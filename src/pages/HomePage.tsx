@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground.tsx'
 import LanguageSelector from '../components/ThemeLanguageSelector.tsx'
-import '../styles/HomePage.css'
+import '../styles/home/index.css'
 import '../styles/animations.css'
-import { CLIENT_INFO, SOCIAL_LINKS, PRODUCTS } from '../utils/constants.ts'
+import { CLIENT_INFO, SOCIAL_LINKS } from '../utils/constants.ts'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index.ts'
 
 function HomePage() {
@@ -14,19 +14,11 @@ function HomePage() {
 
   // Refs для анимаций при скролле
   const heroRef = useRef<HTMLElement>(null)
-  const aboutRef = useRef<HTMLElement>(null)
-  const servicesRef = useRef<HTMLElement>(null)
   const featuresRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
-  const productsRef = useRef<HTMLDivElement>(null)
 
   // Состояния видимости
   const [heroVisible, setHeroVisible] = useState(false)
-  const [aboutVisible, setAboutVisible] = useState(false)
-  const [servicesVisible, setServicesVisible] = useState(false)
   const [featuresVisible, setFeaturesVisible] = useState(false)
-  const [statsVisible, setStatsVisible] = useState(false)
-  const [productsVisible, setProductsVisible] = useState(false)
 
   // Слушаем изменение языка
   useEffect(() => {
@@ -62,11 +54,7 @@ function HomePage() {
           const id = entry.target.getAttribute('data-animate')
           switch(id) {
             case 'hero': setHeroVisible(true); break
-            case 'about': setAboutVisible(true); break
-            case 'services': setServicesVisible(true); break
             case 'features': setFeaturesVisible(true); break
-            case 'stats': setStatsVisible(true); break
-            case 'products': setProductsVisible(true); break
           }
         }
       })
@@ -74,11 +62,7 @@ function HomePage() {
 
     // Наблюдаем за элементами
     if (heroRef.current) observer.observe(heroRef.current)
-    if (aboutRef.current) observer.observe(aboutRef.current)
-    if (servicesRef.current) observer.observe(servicesRef.current)
     if (featuresRef.current) observer.observe(featuresRef.current)
-    if (statsRef.current) observer.observe(statsRef.current)
-    if (productsRef.current) observer.observe(productsRef.current)
 
     // Hero сразу видим
     setTimeout(() => setHeroVisible(true), 100)
@@ -86,8 +70,8 @@ function HomePage() {
     return () => observer.disconnect()
   }, [])
 
-  const scrollToServices = () => {
-    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToFeatures = () => {
+    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
   }
 
 
@@ -107,11 +91,10 @@ function HomePage() {
           <img src="/icon.ico" alt="Shakedown Logo" className="nav-logo" />
           <div className="brand-info">
             <span className="brand-name">{CLIENT_INFO.name}</span>
-            <span className="brand-version">{CLIENT_INFO.version}</span>
           </div>
         </div>
         <div className="nav-links">
-          <button onClick={scrollToServices} className="nav-link">{t.nav.services}</button>
+          <button onClick={() => navigate('/pricing')} className="nav-link">{t.nav.services}</button>
           <button onClick={() => navigate('/news')} className="nav-link">{t.nav.news}</button>
           <LanguageSelector 
             onLanguageChange={() => {
@@ -129,31 +112,40 @@ function HomePage() {
         data-animate="hero"
         className={`hero-section ${heroVisible ? 'visible' : ''}`}
       >
+        {/* Фоновое изображение */}
+        <div className="hero-background">
+          <img 
+            src="/photo.png" 
+            alt="" 
+            className="hero-bg-image" 
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+          />
+          <div className="hero-bg-overlay"></div>
+        </div>
+
         <div className={`hero-content ${heroVisible ? 'animate-in' : ''}`}>
-          <div className="hero-badge animate-item delay-1">
-            <span className="badge-dot"></span>
-            {t.hero.badge} {CLIENT_INFO.minecraftVersion}
-          </div>
-          <h1 className="hero-title animate-item delay-2">
+          <h1 className="hero-title animate-item delay-1">
             <span className="gradient-text-animated">{CLIENT_INFO.name}</span>
           </h1>
-          <p className="hero-subtitle animate-item delay-3">
+          <p className="hero-subtitle animate-item delay-2">
             {t.hero.subtitle}
           </p>
-          <div className="hero-buttons animate-item delay-4">
+          <div className="hero-buttons animate-item delay-3">
             <button onClick={() => navigate('/auth')} className="primary-button glow-button">
               <span>{t.hero.cta}</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button onClick={scrollToServices} className="secondary-button">
+            <button onClick={scrollToFeatures} className="secondary-button">
               {t.hero.learnMore}
             </button>
           </div>
           
           {/* Социальные сети */}
-          <div className="social-links animate-item delay-5">
+          <div className="social-links animate-item delay-4">
             {SOCIAL_LINKS.discord && (
               <a href={SOCIAL_LINKS.discord} target="_blank" rel="noopener noreferrer" className="social-link hover-lift">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -170,19 +162,6 @@ function HomePage() {
             )}
           </div>
         </div>
-
-        {/* 3D визуализация */}
-        <div className={`hero-visual ${heroVisible ? 'animate-in' : ''}`}>
-          <div className="floating-card">
-            <div className="card-glow"></div>
-            <div className="card-rings">
-              <div className="ring ring-1"></div>
-              <div className="ring ring-2"></div>
-              <div className="ring ring-3"></div>
-            </div>
-            <img src="/icon.ico" alt="Shakedown" className="hero-icon no-background" />
-          </div>
-        </div>
       </main>
 
       {/* Преимущества */}
@@ -192,146 +171,87 @@ function HomePage() {
         data-animate="features"
         className={`features-section ${featuresVisible ? 'visible' : ''}`}
       >
-        <div className="features-container">
-          <h2 className={`section-title animate-fade-up ${featuresVisible ? 'visible' : ''}`}>
-            Преимущества
-          </h2>
-          <div className="features-grid-compact">
+        <div className="features-layout">
+          {/* Левая колонка с заголовком и одной карточкой */}
+          <div className={`features-left animate-fade-up ${featuresVisible ? 'visible' : ''}`}>
+            <div className="features-header">
+              <h2 className="features-title">{t.features.ourAdvantages}</h2>
+              <p className="features-subtitle">{t.features.ourAdvantagesDesc}</p>
+            </div>
+            <div className="feature-card feature-card-left">
+              <div className="feature-card-header">
+                <span className="feature-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M26 4L14 24H24L22 44L34 24H24L26 4Z" fill="currentColor" />
+                  </svg>
+                </span>
+                <h4 className="feature-card-title">{t.features.optimization}</h4>
+              </div>
+              <p className="feature-card-desc">{t.features.optimizationDesc}</p>
+            </div>
+          </div>
+          
+          {/* Правая колонка с карточками 2x2 */}
+          <div className="features-grid">
             {[
               { 
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>, 
-                title: t.features.performance, 
-                desc: t.features.performanceDesc 
-              },
-              { 
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, 
-                title: t.features.bypass, 
-                desc: t.features.bypassDesc 
-              },
-              { 
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>, 
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="6" y="8" width="36" height="26" rx="2" />
+                    <path d="M6 30H42" />
+                    <path d="M18 40H30" strokeLinecap="round" />
+                    <path d="M24 34V40" />
+                  </svg>
+                ),
                 title: t.features.interface, 
-                desc: t.features.interfaceDesc 
+                desc: t.features.interfaceDescFull 
               },
               { 
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>, 
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="10" y="10" width="28" height="4" rx="1" fill="currentColor" />
+                    <rect x="10" y="18" width="28" height="4" rx="1" fill="currentColor" />
+                    <rect x="10" y="26" width="28" height="4" rx="1" fill="currentColor" />
+                    <rect x="10" y="34" width="20" height="4" rx="1" fill="currentColor" />
+                  </svg>
+                ),
+                title: t.features.customization, 
+                desc: t.features.customizationDesc 
+              },
+              { 
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="24" cy="24" r="18" />
+                    <path d="M24 10V24L32 32" strokeLinecap="round" />
+                  </svg>
+                ),
                 title: t.features.updates, 
-                desc: t.features.updatesDesc 
+                desc: t.features.updatesDescFull 
+              },
+              { 
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="24" cy="16" r="8" fill="currentColor" />
+                    <path d="M10 42C10 33.163 16.268 26 24 26C31.732 26 38 33.163 38 42" fill="currentColor" />
+                  </svg>
+                ),
+                title: t.features.support, 
+                desc: t.features.supportDescFull 
               }
             ].map((feature, index) => (
               <div 
                 key={index}
-                className={`feature-item animate-fade-up hover-lift ${featuresVisible ? 'visible' : ''}`}
-                style={{transitionDelay: `${0.1 * index}s`}}
+                className={`feature-card animate-fade-up ${featuresVisible ? 'visible' : ''}`}
+                style={{transitionDelay: `${0.1 * (index + 1)}s`}}
               >
-                <div className="feature-icon-small">{feature.icon}</div>
-                <div className="feature-text">
-                  <h4>{feature.title}</h4>
-                  <p>{feature.desc}</p>
+                <div className="feature-card-header">
+                  <span className="feature-card-icon">{feature.icon}</span>
+                  <h4 className="feature-card-title">{feature.title}</h4>
                 </div>
+                <p className="feature-card-desc">{feature.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <div className="section-divider"></div>
-
-      {/* О нас */}
-      <section 
-        ref={aboutRef as React.RefObject<HTMLElement>}
-        data-animate="about"
-        className={`about-section ${aboutVisible ? 'visible' : ''}`}
-      >
-        <div className="about-content">
-          <h2 className={`section-title animate-fade-up ${aboutVisible ? 'visible' : ''}`}>
-            {t.about.title}
-          </h2>
-          <p className={`about-text animate-fade-up ${aboutVisible ? 'visible' : ''}`} style={{transitionDelay: '0.1s'}}>
-            {t.about.text}
-          </p>
-          <div 
-            ref={statsRef}
-            data-animate="stats"
-            className="stats-grid"
-          >
-            {[
-              { number: '1000+', label: t.about.players },
-              { number: '24/7', label: t.about.support },
-              { number: '99.9%', label: t.about.uptime }
-            ].map((stat, index) => (
-              <div 
-                key={index}
-                className={`stat-card animate-fade-up hover-lift ${statsVisible ? 'visible' : ''}`}
-                style={{transitionDelay: `${0.15 * index}s`}}
-              >
-                <div className="stat-number gradient-text-animated">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="section-divider"></div>
-
-      {/* Наши услуги */}
-      <section 
-        id="services" 
-        ref={servicesRef as React.RefObject<HTMLElement>}
-        data-animate="services"
-        className={`services-section ${servicesVisible ? 'visible' : ''}`}
-      >
-        <h2 className={`section-title animate-fade-up ${servicesVisible ? 'visible' : ''}`}>
-          {t.services.title}
-        </h2>
-        <div 
-          ref={productsRef}
-          data-animate="products"
-          className="products-grid"
-        >
-          {PRODUCTS.map((product, index) => (
-            <div 
-              key={product.id} 
-              className={`product-card hover-lift ${product.popular ? 'popular' : ''} animate-fade-up ${productsVisible ? 'visible' : ''}`}
-              style={{transitionDelay: `${0.1 * index}s`}}
-            >
-              {product.popular && <div className="popular-badge">{t.services.popular}</div>}
-              {'discount' in product && (product as { discount?: number }).discount && (
-                <div className="discount-badge">{t.services.discount} {(product as { discount?: number }).discount}%</div>
-              )}
-              
-              <div className="product-header">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-              </div>
-
-              <div className="product-price">
-                {'originalPrice' in product && (product as { originalPrice?: number }).originalPrice && (
-                  <span className="original-price">{(product as { originalPrice?: number }).originalPrice} ₽</span>
-                )}
-                <span className="current-price">{product.price} ₽</span>
-              </div>
-
-              <ul className="product-features">
-                {product.features.map((feature, idx) => (
-                  <li key={idx}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button 
-                onClick={() => navigate('/auth')} 
-                className="product-button glow-button"
-              >
-                {t.services.pay}
-              </button>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -343,7 +263,7 @@ function HomePage() {
             <span className="footer-name gradient-text">{CLIENT_INFO.name}</span>
           </div>
           <div className="footer-links">
-            <a href="#services">{t.nav.services}</a>
+            <a href="/pricing">{t.nav.services}</a>
             <a href="/news">{t.nav.news}</a>
             <a href="/auth">{t.nav.dashboard}</a>
           </div>

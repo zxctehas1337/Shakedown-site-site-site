@@ -13,7 +13,6 @@ export interface TranslationStructure {
     logout: string
   }
   hero: {
-    badge: string
     title: string
     subtitle: string
     cta: string
@@ -23,13 +22,6 @@ export interface TranslationStructure {
     title: string
     subtitle: string
   }
-  about: {
-    title: string
-    text: string
-    players: string
-    support: string
-    uptime: string
-  }
   services: {
     title: string
     popular: string
@@ -37,14 +29,27 @@ export interface TranslationStructure {
     pay: string
   }
   features: {
+    ourAdvantages: string
+    ourAdvantagesDesc: string
     performance: string
     performanceDesc: string
     bypass: string
     bypassDesc: string
     interface: string
     interfaceDesc: string
+    interfaceDescFull: string
+    customization: string
+    customizationDesc: string
+    optimization: string
+    optimizationDesc: string
     updates: string
     updatesDesc: string
+    updatesDescFull: string
+    richFunctionality: string
+    richFunctionalityDesc: string
+    support: string
+    supportDesc: string
+    supportDescFull: string
   }
   footer: {
     rights: string

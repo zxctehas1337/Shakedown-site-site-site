@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import '../styles/PaymentModal.css'
-import { PRODUCTS } from '../utils/constants'
+import { fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index'
 
 interface PaymentModalProps {
@@ -14,7 +14,17 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
   const [promoCode, setPromoCode] = useState('')
   const [paymentMethod, setPaymentMethod] = useState<'youkassa' | 'funpay' | ''>('')
   const [lang, setLang] = useState<Language>(getCurrentLanguage())
+  const [products, setProducts] = useState<Product[]>(PRODUCTS_FALLBACK)
   const t = getTranslation(lang)
+
+  // Загрузка продуктов с API
+  useEffect(() => {
+    fetchProducts().then(data => {
+      if (data.length > 0) {
+        setProducts(data)
+      }
+    })
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,7 +36,7 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
 
   if (!isOpen) return null
 
-  const product = PRODUCTS.find(p => p.id === selectedProduct)
+  const product = products.find(p => p.id === selectedProduct)
   const finalPrice = product?.price || 0
 
   const handlePayment = () => {
@@ -62,10 +72,10 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
             onChange={(e) => setSelectedProduct(e.target.value)}
           >
             <option value="">{t.payment.selectPlaceholder}</option>
-            {PRODUCTS.map(p => (
+            {products.map(p => (
               <option key={p.id} value={p.id}>
                 {p.name} - {p.price} ₽
-                {'discount' in p && (p as { discount?: number }).discount && ` (${t.services.discount} ${(p as { discount?: number }).discount}%)`}
+                {p.discount && ` (${t.services.discount} ${p.discount}%)`}
               </option>
             ))}
           </select>

@@ -37,7 +37,7 @@
 [data-theme="light"] .home-page,
 [data-theme="light"] .dashboard-page,
 [data-theme="light"] .auth-page {
-    background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+    background: #F9FAFB;
 }
 
 [data-theme="light"] .navbar,
@@ -90,7 +90,7 @@
 }
 
 [data-theme="light"] .footer {
-    background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
+    background: #F3F4F6;
     border-top-color: rgba(0, 0, 0, 0.1);
 }
 

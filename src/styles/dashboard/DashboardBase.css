@@ -1,0 +1,15 @@
+/* ========================================
+   Dashboard Base Styles
+   ======================================== */
+
+.dashboard-page {
+  min-height: 100vh;
+  background: #0a0a0f;
+  color: #ffffff;
+  position: relative;
+}
+
+/* Светлая тема - база */
+[data-theme="light"] .dashboard-page {
+  background: #ffffff;
+}

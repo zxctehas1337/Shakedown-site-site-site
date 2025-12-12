@@ -371,6 +371,63 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// ==================== PRODUCTS/PRICES ENDPOINT ====================
+
+// Товары и цены
+const PRODUCTS = [
+  {
+    id: 'client-30',
+    name: 'Клиент на 30 дней',
+    price: 199,
+    duration: 30,
+    description: 'Доступ к клиенту на 30 дней',
+    features: ['Полный функционал', 'Обновления', 'Поддержка']
+  },
+  {
+    id: 'client-90',
+    name: 'Клиент на 90 дней',
+    price: 449,
+    duration: 90,
+    description: 'Доступ к клиенту на 90 дней',
+    features: ['Полный функционал', 'Обновления', 'Поддержка'],
+    popular: true
+  },
+  {
+    id: 'client-lifetime',
+    name: 'Клиент навсегда',
+    price: 999,
+    duration: -1,
+    description: 'Пожизненный доступ к клиенту',
+    features: ['Полный функционал', 'Все обновления', 'Приоритетная поддержка']
+  },
+  {
+    id: 'hwid-reset',
+    name: 'Сброс привязки',
+    price: 99,
+    description: 'Сброс HWID привязки',
+    features: ['Мгновенный сброс', 'Новая привязка']
+  }
+];
+
+// Получить все продукты
+app.get('/api/products', (req, res) => {
+  res.json({ success: true, data: PRODUCTS });
+});
+
+// Получить конкретный продукт по ID
+app.get('/api/products/:id', (req, res) => {
+  const { id } = req.params;
+  const product = PRODUCTS.find(p => p.id === id);
+  
+  if (!product) {
+    return res.json({ success: false, message: 'Продукт не найден' });
+  }
+  
+  res.json({ success: true, data: product });
+});
+
+// ==================== END PRODUCTS ====================
+
 // Регистрация
 app.post('/api/auth/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -883,7 +940,9 @@ app.listen(PORT, () => {
   console.log('   GET  /api/hwid/:userId - Получить HWID пользователя');
   console.log('   POST /api/hwid/set - Установить HWID');
   console.log('   POST /api/hwid/reset - Сбросить HWID');
-  console.log('   POST /api/hwid/verify - Проверить HWID\n');
+  console.log('   POST /api/hwid/verify - Проверить HWID');
+  console.log('   GET  /api/products - Список продуктов и цен');
+  console.log('   GET  /api/products/:id - Информация о продукте\n');
   console.log('🔐 OAuth эндпоинты:');
   console.log('   GET  /api/auth/google - Вход через Google');
   console.log('   GET  /api/auth/yandex - Вход через Yandex');

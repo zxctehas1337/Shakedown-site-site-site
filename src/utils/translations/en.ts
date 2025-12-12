@@ -11,7 +11,6 @@ export const enTranslations: TranslationStructure = {
     logout: 'Logout'
   },
   hero: {
-    badge: 'Minecraft',
     title: 'ShakeDown',
     subtitle: 'We provide you with the best client for comfortable gaming that will give you the best gaming experience.',
     cta: 'Start Playing',
@@ -21,13 +20,6 @@ export const enTranslations: TranslationStructure = {
     title: 'Video Review',
     subtitle: 'See how our client works'
   },
-  about: {
-    title: 'About Us',
-    text: 'We provide you with the best client for comfortable gaming that will give you the best gaming experience.',
-    players: 'Active Players',
-    support: 'Support',
-    uptime: 'Uptime'
-  },
   services: {
     title: 'Our Prices',
     popular: 'Popular',
@@ -35,14 +27,27 @@ export const enTranslations: TranslationStructure = {
     pay: 'Pay'
   },
   features: {
+    ourAdvantages: 'Our\nAdvantages',
+    ourAdvantagesDesc: 'We briefly outlined what you are guaranteed to get after purchasing our client.',
     performance: 'High Performance',
-    performanceDesc: 'No FPS drops',
+    performanceDesc: 'Optimized code without FPS drops',
     bypass: 'Best Bypasses',
-    bypassDesc: 'Unbreakable protection',
-    interface: 'Modern Interface',
-    interfaceDesc: 'Easy control',
-    updates: 'Regular Updates',
-    updatesDesc: 'New features every week'
+    bypassDesc: 'Unbreakable anticheat bypasses with constant updates',
+    interface: 'Beautiful Appearance',
+    interfaceDesc: 'Modern GUI with themes and settings',
+    interfaceDescFull: 'Our client has a large number of visual features that will make your game more colorful. You can also customize the client design to your liking, making it truly beautiful.',
+    customization: 'Customization',
+    customizationDesc: 'In our client you can customize almost any feature to your liking, as well as use configurations from other users. Thanks to this, you can use our client to its full potential.',
+    optimization: 'Optimization',
+    optimizationDesc: 'We constantly improve the optimization of our client and the game itself. Thanks to this, you can run our client even on weak computers.',
+    updates: 'Frequent Updates',
+    updatesDesc: 'Weekly updates with new features',
+    updatesDescFull: 'We regularly update the functionality in our client, adding new features and improving existing ones. Thanks to this, our client has advantages for all existing servers.',
+    richFunctionality: 'Rich Functionality',
+    richFunctionalityDesc: 'Over 100 modules for all aspects of the game',
+    support: 'Best Support',
+    supportDesc: 'Round-the-clock help and active community',
+    supportDescFull: 'We have the best support team that knows their stuff and can help you with any question related to our client.'
   },
   footer: {
     rights: 'All rights reserved'

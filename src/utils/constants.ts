@@ -2,7 +2,7 @@
 
 // Информация о клиенте
 export const CLIENT_INFO = {
-  name: 'Shakedown Client',
+  name: 'SHAKEDOWN',
   version: '1.21.4',
   minecraftVersion: '1.21.4',
   platform: 'Windows 10/11'
@@ -21,8 +21,55 @@ export const SOCIAL_LINKS = {
   vk: ''
 }
 
-// Товары/услуги
-export const PRODUCTS = [
+// Тип продукта
+export interface Product {
+  id: string
+  name: string
+  price: number
+  duration?: number
+  description: string
+  features: string[]
+  popular?: boolean
+  discount?: number
+  originalPrice?: number
+}
+
+// API URL
+const API_URL = import.meta.env.VITE_API_URL || ''
+
+// Функция загрузки продуктов с сервера
+export async function fetchProducts(): Promise<Product[]> {
+  try {
+    const response = await fetch(`${API_URL}/api/products`)
+    const data = await response.json()
+    if (data.success) {
+      return data.data
+    }
+    console.error('Ошибка загрузки продуктов:', data.message)
+    return []
+  } catch (error) {
+    console.error('Ошибка загрузки продуктов:', error)
+    return []
+  }
+}
+
+// Функция получения одного продукта
+export async function fetchProduct(id: string): Promise<Product | null> {
+  try {
+    const response = await fetch(`${API_URL}/api/products/${id}`)
+    const data = await response.json()
+    if (data.success) {
+      return data.data
+    }
+    return null
+  } catch (error) {
+    console.error('Ошибка загрузки продукта:', error)
+    return null
+  }
+}
+
+// Fallback продукты (на случай если API недоступен)
+export const PRODUCTS_FALLBACK: Product[] = [
   {
     id: 'client-30',
     name: 'Клиент на 30 дней',
@@ -56,6 +103,9 @@ export const PRODUCTS = [
     features: ['Мгновенный сброс', 'Новая привязка']
   }
 ]
+
+// Для обратной совместимости - экспортируем fallback как PRODUCTS
+export const PRODUCTS = PRODUCTS_FALLBACK
 
 // Способы оплаты
 export const PAYMENT_METHODS = {

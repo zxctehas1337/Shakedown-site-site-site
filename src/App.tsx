@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage.tsx'
-import AuthPage from './pages/AuthPage.tsx'
+import AuthPage from './pages/auth/AuthPage.tsx'
 import DashboardPage from './pages/DashboardPage.tsx'
-import AdminPage from './pages/AdminPage.tsx'
+import AdminPage from './pages/admin/AdminPage.tsx'
 import NewsPage from './pages/NewsPage.tsx'
+import PricingPage from './pages/PricingPage.tsx'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
       </Routes>
     </Router>
   )

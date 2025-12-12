@@ -1,0 +1,164 @@
+/* ========================================
+   HERO СЕКЦИЯ
+   ======================================== */
+.hero-section {
+  min-height: 125vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 6rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Фоновое изображение на всю ширину */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(to right, var(--bg-primary, #0a0a0f) 0%, var(--bg-primary, #0a0a0f) 25%, transparent 60%),
+    linear-gradient(to top, var(--bg-primary, #0a0a0f) 0%, transparent 30%),
+    linear-gradient(to bottom, var(--bg-primary, #0a0a0f) 0%, transparent 20%);
+}
+
+.hero-section.visible .hero-content.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-content {
+  max-width: 500px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content .animate-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-content.animate-in .animate-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-content.animate-in .delay-1 { transition-delay: 0.1s; }
+.hero-content.animate-in .delay-2 { transition-delay: 0.2s; }
+.hero-content.animate-in .delay-3 { transition-delay: 0.3s; }
+.hero-content.animate-in .delay-4 { transition-delay: 0.4s; }
+.hero-content.animate-in .delay-5 { transition-delay: 0.5s; }
+
+.hero-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #5B9BD5 0%, #9B7EDE 100%);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-button {
+  box-shadow: 0 0 15px rgba(91, 155, 213, 0.2);
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 25px rgba(91, 155, 213, 0.3);
+  transform: translateY(-3px);
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Социальные сети */
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3B82F6;
+  color: #3B82F6;
+}
