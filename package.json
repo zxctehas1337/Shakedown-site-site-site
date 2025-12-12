@@ -8,7 +8,6 @@
     "build": "tsc && vite build",
     "start": "vite preview",
     "preview": "vite preview",
-    "vercel-build": "tsc && vite build",
     "test:email": "node server/scripts/test-email.js",
     "test:registration": "node server/scripts/test-registration.js",
     "test:code": "node server/scripts/test-code-verification.js",
