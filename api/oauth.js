@@ -5,7 +5,7 @@ const { mapOAuthUser } = require('./_lib/userMapper');
 module.exports = async (req, res) => {
   const { provider, action } = req.query;
   const frontendUrl = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
-  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : frontendUrl;
+  const baseUrl = frontendUrl; // Используем FRONTEND_URL, а не VERCEL_URL (он меняется при каждом деплое)
 
   if (!['github', 'google', 'yandex'].includes(provider)) {
     return res.status(400).json({ success: false, message: 'Invalid provider' });
@@ -20,7 +20,12 @@ module.exports = async (req, res) => {
 };
 
 function handleRedirect(res, provider, baseUrl) {
-  const redirectUri = `${baseUrl}/api/oauth?provider=${provider}&action=callback`;
+  const redirectUris = {
+    github: process.env.GITHUB_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
+    google: process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
+    yandex: process.env.YANDEX_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`
+  };
+  const redirectUri = redirectUris[provider];
 
   const urls = {
     github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}`,
@@ -87,7 +92,7 @@ async function handleGitHub(code) {
 }
 
 async function handleGoogle(code, baseUrl, provider) {
-  const redirectUri = `${baseUrl}/api/oauth?provider=${provider}&action=callback`;
+  const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`;
 
   const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
