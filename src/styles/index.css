@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #12121A;
+    --bg-tertiary: #1A1A24;
+    --purple-500: #A855F7;
+    --purple-600: #9333EA;
+    --pink-500: #EC4899;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A0A0B0;
+    --text-tertiary: #6B6B80;
+}
+
+/* Светлая тема */
+[data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F3F4F6;
+    --bg-tertiary: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-tertiary: #6B7280;
+}
+
+[data-theme="light"] body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Обновляем фон для светлой темы */
+[data-theme="light"] .home-page,
+[data-theme="light"] .dashboard-page,
+[data-theme="light"] .auth-page {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+}
+
+[data-theme="light"] .navbar,
+[data-theme="light"] .dashboard-navbar {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .nav-link,
+[data-theme="light"] .nav-btn {
+    color: #4B5563;
+}
+
+[data-theme="light"] .nav-link:hover,
+[data-theme="light"] .nav-btn:hover {
+    color: #3B82F6;
+}
+
+[data-theme="light"] .profile-section,
+[data-theme="light"] .actions-section,
+[data-theme="light"] .product-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .profile-field,
+[data-theme="light"] .feature-item {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .profile-section:hover,
+[data-theme="light"] .product-card:hover,
+[data-theme="light"] .stat-card:hover,
+[data-theme="light"] .profile-field:hover,
+[data-theme="light"] .feature-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="light"] .section-title,
+[data-theme="light"] .hero-title,
+[data-theme="light"] .product-name,
+[data-theme="light"] .field-value {
+    color: #111827;
+}
+
+[data-theme="light"] .hero-subtitle,
+[data-theme="light"] .about-text,
+[data-theme="light"] .product-description,
+[data-theme="light"] .field-label {
+    color: #4B5563;
+}
+
+[data-theme="light"] .footer {
+    background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .footer-links a,
+[data-theme="light"] .footer-social a {
+    color: #4B5563;
+}
+
+[data-theme="light"] .footer-links a:hover,
+[data-theme="light"] .footer-social a:hover {
+    color: #3B82F6;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Плавный скролл */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Выделение текста */
+::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: #ffffff;
+}
+
+[data-theme="light"] ::selection {
+    background: rgba(59, 130, 246, 0.2);
+    color: #111827;
+}
+
+/* Фокус для доступности */
+:focus-visible {
+    outline: 2px solid #3B82F6;
+    outline-offset: 2px;
+}
+
+/* Анимация загрузки страницы */
+@keyframes pageLoad {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+body {
+    animation: pageLoad 0.5s ease;
+}

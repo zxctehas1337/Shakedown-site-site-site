@@ -1,0 +1,140 @@
+// Типы для системы переводов ShakeDown
+
+export type Language = 'ru' | 'en' | 'uk'
+
+export interface TranslationStructure {
+  nav: {
+    services: string
+    video: string
+    news: string
+    dashboard: string
+    home: string
+    admin: string
+    logout: string
+  }
+  hero: {
+    badge: string
+    title: string
+    subtitle: string
+    cta: string
+    learnMore: string
+  }
+  video: {
+    title: string
+    subtitle: string
+  }
+  about: {
+    title: string
+    text: string
+    players: string
+    support: string
+    uptime: string
+  }
+  services: {
+    title: string
+    popular: string
+    discount: string
+    pay: string
+  }
+  features: {
+    performance: string
+    performanceDesc: string
+    bypass: string
+    bypassDesc: string
+    interface: string
+    interfaceDesc: string
+    updates: string
+    updatesDesc: string
+  }
+  footer: {
+    rights: string
+  }
+  dashboard: {
+    title: string
+    uid: string
+    login: string
+    group: string
+    regDate: string
+    lastLogin: string
+    email: string
+    hwid: string
+    hwidPlaceholder: string
+    reset: string
+    activateKey: string
+    enterKey: string
+    activate: string
+    buyClient: string
+    downloadLauncher: string
+    changePassword: string
+    user: string
+    premium: string
+    alpha: string
+  }
+  payment: {
+    title: string
+    selectProduct: string
+    selectPlaceholder: string
+    promo: string
+    promoPlaceholder: string
+    toPay: string
+    paymentMethod: string
+    continue: string
+    note: string
+    cards: string
+    gameMarket: string
+  }
+  auth: {
+    login: string
+    register: string
+    loginOrEmail: string
+    enterLoginOrEmail: string
+    password: string
+    enterPassword: string
+    rememberMe: string
+    loginBtn: string
+    username: string
+    createUsername: string
+    email: string
+    enterEmail: string
+    createPassword: string
+    confirmPassword: string
+    repeatPassword: string
+    agreeTerms: string
+    registerBtn: string
+    backToHome: string
+    orContinueWith: string
+    emailVerification: string
+    verificationSent: string
+    confirm: string
+    verifying: string
+    resendCode: string
+    enterFullCode: string
+    passwordsNotMatch: string
+    passwordMinLength: string
+    mustAgreeTerms: string
+  }
+  products: {
+    client30: string
+    client30Desc: string
+    client90: string
+    client90Desc: string
+    clientLifetime: string
+    clientLifetimeDesc: string
+    hwidReset: string
+    hwidResetDesc: string
+    premium30: string
+    premium30Desc: string
+    alpha: string
+    alphaDesc: string
+    fullFeatures: string
+    updates: string
+    support: string
+    prioritySupport: string
+    allUpdates: string
+    instantReset: string
+    newBinding: string
+    exclusiveFeatures: string
+    priorityQueue: string
+    uniqueFeatures: string
+  }
+}
