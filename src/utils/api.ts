@@ -1,5 +1,5 @@
-// API для работы с backend
-const API_URL = import.meta.env.VITE_API_URL || 'https://oneshakedown.onrender.com'
+// API для работы с backend - относительный путь для Vercel
+const API_URL = ''
 
 export interface ApiResponse<T> {
   success: boolean

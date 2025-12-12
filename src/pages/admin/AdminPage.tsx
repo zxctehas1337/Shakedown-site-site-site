@@ -68,7 +68,7 @@ export default function AdminPage() {
     const newBanStatus = !user.isBanned
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isBanned: newBanStatus })

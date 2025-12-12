@@ -1,5 +1,5 @@
-// OAuth запросы должны идти напрямую на сервер Render, а не через Vercel
-const OAUTH_URL = 'https://oneshakedown.onrender.com'
+// OAuth теперь на том же домене (Vercel serverless)
+const OAUTH_URL = ''
 
 export function SocialButtons() {
   return (

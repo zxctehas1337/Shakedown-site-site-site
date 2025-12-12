@@ -27,7 +27,7 @@ export function useAdminData() {
 
   const loadUsers = async () => {
     try {
-      const result = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
+      const result = await fetch(`/api/users`)
       if (result.ok) {
         const data = await result.json()
         if (data.success && data.data) {

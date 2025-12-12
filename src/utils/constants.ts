@@ -34,8 +34,8 @@ export interface Product {
   originalPrice?: number
 }
 
-// API URL
-const API_URL = import.meta.env.VITE_API_URL || 'https://oneshakedown.onrender.com'
+// API URL - теперь относительный, так как фронт и бэк на одном домене (Vercel)
+const API_URL = ''
 
 // Функция загрузки продуктов с сервера
 export async function fetchProducts(): Promise<Product[]> {
