@@ -125,7 +125,8 @@ export const PAYMENT_METHODS = {
 export const LANGUAGES = {
   ru: { name: 'Русский', flag: '🇷🇺' },
   en: { name: 'English', flag: '🇬🇧' },
-  uk: { name: 'Українська', flag: '🇺🇦' }
+  uk: { name: 'Українська', flag: '🇺🇦' },
+  pl: { name: 'Polski', flag: '🇵🇱' }
 }
 
 // Доступные темы

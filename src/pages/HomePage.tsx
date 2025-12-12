@@ -277,7 +277,7 @@ function HomePage() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2024 {CLIENT_INFO.name}. {t.footer.rights}</p>
+          <p>© 2025 {CLIENT_INFO.name}. {t.footer.rights}</p>
         </div>
       </footer>
     </div>

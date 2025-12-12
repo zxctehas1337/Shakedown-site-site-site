@@ -1,6 +1,6 @@
 // Типы для системы переводов ShakeDown
 
-export type Language = 'ru' | 'en' | 'uk'
+export type Language = 'ru' | 'en' | 'uk' | 'pl'
 
 export interface TranslationStructure {
   nav: {
@@ -74,6 +74,52 @@ export interface TranslationStructure {
     user: string
     premium: string
     alpha: string
+    // Новые ключи для расширенного Dashboard
+    welcome: string
+    manageAccount: string
+    overview: string
+    profile: string
+    subscription: string
+    settings: string
+    status: string
+    registration: string
+    emailStatus: string
+    verified: string
+    notVerified: string
+    notLinked: string
+    quickActions: string
+    news: string
+    profileInfo: string
+    myProfile: string
+    setupProfile: string
+    avatarSection: string
+    displayName: string
+    displayNameHint: string
+    basicInfo: string
+    profileSaved: string
+    nameTaken: string
+    avatarUpdated: string
+    fileTooLarge: string
+    subscriptionManagement: string
+    currentPlan: string
+    upgradeForFeatures: string
+    activeSubscription: string
+    keyActivation: string
+    keyPlaceholder: string
+    keyHint: string
+    keyActivated: string
+    keyNotFound: string
+    keyAlreadyUsed: string
+    enterKeyToActivate: string
+    security: string
+    changePasswordDesc: string
+    change: string
+    resetHwid: string
+    resetHwidDesc: string
+    account: string
+    adminPanel: string
+    forever: string
+    forDays: string
   }
   payment: {
     title: string

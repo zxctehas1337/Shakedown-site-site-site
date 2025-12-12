@@ -10,6 +10,11 @@ export interface User {
   isAdmin?: boolean
   isBanned?: boolean
   emailVerified?: boolean
+  profile?: UserProfile
+}
+
+export interface UserProfile {
+  displayName?: string
 }
 
 export interface UserSettings {

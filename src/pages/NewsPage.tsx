@@ -130,7 +130,7 @@ export default function NewsPage() {
                     <span className="news-date">
                       {new Date(post.date).toLocaleDateString('ru-RU', { 
                         year: 'numeric', 
-                        month: 'long', 
+                        month: 'short', 
                         day: 'numeric' 
                       })}
                     </span>

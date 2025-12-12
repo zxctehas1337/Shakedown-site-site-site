@@ -35,7 +35,6 @@
 /* Меню языков */
 .lang-menu {
   position: absolute;
-  top: calc(100% + 0.75rem);
   right: 0;
   background: rgba(15, 15, 25, 0.98);
   backdrop-filter: blur(20px);
@@ -45,7 +44,29 @@
   min-width: 180px;
   z-index: 1000;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Меню открывается вверх */
+.lang-menu-up {
+  bottom: calc(100% + 0.75rem);
+  animation: menuSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Меню открывается вниз */
+.lang-menu-down {
+  top: calc(100% + 0.75rem);
   animation: menuSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes menuSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes menuSlideDown {

@@ -56,9 +56,6 @@ async function sendVerificationEmail(email, username, verificationCode) {
               <p class="warning">Код действителен в течение 10 минут</p>
               <p>Если вы не регистрировались на нашем сайте, просто проигнорируйте это письмо.</p>
             </div>
-            <div class="footer">
-              <p>© 2024 Inside. Все права защищены.</p>
-            </div>
           </div>
         </body>
         </html>

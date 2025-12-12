@@ -4,9 +4,10 @@ import { LANGUAGES } from '../utils/constants'
 
 interface LanguageSelectorProps {
   onLanguageChange?: (lang: string) => void
+  dropdownDirection?: 'up' | 'down'
 }
 
-function LanguageSelector({ onLanguageChange }: LanguageSelectorProps) {
+function LanguageSelector({ onLanguageChange, dropdownDirection = 'down' }: LanguageSelectorProps) {
   const [currentLang, setCurrentLang] = useState('ru')
   const [showLangMenu, setShowLangMenu] = useState(false)
 
@@ -33,7 +34,7 @@ function LanguageSelector({ onLanguageChange }: LanguageSelectorProps) {
       </button>
 
       {showLangMenu && (
-        <div className="lang-menu">
+        <div className={`lang-menu ${dropdownDirection === 'up' ? 'lang-menu-up' : 'lang-menu-down'}`}>
           {Object.entries(LANGUAGES).map(([code, lang]) => (
             <button
               key={code}

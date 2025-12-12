@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground'
 import PaymentModal from '../components/PaymentModal'
@@ -6,14 +6,16 @@ import Notification from '../components/Notification'
 import LanguageSelector from '../components/ThemeLanguageSelector'
 import { LogoutModal } from '../components/LogoutModal'
 import { getCurrentUser, setCurrentUser } from '../utils/database'
-import { User, NotificationType, LicenseKey } from '../types'
+import { User, NotificationType, LicenseKey, UserProfile } from '../types'
 import { CLIENT_INFO, DOWNLOAD_LINKS } from '../utils/constants'
+import { useTranslation } from '../hooks/useTranslation'
 import '../styles/dashboard/DashboardBase.css'
 import '../styles/dashboard/DashboardNavbar.css'
 import '../styles/dashboard/DashboardProfile.css'
 import '../styles/dashboard/DashboardActions.css'
 import '../styles/dashboard/DashboardAnimations.css'
 import '../styles/dashboard/DashboardResponsive.css'
+import '../styles/dashboard/DashboardProfileTab.css'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -21,9 +23,12 @@ export default function DashboardPage() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [selectedProductId, setSelectedProductId] = useState<string>('')
-  const [hwidInput, setHwidInput] = useState('')
   const [keyInput, setKeyInput] = useState('')
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'subscription' | 'settings'>('overview')
+  const [profileForm, setProfileForm] = useState<UserProfile>({})
+  const avatarInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+  const { t, dateLocale } = useTranslation()
 
   useEffect(() => {
     const userData = getCurrentUser()
@@ -31,6 +36,7 @@ export default function DashboardPage() {
       navigate('/auth')
     } else {
       setUser(userData)
+      setProfileForm(userData.profile || {})
     }
   }, [navigate])
 
@@ -44,41 +50,27 @@ export default function DashboardPage() {
     setShowPaymentModal(true)
   }
 
-  const handleResetHWID = () => {
-    if (!hwidInput.trim()) {
-      setNotification({ message: 'Введите HWID для сброса', type: 'error' })
-      return
-    }
-    // Здесь будет логика сброса HWID
-    setNotification({ message: 'HWID успешно сброшен!', type: 'success' })
-    setHwidInput('')
-  }
-
   const handleActivateKey = () => {
     if (!keyInput.trim()) {
-      setNotification({ message: 'Введите ключ для активации', type: 'error' })
+      setNotification({ message: t.dashboard.enterKeyToActivate, type: 'error' })
       return
     }
 
-    // Получаем все ключи из localStorage
     const licenseKeys: LicenseKey[] = JSON.parse(localStorage.getItem('insideLicenseKeys') || '[]')
-    
-    // Ищем ключ
     const keyIndex = licenseKeys.findIndex(k => k.key === keyInput.trim().toUpperCase())
     
     if (keyIndex === -1) {
-      setNotification({ message: 'Ключ не найден', type: 'error' })
+      setNotification({ message: t.dashboard.keyNotFound, type: 'error' })
       return
     }
 
     const licenseKey = licenseKeys[keyIndex]
 
     if (licenseKey.isUsed) {
-      setNotification({ message: 'Этот ключ уже был использован', type: 'error' })
+      setNotification({ message: t.dashboard.keyAlreadyUsed, type: 'error' })
       return
     }
 
-    // Активируем ключ
     licenseKeys[keyIndex] = {
       ...licenseKey,
       isUsed: true,
@@ -86,10 +78,8 @@ export default function DashboardPage() {
       usedBy: user?.id
     }
 
-    // Сохраняем обновленные ключи
     localStorage.setItem('insideLicenseKeys', JSON.stringify(licenseKeys))
 
-    // Обновляем подписку пользователя
     if (user) {
       let newSubscription: 'free' | 'premium' | 'alpha' = user.subscription
       
@@ -99,16 +89,10 @@ export default function DashboardPage() {
         newSubscription = 'alpha'
       }
 
-      const updatedUser = {
-        ...user,
-        subscription: newSubscription
-      }
-
-      // Обновляем пользователя в localStorage
+      const updatedUser = { ...user, subscription: newSubscription }
       setCurrentUser(updatedUser)
       setUser(updatedUser)
 
-      // Также обновляем в списке пользователей
       const users: User[] = JSON.parse(localStorage.getItem('insideUsers') || '[]')
       const userIndex = users.findIndex(u => u.id === user.id)
       if (userIndex !== -1) {
@@ -118,21 +102,17 @@ export default function DashboardPage() {
     }
 
     const productNames: Record<string, string> = {
-      'premium': 'Premium подписка',
-      'alpha': 'Alpha подписка',
+      'premium': 'Premium',
+      'alpha': 'Alpha',
       'inside-client': 'Shakedown Client',
       'inside-spoofer': 'Shakedown Spoofer',
       'inside-cleaner': 'Shakedown Cleaner'
     }
 
     const durationText = licenseKey.duration === 0 
-      ? 'навсегда' 
-      : `на ${licenseKey.duration} дней`
-
-    setNotification({ 
-      message: `Ключ активирован! ${productNames[licenseKey.product]} ${durationText}`, 
-      type: 'success' 
-    })
+      ? t.dashboard.forever 
+      : t.dashboard.forDays.replace('{days}', String(licenseKey.duration))
+    setNotification({ message: `${t.dashboard.keyActivated} ${productNames[licenseKey.product]} ${durationText}`, type: 'success' })
     setKeyInput('')
   }
 
@@ -140,17 +120,80 @@ export default function DashboardPage() {
     window.location.href = DOWNLOAD_LINKS.launcher
   }
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 15 * 1024 * 1024) {
+      setNotification({ message: t.dashboard.fileTooLarge, type: 'error' })
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const base64 = event.target?.result as string
+      if (user) {
+        const updatedUser = { ...user, avatar: base64 }
+        updateUserData(updatedUser)
+        setNotification({ message: t.dashboard.avatarUpdated, type: 'success' })
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleProfileSave = () => {
+    if (!user) return
+
+    // Проверка уникальности имени
+    if (profileForm.displayName && profileForm.displayName.trim()) {
+      const users: User[] = JSON.parse(localStorage.getItem('insideUsers') || '[]')
+      const nameTaken = users.some(u => 
+        u.id !== user.id && 
+        (u.profile?.displayName?.toLowerCase() === profileForm.displayName?.toLowerCase() ||
+         u.username.toLowerCase() === profileForm.displayName?.toLowerCase())
+      )
+      if (nameTaken) {
+        setNotification({ message: t.dashboard.nameTaken, type: 'error' })
+        return
+      }
+    }
+
+    const updatedUser = { ...user, profile: { displayName: profileForm.displayName } }
+    updateUserData(updatedUser)
+    setNotification({ message: t.dashboard.profileSaved, type: 'success' })
+  }
+
+  const updateUserData = (updatedUser: User) => {
+    setCurrentUser(updatedUser)
+    setUser(updatedUser)
+
+    const users: User[] = JSON.parse(localStorage.getItem('insideUsers') || '[]')
+    const userIndex = users.findIndex(u => u.id === updatedUser.id)
+    if (userIndex !== -1) {
+      users[userIndex] = updatedUser
+      localStorage.setItem('insideUsers', JSON.stringify(users))
+    }
+  }
+
   if (!user) return null
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ru-RU', {
+    return new Date(dateString).toLocaleDateString(dateLocale, {
       year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      month: 'short',
+      day: 'numeric'
     })
   }
+
+  const getSubscriptionBadge = () => {
+    switch (user.subscription) {
+      case 'alpha': return { text: 'Alpha', class: 'badge-alpha' }
+      case 'premium': return { text: 'Premium', class: 'badge-premium' }
+      default: return { text: 'Free', class: 'badge-free' }
+    }
+  }
+
+  const badge = getSubscriptionBadge()
 
   return (
     <div className="dashboard-page">
@@ -180,192 +223,398 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* Навигация */}
-      <nav className="dashboard-navbar">
-        <div className="nav-brand">
-          <img src="/icon.ico" alt="Shakedown" className="nav-logo" />
-          <div className="brand-info">
+      {/* Sidebar */}
+      <aside className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <img src="/icon.ico" alt="Shakedown" className="sidebar-logo" />
+          <div className="sidebar-brand">
             <span className="brand-name">{CLIENT_INFO.name}</span>
             <span className="brand-version">{CLIENT_INFO.version}</span>
           </div>
         </div>
-        <div className="nav-actions">
-          <button onClick={() => navigate('/')} className="nav-btn">Главная</button>
-          <button onClick={() => navigate('/news')} className="nav-btn">Новости</button>
-          {user.isAdmin && (
-            <button onClick={() => navigate('/admin')} className="nav-btn">Админ</button>
-          )}
-          <LanguageSelector />
-          <button onClick={() => setShowLogoutModal(true)} className="nav-btn-logout">Выйти</button>
+
+        <div className="sidebar-user">
+          <div className="user-avatar">
+            {user.avatar ? (
+              <img src={user.avatar} alt={user.username} />
+            ) : (
+              <span>{user.username.charAt(0).toUpperCase()}</span>
+            )}
+          </div>
+          <div className="user-info">
+            <span className="user-name">{user.username}</span>
+            <span className={`user-badge ${badge.class}`}>{badge.text}</span>
+          </div>
         </div>
-      </nav>
 
-      {/* Основной контент */}
+        <nav className="sidebar-nav">
+          <button 
+            className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            {t.dashboard.overview}
+          </button>
+          <button 
+            className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+            </svg>
+            {t.dashboard.profile}
+          </button>
+          <button 
+            className={`nav-item ${activeTab === 'subscription' ? 'active' : ''}`}
+            onClick={() => setActiveTab('subscription')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            {t.dashboard.subscription}
+          </button>
+          <button 
+            className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            {t.dashboard.settings}
+          </button>
+        </nav>
+
+        <div className="sidebar-links">
+          <button onClick={() => navigate('/')} className="link-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            {t.nav.home}
+          </button>
+          <button onClick={() => navigate('/news')} className="link-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+            </svg>
+            {t.nav.news}
+          </button>
+          {user.isAdmin && (
+            <button onClick={() => navigate('/admin')} className="link-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              {t.dashboard.adminPanel}
+            </button>
+          )}
+        </div>
+
+        <div className="sidebar-footer">
+          <LanguageSelector dropdownDirection="up" />
+          <button onClick={() => setShowLogoutModal(true)} className="logout-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            {t.nav.logout}
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
       <main className="dashboard-main">
-        <div className="dashboard-container">
-          
-          {/* Личный кабинет */}
-          <section className="profile-section">
-            <h2 className="section-title">Личный кабинет</h2>
-            
-            <div className="profile-grid">
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="4" width="18" height="16" rx="2"/>
-                    <path d="M7 8h4M7 12h10M7 16h6"/>
-                  </svg>
-                </div>
-                <div className="field-content">
-                  <div className="field-label">UID</div>
-                  <div className="field-value">{user.id}</div>
-                </div>
-              </div>
+        {activeTab === 'overview' && (
+          <div className="dashboard-content">
+            <div className="content-header">
+              <h1>{t.dashboard.welcome}, {user.username}!</h1>
+              <p>{t.dashboard.manageAccount}</p>
+            </div>
 
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            {/* Stats Cards */}
+            <div className="stats-grid">
+              <div className="stat-card">
+                <div className="stat-icon blue">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="8" r="4"/>
                     <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
                   </svg>
                 </div>
-                <div className="field-content">
-                  <div className="field-label">Логин</div>
-                  <div className="field-value">{user.username}</div>
+                <div className="stat-info">
+                  <span className="stat-label">{t.dashboard.status}</span>
+                  <span className={`stat-value ${badge.class}`}>{badge.text}</span>
                 </div>
               </div>
 
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="9" cy="7" r="3"/>
-                    <circle cx="15" cy="7" r="3"/>
-                    <path d="M3 18c0-3 3-5 6-5 1.5 0 3 .5 3 .5s1.5-.5 3-.5c3 0 6 2 6 5"/>
-                  </svg>
-                </div>
-                <div className="field-content">
-                  <div className="field-label">Группа</div>
-                  <div className="field-value">
-                    {user.subscription === 'premium' ? 'Premium' : 
-                     user.subscription === 'alpha' ? 'Alpha' : 'Пользователь'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="stat-card">
+                <div className="stat-icon purple">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="4" width="18" height="18" rx="2"/>
                     <path d="M16 2v4M8 2v4M3 10h18"/>
                   </svg>
                 </div>
-                <div className="field-content">
-                  <div className="field-label">Дата регистрации</div>
-                  <div className="field-value">{formatDate(user.registeredAt)}</div>
+                <div className="stat-info">
+                  <span className="stat-label">{t.dashboard.registration}</span>
+                  <span className="stat-value">{formatDate(user.registeredAt)}</span>
                 </div>
               </div>
 
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
+              <div className="stat-card">
+                <div className="stat-icon green">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
                   </svg>
                 </div>
-                <div className="field-content">
-                  <div className="field-label">Последний вход</div>
-                  <div className="field-value">{formatDate(user.registeredAt)}</div>
+                <div className="stat-info">
+                  <span className="stat-label">{t.dashboard.emailStatus}</span>
+                  <span className="stat-value">{user.emailVerified ? t.dashboard.verified : t.dashboard.notVerified}</span>
                 </div>
               </div>
 
-              <div className="profile-field">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <path d="M22 7l-10 7L2 7"/>
-                  </svg>
-                </div>
-                <div className="field-content">
-                  <div className="field-label">E-mail</div>
-                  <div className="field-value">{user.email}</div>
-                </div>
-              </div>
-
-              <div className="profile-field full-width">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="stat-card">
+                <div className="stat-icon orange">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="2" y="3" width="20" height="14" rx="2"/>
                     <path d="M8 21h8M12 17v4"/>
                   </svg>
                 </div>
-                <div className="field-content">
-                  <div className="field-label">HWID</div>
-                  <div className="field-value hwid-value">
-                    Будет получен от лаунчера
-                  </div>
-                  <button className="field-button" onClick={handleResetHWID}>
-                    Сбросить
-                  </button>
+                <div className="stat-info">
+                  <span className="stat-label">{t.dashboard.hwid}</span>
+                  <span className="stat-value hwid">{t.dashboard.notLinked}</span>
                 </div>
               </div>
+            </div>
 
-              <div className="profile-field full-width">
-                <div className="field-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-                  </svg>
+            {/* Quick Actions */}
+            <div className="quick-actions">
+              <h2>{t.dashboard.quickActions}</h2>
+              <div className="actions-grid">
+                <button className="action-card primary" onClick={() => handleBuyClient()}>
+                  <div className="action-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="9" cy="21" r="1"/>
+                      <circle cx="20" cy="21" r="1"/>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                  </div>
+                  <span className="action-title">{t.dashboard.buyClient}</span>
+                </button>
+
+                <button className="action-card" onClick={handleDownloadLauncher}>
+                  <div className="action-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                  </div>
+                  <span className="action-title">{t.dashboard.downloadLauncher}</span>
+                </button>
+
+                <button className="action-card" onClick={() => setActiveTab('subscription')}>
+                  <div className="action-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                    </svg>
+                  </div>
+                  <span className="action-title">{t.dashboard.activateKey}</span>
+                </button>
+
+                <button className="action-card" onClick={() => navigate('/news')}>
+                  <div className="action-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                  </div>
+                  <span className="action-title">{t.dashboard.news}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Profile Info */}
+            <div className="profile-card">
+              <h2>{t.dashboard.profileInfo}</h2>
+              <div className="profile-details">
+                <div className="detail-row">
+                  <span className="detail-label">{t.dashboard.uid}</span>
+                  <span className="detail-value mono">{user.id}</span>
                 </div>
-                <div className="field-content">
-                  <div className="field-label">Активация ключа</div>
+                <div className="detail-row">
+                  <span className="detail-label">{t.dashboard.login}</span>
+                  <span className="detail-value">{user.username}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">{t.dashboard.email}</span>
+                  <span className="detail-value">{user.email}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">{t.dashboard.subscription}</span>
+                  <span className={`detail-value ${badge.class}`}>{badge.text}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="dashboard-content">
+            <div className="content-header">
+              <h1>{t.dashboard.myProfile}</h1>
+              <p>{t.dashboard.setupProfile}</p>
+            </div>
+
+            {/* Avatar Section */}
+            <div className="profile-avatar-section">
+              <div className="avatar-preview">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.username} />
+                ) : (
+                  <span>{user.username.charAt(0).toUpperCase()}</span>
+                )}
+                <button 
+                  className="avatar-edit-btn"
+                  onClick={() => avatarInputRef.current?.click()}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                </button>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  style={{ display: 'none' }}
+                />
+              </div>
+              <div className="avatar-info">
+                <h3>{profileForm.displayName || user.username}</h3>
+                <span className={`profile-badge ${badge.class}`}>{badge.text}</span>
+              </div>
+            </div>
+
+            {/* Profile Form */}
+            <div className="profile-form-section">
+              <h2>{t.dashboard.basicInfo}</h2>
+              
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label>{t.dashboard.displayName}</label>
                   <input
                     type="text"
-                    className="field-input"
-                    placeholder="XXXXX-XXXXX-XXXXX-XXXXX"
-                    value={keyInput}
-                    onChange={(e) => setKeyInput(e.target.value.toUpperCase())}
+                    placeholder={user.username}
+                    value={profileForm.displayName || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, displayName: e.target.value })}
+                    onBlur={handleProfileSave}
+                    maxLength={20}
                   />
-                  <button className="field-button" onClick={handleActivateKey}>Активировать</button>
+                  <span className="form-hint">{t.dashboard.displayNameHint}</span>
                 </div>
               </div>
             </div>
-          </section>
+          </div>
+        )}
 
-          {/* Действия */}
-          <section className="actions-section">
-            <div className="action-buttons">
-              <button className="action-btn primary" onClick={() => handleBuyClient()}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.707 15.293C4.077 15.923 4.523 17 5.414 17H17M17 17C15.895 17 15 17.895 15 19C15 20.105 15.895 21 17 21C18.105 21 19 20.105 19 19C19 17.895 18.105 17 17 17ZM9 19C9 20.105 8.105 21 7 21C5.895 21 5 20.105 5 19C5 17.895 5.895 17 7 17C8.105 17 9 17.895 9 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Купить клиент
-              </button>
-
-              <button className="action-btn secondary" onClick={handleDownloadLauncher}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Скачать лаунчер
-              </button>
-
-              <button className="action-btn secondary" onClick={() => navigate('/news')}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M19 20H5C3.89543 20 3 19.1046 3 18V6C3 4.89543 3.89543 4 5 4H19C20.1046 4 21 4.89543 21 6V18C21 19.1046 20.1046 20 19 20Z" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M7 8H17M7 12H17M7 16H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                Новости
-              </button>
-
-              <button className="action-btn secondary">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M19.4 15C19.2669 15.3016 19.2272 15.6362 19.286 15.9606C19.3448 16.285 19.4995 16.5843 19.73 16.82L19.79 16.88C19.976 17.0657 20.1235 17.2863 20.2241 17.5291C20.3248 17.7719 20.3766 18.0322 20.3766 18.295C20.3766 18.5578 20.3248 18.8181 20.2241 19.0609C20.1235 19.3037 19.976 19.5243 19.79 19.71C19.6043 19.896 19.3837 20.0435 19.1409 20.1441C18.8981 20.2448 18.6378 20.2966 18.375 20.2966C18.1122 20.2966 17.8519 20.2448 17.6091 20.1441C17.3663 20.0435 17.1457 19.896 16.96 19.71L16.9 19.65C16.6643 19.4195 16.365 19.2648 16.0406 19.206C15.7162 19.1472 15.3816 19.1869 15.08 19.32C14.7842 19.4468 14.532 19.6572 14.3543 19.9255C14.1766 20.1938 14.0813 20.5082 14.08 20.83V21C14.08 21.5304 13.8693 22.0391 13.4942 22.4142C13.1191 22.7893 12.6104 23 12.08 23C11.5496 23 11.0409 22.7893 10.6658 22.4142C10.2907 22.0391 10.08 21.5304 10.08 21V20.91C10.0723 20.579 9.96512 20.258 9.77251 19.9887C9.5799 19.7194 9.31074 19.5143 9 19.4C8.69838 19.2669 8.36381 19.2272 8.03941 19.286C7.71502 19.3448 7.41568 19.4995 7.18 19.73L7.12 19.79C6.93425 19.976 6.71368 20.1235 6.47088 20.2241C6.22808 20.3248 5.96783 20.3766 5.705 20.3766C5.44217 20.3766 5.18192 20.3248 4.93912 20.2241C4.69632 20.1235 4.47575 19.976 4.29 19.79C4.10405 19.6043 3.95653 19.3837 3.85588 19.1409C3.75523 18.8981 3.70343 18.6378 3.70343 18.375C3.70343 18.1122 3.75523 17.8519 3.85588 17.6091C3.95653 17.3663 4.10405 17.1457 4.29 16.96L4.35 16.9C4.58054 16.6643 4.73519 16.365 4.794 16.0406C4.85282 15.7162 4.81312 15.3816 4.68 15.08C4.55324 14.7842 4.34276 14.532 4.07447 14.3543C3.80618 14.1766 3.49179 14.0813 3.17 14.08H3C2.46957 14.08 1.96086 13.8693 1.58579 13.4942C1.21071 13.1191 1 12.6104 1 12.08C1 11.5496 1.21071 11.0409 1.58579 10.6658C1.96086 10.2907 2.46957 10.08 3 10.08H3.09C3.42099 10.0723 3.742 9.96512 4.0113 9.77251C4.28059 9.5799 4.48572 9.31074 4.6 9C4.73312 8.69838 4.77282 8.36381 4.714 8.03941C4.65519 7.71502 4.50054 7.41568 4.27 7.18L4.21 7.12C4.02405 6.93425 3.87653 6.71368 3.77588 6.47088C3.67523 6.22808 3.62343 5.96783 3.62343 5.705C3.62343 5.44217 3.67523 5.18192 3.77588 4.93912C3.87653 4.69632 4.02405 4.47575 4.21 4.29C4.39575 4.10405 4.61632 3.95653 4.85912 3.85588C5.10192 3.75523 5.36217 3.70343 5.625 3.70343C5.88783 3.70343 6.14808 3.75523 6.39088 3.85588C6.63368 3.95653 6.85425 4.10405 7.04 4.29L7.1 4.35C7.33568 4.58054 7.63502 4.73519 7.95941 4.794C8.28381 4.85282 8.61838 4.81312 8.92 4.68H9C9.29577 4.55324 9.54802 4.34276 9.72569 4.07447C9.90337 3.80618 9.99872 3.49179 10 3.17V3C10 2.46957 10.2107 1.96086 10.5858 1.58579C10.9609 1.21071 11.4696 1 12 1C12.5304 1 13.0391 1.21071 13.4142 1.58579C13.7893 1.96086 14 2.46957 14 3V3.09C14.0013 3.41179 14.0966 3.72618 14.2743 3.99447C14.452 4.26276 14.7042 4.47324 15 4.6C15.3016 4.73312 15.6362 4.77282 15.9606 4.714C16.285 4.65519 16.5843 4.50054 16.82 4.27L16.88 4.21C17.0657 4.02405 17.2863 3.87653 17.5291 3.77588C17.7719 3.67523 18.0322 3.62343 18.295 3.62343C18.5578 3.62343 18.8181 3.67523 19.0609 3.77588C19.3037 3.87653 19.5243 4.02405 19.71 4.21C19.896 4.39575 20.0435 4.61632 20.1441 4.85912C20.2448 5.10192 20.2966 5.36217 20.2966 5.625C20.2966 5.88783 20.2448 6.14808 20.1441 6.39088C20.0435 6.63368 19.896 6.85425 19.71 7.04L19.65 7.1C19.4195 7.33568 19.2648 7.63502 19.206 7.95941C19.1472 8.28381 19.1869 8.61838 19.32 8.92V9C19.4468 9.29577 19.6572 9.54802 19.9255 9.72569C20.1938 9.90337 20.5082 9.99872 20.83 10H21C21.5304 10 22.0391 10.2107 22.4142 10.5858C22.7893 10.9609 23 11.4696 23 12C23 12.5304 22.7893 13.0391 22.4142 13.4142C22.0391 13.7893 21.5304 14 21 14H20.91C20.5882 14.0013 20.2738 14.0966 20.0055 14.2743C19.7372 14.452 19.5268 14.7042 19.4 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Сменить пароль
-              </button>
+        {activeTab === 'subscription' && (
+          <div className="dashboard-content">
+            <div className="content-header">
+              <h1>{t.dashboard.subscription}</h1>
+              <p>{t.dashboard.subscriptionManagement}</p>
             </div>
-          </section>
 
-        </div>
+            <div className="subscription-status">
+              <div className="current-plan">
+                <div className={`plan-badge ${badge.class}`}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                </div>
+                <div className="plan-info">
+                  <h3>{t.dashboard.currentPlan}: {badge.text}</h3>
+                  <p>{user.subscription === 'free' ? t.dashboard.upgradeForFeatures : t.dashboard.activeSubscription}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="key-activation">
+              <h2>{t.dashboard.keyActivation}</h2>
+              <div className="key-input-group">
+                <input
+                  type="text"
+                  className="key-input"
+                  placeholder={t.dashboard.keyPlaceholder}
+                  value={keyInput}
+                  onChange={(e) => setKeyInput(e.target.value.toUpperCase())}
+                />
+                <button className="activate-btn" onClick={handleActivateKey}>
+                  {t.dashboard.activate}
+                </button>
+              </div>
+              <p className="key-hint">{t.dashboard.keyHint}</p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="dashboard-content">
+            <div className="content-header">
+              <h1>{t.dashboard.settings}</h1>
+              <p>{t.dashboard.subscriptionManagement}</p>
+            </div>
+
+            <div className="settings-section">
+              <h2>{t.dashboard.security}</h2>
+              <div className="settings-card">
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>{t.dashboard.changePassword}</h4>
+                    <p>{t.dashboard.changePasswordDesc}</p>
+                  </div>
+                  <button className="setting-btn">{t.dashboard.change}</button>
+                </div>
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>{t.dashboard.resetHwid}</h4>
+                    <p>{t.dashboard.resetHwidDesc}</p>
+                  </div>
+                  <button className="setting-btn">{t.dashboard.reset}</button>
+                </div>
+              </div>
+            </div>
+
+            <div className="settings-section">
+              <h2>{t.dashboard.account}</h2>
+              <div className="settings-card">
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>{t.dashboard.email}</h4>
+                    <p>{user.email}</p>
+                  </div>
+                  <span className={`email-status ${user.emailVerified ? 'verified' : ''}`}>
+                    {user.emailVerified ? t.dashboard.verified : t.dashboard.notVerified}
+                  </span>
+                </div>
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <h4>{t.dashboard.regDate}</h4>
+                    <p>{formatDate(user.registeredAt)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )

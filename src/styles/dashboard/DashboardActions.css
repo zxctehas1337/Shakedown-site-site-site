@@ -1,97 +1,354 @@
 /* ========================================
-   Dashboard Actions Section
+   Dashboard Subscription & Settings
    ======================================== */
 
-.actions-section {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 24px;
-  padding: 2.5rem;
-  animation: fadeInUp 0.6s ease 0.4s both;
+/* Subscription Status */
+.subscription-status {
+  margin-bottom: 2rem;
 }
 
-.action-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+.current-plan {
+  background: rgba(20, 20, 28, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
   gap: 1.25rem;
 }
 
-.action-btn {
+.plan-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
+.plan-badge.badge-free {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+}
+
+.plan-badge.badge-premium {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3B82F6;
+}
+
+.plan-badge.badge-alpha {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+  color: #a78bfa;
+}
+
+.plan-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.plan-info p {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Key Activation */
+.key-activation {
+  background: rgba(20, 20, 28, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: 1.5rem;
-  border-radius: 18px;
+  margin-bottom: 2rem;
+}
+
+.key-activation h2 {
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.key-input-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.key-input {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.key-input:focus {
+  outline: none;
+  border-color: #3B82F6;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.key-input::placeholder {
+  color: #4b5563;
+  letter-spacing: 2px;
+}
+
+.activate-btn {
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
   border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.activate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+}
+
+.key-hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Upgrade Section */
+.upgrade-section {
+  margin-bottom: 2rem;
+}
+
+.upgrade-section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.plan-card {
+  background: rgba(20, 20, 28, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  background: rgba(30, 30, 40, 0.9);
+  transform: translateY(-3px);
+}
+
+.plan-card.featured {
+  border-color: rgba(139, 92, 246, 0.3);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+}
+
+.plan-badge-tag {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.plan-header {
+  margin-bottom: 1rem;
+}
+
+.plan-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.plan-price {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem 0;
+}
+
+.plan-features li {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.plan-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.plan-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.plan-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.plan-btn.primary {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  border: none;
+}
+
+.plan-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+}
+
+/* Settings */
+.settings-section {
+  margin-bottom: 2rem;
+}
+
+.settings-section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.settings-card {
+  background: rgba(20, 20, 28, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   overflow: hidden;
 }
 
-.action-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.5s ease;
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.action-btn:hover::before {
-  left: 100%;
+.setting-item:last-child {
+  border-bottom: none;
 }
 
-.action-btn.primary {
-  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
-  color: white;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-}
-
-.action-btn.primary:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
-}
-
-.action-btn.secondary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.setting-info h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #ffffff;
+  margin-bottom: 4px;
 }
 
-.action-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+.setting-info p {
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
-.action-btn svg {
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
+.setting-btn {
+  padding: 0.6rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.action-btn:hover svg {
-  transform: scale(1.1);
+.setting-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Светлая тема - действия */
-[data-theme="light"] .actions-section {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.06);
+.email-status {
+  font-size: 0.85rem;
+  color: #f97316;
+  font-weight: 500;
 }
 
-[data-theme="light"] .action-btn.secondary {
-  background: rgba(0, 0, 0, 0.02);
+.email-status.verified {
+  color: #22c55e;
+}
+
+/* Light Theme */
+[data-theme="light"] .current-plan,
+[data-theme="light"] .key-activation,
+[data-theme="light"] .plan-card,
+[data-theme="light"] .settings-card {
+  background: rgba(255, 255, 255, 0.9);
   border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .plan-info h3,
+[data-theme="light"] .key-activation h2,
+[data-theme="light"] .upgrade-section h2,
+[data-theme="light"] .settings-section h2,
+[data-theme="light"] .plan-header h3,
+[data-theme="light"] .setting-info h4 {
   color: #111827;
 }
 
-[data-theme="light"] .action-btn.secondary:hover {
+[data-theme="light"] .key-activation h2,
+[data-theme="light"] .upgrade-section h2,
+[data-theme="light"] .settings-section h2 {
+  color: #6b7280;
+}
+
+[data-theme="light"] .key-input {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #111827;
+}
+
+[data-theme="light"] .plan-btn,
+[data-theme="light"] .setting-btn {
   background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #111827;
+}
+
+[data-theme="light"] .setting-item {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
 }

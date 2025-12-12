@@ -2,55 +2,170 @@
    Dashboard Responsive Styles
    ======================================== */
 
+@media (max-width: 1400px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 1024px) {
-  .dashboard-navbar {
-    padding: 1rem 2rem;
+  .dashboard-sidebar {
+    width: 240px;
   }
 
   .dashboard-main {
-    padding: 6rem 2rem 4rem;
+    margin-left: 240px;
+    padding: 1.5rem;
   }
 
-  .profile-grid {
+  .plans-grid {
     grid-template-columns: 1fr;
-  }
-
-  .action-buttons {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .dashboard-navbar {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+  .dashboard-sidebar {
+    position: fixed;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-direction: row;
+    padding: 0.5rem 1rem;
+    z-index: 1000;
+    background: rgba(15, 15, 20, 0.98);
+    backdrop-filter: blur(20px);
   }
 
-  .nav-actions {
+  .sidebar-header,
+  .sidebar-user,
+  .sidebar-links,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
     width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0;
+    gap: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
   }
 
   .dashboard-main {
-    padding: 10rem 1rem 2rem;
+    margin-left: 0;
+    margin-bottom: 70px;
+    padding: 1rem;
   }
 
-  .profile-section,
-  .actions-section {
-    padding: 1.5rem;
-  }
-
-  .section-title {
+  .content-header h1 {
     font-size: 1.5rem;
   }
 
-  .action-buttons {
-    grid-template-columns: 1fr;
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
-  .action-btn {
+  .stat-card {
+    padding: 1.25rem;
+    min-height: auto;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .action-card {
     padding: 1.25rem;
   }
+
+  .key-input-group {
+    flex-direction: column;
+  }
+
+  .activate-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding: 0.75rem;
+  }
+
+  .content-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .action-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .profile-card,
+  .key-activation,
+  .current-plan,
+  .settings-card {
+    padding: 1rem;
+  }
+
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .setting-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Light Theme Mobile */
+[data-theme="light"] .dashboard-sidebar {
+  border-top-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.98);
 }

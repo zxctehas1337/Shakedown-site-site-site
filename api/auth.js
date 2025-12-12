@@ -20,12 +20,14 @@ module.exports = async (req, res) => {
         return await handleResendCode(req, res, pool);
       case 'verify-code':
         return await handleVerifyCode(req, res, pool);
+      case 'local_auth_test':
+        return await handleLocalAuthTest(req, res, pool);
       default:
         return res.status(400).json({ success: false, message: 'Invalid action' });
     }
   } catch (error) {
     console.error('Auth error:', error);
-    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    return res.status(500).json({ success: false, message: 'Ошибка сервера' });
   }
 };
 
@@ -161,4 +163,44 @@ async function handleVerifyCode(req, res, pool) {
   );
 
   res.json({ success: true, message: 'Email успешно подтвержден!' });
+}
+
+// Скрытая функция для локального тестирования
+// Создает фейкового пользователя без базы данных
+async function handleLocalAuthTest(req, res, pool) {
+  // Проверка что запрос с localhost или локальной сети
+  const host = req.headers.host || '';
+  const origin = req.headers.origin || '';
+  const localHosts = ['localhost', '127.0.0.1', '192.168.', '10.0.', '172.16.'];
+  const localPorts = [':3000', ':8060', ':8080', ':5173', ':4173'];
+  
+  const isLocalHost = localHosts.some(h => host.includes(h) || origin.includes(h));
+  const isLocalPort = localPorts.some(p => host.includes(p) || origin.includes(p));
+  const isLocal = isLocalHost || isLocalPort;
+  
+  if (!isLocal) {
+    return res.status(403).json({ success: false, message: 'Доступно только для локальной сети' });
+  }
+
+  const { username = 'test_user', email = 'test@local.dev', password = 'test123' } = req.body;
+
+  // Создаем фейкового пользователя для тестирования без обращения к БД
+  const fakeUser = {
+    id: 999,
+    username: username,
+    email: email,
+    subscription: 'free',
+    registered_at: new Date().toISOString(),
+    is_admin: false,
+    is_banned: false,
+    email_verified: true,
+    settings: JSON.stringify({})
+  };
+
+  return res.json({ 
+    success: true, 
+    message: 'Тестовый вход выполнен!', 
+    data: mapUserFromDb(fakeUser),
+    isTestAuth: true
+  });
 }
