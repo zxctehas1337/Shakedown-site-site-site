@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Notification from '../../components/Notification'
 import { NotificationType } from '../../types'
 import { useFeatureSlider } from './hooks/useFeatureSlider'
@@ -7,6 +8,7 @@ import { FeatureSlider } from './components/FeatureSlider'
 import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
 import { VerificationModal } from './components/VerificationModal'
+import { getCurrentUser } from '../../utils/database'
 import '../../styles/AuthPage.css'
 
 export default function AuthPage() {
@@ -14,10 +16,29 @@ export default function AuthPage() {
   const [isAdminMode, setIsAdminMode] = useState(false)
   const [showVerificationModal, setShowVerificationModal] = useState(false)
   const [pendingUserId] = useState<string | null>(null)
+  const navigate = useNavigate()
   
   const { currentFeature, setCurrentFeature } = useFeatureSlider()
   
   useOAuthCallback({ setNotification })
+
+  // Редирект если пользователь уже авторизован
+  useEffect(() => {
+    // Проверяем только если нет OAuth callback параметров в URL
+    const params = new URLSearchParams(window.location.search)
+    const hasOAuthCallback = params.get('auth') || params.get('error')
+    
+    if (!hasOAuthCallback) {
+      const user = getCurrentUser()
+      if (user) {
+        if (user.isAdmin) {
+          navigate('/admin')
+        } else {
+          navigate('/dashboard')
+        }
+      }
+    }
+  }, [navigate])
 
   return (
     <div className="auth-page-split">
