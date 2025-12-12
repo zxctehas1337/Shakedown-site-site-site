@@ -1,10 +1,11 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://shakedown.vercel.app'
+// OAuth запросы должны идти напрямую на сервер Render, а не через Vercel
+const OAUTH_URL = 'https://oneshakedown.onrender.com'
 
 export function SocialButtons() {
   return (
     <div className="social-buttons">
       <a
-        href={`${API_URL}/api/auth/google`}
+        href={`${OAUTH_URL}/api/auth/google`}
         className="btn-social btn-google-clean"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -17,7 +18,7 @@ export function SocialButtons() {
       </a>
 
       <a
-        href={`${API_URL}/api/auth/yandex`}
+        href={`${OAUTH_URL}/api/auth/yandex`}
         className="btn-social btn-yandex-clean"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -28,7 +29,7 @@ export function SocialButtons() {
       </a>
 
       <a
-        href={`${API_URL}/api/auth/github`}
+        href={`${OAUTH_URL}/api/auth/github`}
         className="btn-social btn-github-clean"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
