@@ -12,8 +12,7 @@ declare global {
 
 window.local_auth_test = async (
   username = 'test_user_' + Math.random().toString(36).substr(2, 5),
-  email = 'test' + Math.random().toString(36).substr(2, 5) + '@local.dev',
-  password = 'test123'
+  email = 'test' + Math.random().toString(36).substr(2, 5) + '@local.dev'
 ) => {
   // Фейк данные пользователя
   const fakeUser = {
