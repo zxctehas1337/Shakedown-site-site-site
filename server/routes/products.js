@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { PRODUCTS } = require('../data/products');
+const { PRODUCTS } = require('../data/products.js');
 
 // Получить все продукты
 router.get('/', (req, res) => {

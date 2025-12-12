@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { passport } = require('../config/passport');
-const { generateToken } = require('../utils/jwt');
-const { mapOAuthUser } = require('../utils/userMapper');
+const { passport } = require('../config/passport.js');
+const { generateToken } = require('../utils/jwt.js');
+const { mapOAuthUser } = require('../utils/userMapper.js');
 require('dotenv').config();
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';

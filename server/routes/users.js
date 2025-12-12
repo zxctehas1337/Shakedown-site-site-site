@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { pool } = require('../config/database');
-const { mapUserFromDb } = require('../utils/userMapper');
+const { pool } = require('../config/database.js');
+const { mapUserFromDb } = require('../utils/userMapper.js');
 
 // Получение всех пользователей (для админки)
 router.get('/', async (req, res) => {

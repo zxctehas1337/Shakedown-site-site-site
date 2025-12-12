@@ -5,8 +5,8 @@ const session = require('express-session');
 require('dotenv').config();
 
 // Config
-const { pool, initDatabase } = require(path.join(__dirname, 'config', 'database.js'));
-const { passport, setupStrategies } = require(path.join(__dirname, 'config', 'passport.js'));
+const { pool, initDatabase } = require('./config/database.js');
+const { passport, setupStrategies } = require('./config/passport.js');
 
 // Routes
 const authRoutes = require('./routes/auth.js');

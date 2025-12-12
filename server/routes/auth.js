@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { pool } = require('../config/database');
-const { generateVerificationCode, sendVerificationEmail } = require('../services/email');
-const { mapUserFromDb } = require('../utils/userMapper');
+const { pool } = require('../config/database.js');
+const { generateVerificationCode, sendVerificationEmail } = require('../services/email.js');
+const { mapUserFromDb } = require('../utils/userMapper.js');
 
 // Регистрация
 router.post('/register', async (req, res) => {
