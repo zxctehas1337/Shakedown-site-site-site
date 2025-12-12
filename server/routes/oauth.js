@@ -5,7 +5,7 @@ const { generateToken } = require('../utils/jwt');
 const { mapOAuthUser } = require('../utils/userMapper');
 require('dotenv').config();
 
-const FRONTEND_URL = process.env.VITE_API_URL || 'https://shakedown.vercel.app';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
 
 // Google OAuth
 router.get('/google', passport.authenticate('google', { 

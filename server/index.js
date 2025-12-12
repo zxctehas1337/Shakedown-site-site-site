@@ -5,22 +5,22 @@ const session = require('express-session');
 require('dotenv').config();
 
 // Config
-const { pool, initDatabase } = require('./config/database');
-const { passport, setupStrategies } = require('./config/passport');
+const { pool, initDatabase } = require(path.join(__dirname, 'config', 'database.js'));
+const { passport, setupStrategies } = require(path.join(__dirname, 'config', 'passport.js'));
 
 // Routes
-const authRoutes = require('./routes/auth');
-const oauthRoutes = require('./routes/oauth');
-const usersRoutes = require('./routes/users');
-const productsRoutes = require('./routes/products');
-const hwidRoutes = require('./routes/hwid');
+const authRoutes = require('./routes/auth.js');
+const oauthRoutes = require('./routes/oauth.js');
+const usersRoutes = require('./routes/users.js');
+const productsRoutes = require('./routes/products.js');
+const hwidRoutes = require('./routes/hwid.js');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(cors({
-  origin: process.env.VITE_API_URL || 'https://shakedown.vercel.app',
+  origin: process.env.FRONTEND_URL || 'https://shakedown.vercel.app',
   credentials: true
 }));
 app.use(express.json());
