@@ -25,7 +25,7 @@ const pool = new Pool({
 
 // Middleware
 app.use(cors({
-  origin: process.env.VITE_API_URL || 'https://oneshakedown.onrender.com',
+  origin: process.env.VITE_API_URL || 'https://shakedown.vercel.app',
   credentials: true
 }));
 app.use(express.json());
