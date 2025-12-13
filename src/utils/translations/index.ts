@@ -26,11 +26,37 @@ export function getTranslation(lang: Language): TranslationStructure {
 
 // Получить текущий язык из localStorage
 export function getCurrentLanguage(): Language {
+  if (typeof window === 'undefined') {
+    return 'ru'
+  }
+
   const saved = localStorage.getItem('language')
   if (saved && (saved === 'ru' || saved === 'en' || saved === 'uk' || saved === 'pl' || saved === 'tr')) {
     return saved
   }
-  return 'ru'
+
+  const browserLangs = (Array.isArray(navigator.languages) && navigator.languages.length > 0)
+    ? navigator.languages
+    : [navigator.language]
+
+  const normalized = browserLangs
+    .filter(Boolean)
+    .map((l) => l.toLowerCase())
+
+  const detected: Language = normalized.some((l) => l === 'ru' || l.startsWith('ru-'))
+    ? 'ru'
+    : normalized.some((l) => l === 'en' || l.startsWith('en-'))
+      ? 'en'
+      : normalized.some((l) => l === 'uk' || l.startsWith('uk-') || l === 'ua' || l.startsWith('ua-'))
+        ? 'uk'
+        : normalized.some((l) => l === 'pl' || l.startsWith('pl-'))
+          ? 'pl'
+          : normalized.some((l) => l === 'tr' || l.startsWith('tr-'))
+            ? 'tr'
+            : 'ru'
+
+  localStorage.setItem('language', detected)
+  return detected
 }
 
 // Установить язык в localStorage
