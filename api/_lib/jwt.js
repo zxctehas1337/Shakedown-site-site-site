@@ -16,4 +16,3 @@ export function verifyToken(token) {
   }
 }
 
-export { generateToken, verifyToken };

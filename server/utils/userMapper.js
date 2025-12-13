@@ -1,5 +1,5 @@
 // Маппинг пользователя из БД в API формат
-function mapUserFromDb(dbUser) {
+export function mapUserFromDb(dbUser) {
   return {
     id: dbUser.id,
     username: dbUser.username,
@@ -14,7 +14,7 @@ function mapUserFromDb(dbUser) {
 }
 
 // Маппинг для OAuth ответа
-function mapOAuthUser(user, token) {
+export function mapOAuthUser(user, token) {
   return {
     id: user.id,
     username: user.username,
@@ -28,5 +28,3 @@ function mapOAuthUser(user, token) {
     token: token
   };
 }
-
-module.exports = { mapUserFromDb, mapOAuthUser };

@@ -1,10 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const { passport } = require('../config/passport.js');
-const { generateToken } = require('../utils/jwt.js');
-const { mapOAuthUser } = require('../utils/userMapper.js');
-require('dotenv').config();
+import express from 'express';
+import { passport } from '../config/passport.js';
+import { generateToken } from '../utils/jwt.js';
+import { mapOAuthUser } from '../utils/userMapper.js';
+import { config } from 'dotenv';
 
+config();
+
+const router = express.Router();
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
 
 // Google OAuth
@@ -53,4 +55,4 @@ router.get('/github/callback',
   }
 );
 
-module.exports = router;
+export default router;
