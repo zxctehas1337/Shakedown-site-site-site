@@ -4,11 +4,12 @@ import * as api from './api'
 export class Database {
   private users: User[]
   private useApi: boolean = false
+  private apiReady: Promise<void>
 
   constructor() {
     this.users = JSON.parse(localStorage.getItem('insideUsers') || '[]')
-    // Проверяем доступность API при инициализации
-    this.checkApiAvailability()
+    // Проверяем доступность API при инициализации и сохраняем promise
+    this.apiReady = this.checkApiAvailability()
   }
 
   private async checkApiAvailability() {
@@ -24,7 +25,17 @@ export class Database {
     localStorage.setItem('insideUsers', JSON.stringify(this.users))
   }
 
+  private async ensureApiReady() {
+    try {
+      await this.apiReady
+    } catch (error) {
+      console.error('API readiness check failed:', error)
+      this.useApi = false
+    }
+  }
+
   async register(username: string, email: string, password: string) {
+    await this.ensureApiReady()
     // Пробуем использовать API
     if (this.useApi) {
       const result = await api.registerUser(username, email, password)
@@ -71,6 +82,7 @@ export class Database {
   }
 
   async login(usernameOrEmail: string, password: string) {
+    await this.ensureApiReady()
     // Проверка админа
     if (usernameOrEmail === 'admin' && password === 'InsideSecurity208009') {
       const adminUser: User = {
@@ -119,6 +131,7 @@ export class Database {
   }
 
   async updateUser(userId: number, updates: Partial<User>) {
+    await this.ensureApiReady()
     // Пробуем использовать API
     if (this.useApi) {
       const result = await api.updateUser(userId, updates)
@@ -140,6 +153,7 @@ export class Database {
   }
 
   async getUserById(userId: number | string) {
+    await this.ensureApiReady()
     // Пробуем использовать API
     if (this.useApi) {
       const result = await api.getUserInfo(userId)
@@ -159,6 +173,7 @@ export class Database {
   }
 
   async adminLogin(adminKey: string, password: string) {
+    await this.ensureApiReady()
     try {
       // First try to use API
       if (this.useApi) {
