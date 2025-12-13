@@ -115,14 +115,23 @@
 
 .stat-value.badge-free {
   color: #9ca3af;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .stat-value.badge-premium {
   color: #60a5fa;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .stat-value.badge-alpha {
   color: #a78bfa;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .stat-value.hwid {
@@ -270,14 +279,23 @@
 
 .detail-value.badge-free {
   color: #9ca3af;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .detail-value.badge-premium {
   color: #60a5fa;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .detail-value.badge-alpha {
   color: #a78bfa;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 /* Light Theme */

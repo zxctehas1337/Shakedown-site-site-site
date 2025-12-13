@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { NewsPost } from '../types'
 import AnimatedBackground from '../components/AnimatedBackground'
+import { CLIENT_INFO } from '../utils/constants'
 import '../styles/NewsPage.css'
 
 export default function NewsPage() {
@@ -44,7 +45,7 @@ export default function NewsPage() {
           <div className="nav-brand">
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
               <img src="/icon.ico" alt="Shakedown" width="32" height="32" />
-              <span className="version">1.21.4</span>
+              <span className="version">{CLIENT_INFO.name}</span>
             </Link>
           </div>
           <div className="nav-links">
@@ -77,7 +78,7 @@ export default function NewsPage() {
       <section className="news-hero">
         <div className="container">
           <div className="news-hero-content">
-            <h1>Новости <span className="gradient-text">Shakedown Client</span></h1>
+            <h1>Новости <span className="gradient-text">{CLIENT_INFO.name}</span></h1>
             <p>Последние обновления, анонсы и новости проекта</p>
           </div>
           
@@ -159,7 +160,7 @@ export default function NewsPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <img src="/icon.ico" alt="Shakedown" width="32" height="32" />
-              <span>Shakedown Client</span>
+              <span>{CLIENT_INFO.name}</span>
             </div>
             <div className="footer-links">
               <Link to="/">Главная</Link>
@@ -168,7 +169,7 @@ export default function NewsPage() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2025 Shakedown Client. Все права защищены.</p>
+            <p>© 2025 {CLIENT_INFO.name}. Все права защищены.</p>
           </div>
         </div>
       </footer>
