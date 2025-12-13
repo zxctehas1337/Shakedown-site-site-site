@@ -101,6 +101,22 @@ export const PRODUCTS_FALLBACK: Product[] = [
     price: 99,
     description: 'Сброс HWID привязки',
     features: ['Мгновенный сброс', 'Новая привязка']
+  },
+  {
+    id: 'alpha',
+    name: 'ALPHA 1.16.5',
+    price: 599,
+    duration: -1,
+    description: 'Клиент для версии 1.16.5',
+    features: ['Уникальные функции', 'Обновления', 'Поддержка']
+  },
+  {
+    id: 'premium-30',
+    name: 'Premium 30D',
+    price: 299,
+    duration: 30,
+    description: 'Premium статус на 30 дней',
+    features: ['Эксклюзивные функции', 'Приоритет в очереди', 'Приоритетная поддержка']
   }
 ]
 

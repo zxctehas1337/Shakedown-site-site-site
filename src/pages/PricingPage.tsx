@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground.tsx'
 import LanguageSelector from '../components/ThemeLanguageSelector.tsx'
 import '../styles/home/index.css'
-import '../styles/animations.css'
+import '../styles/PricingPage.css'
 import { CLIENT_INFO, SOCIAL_LINKS, fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants.ts'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index.ts'
 
@@ -13,7 +13,6 @@ function PricingPage() {
   const [products, setProducts] = useState<Product[]>(PRODUCTS_FALLBACK)
   const t = getTranslation(lang)
 
-  // Загрузка продуктов с API
   useEffect(() => {
     fetchProducts().then(data => {
       if (data.length > 0) {
@@ -22,10 +21,6 @@ function PricingPage() {
     })
   }, [])
 
-  const productsRef = useRef<HTMLDivElement>(null)
-  const [productsVisible, setProductsVisible] = useState(false)
-
-  // Слушаем изменение языка
   useEffect(() => {
     const handleStorageChange = () => {
       setLang(getCurrentLanguage())
@@ -45,39 +40,29 @@ function PricingPage() {
     }
   }, [lang])
 
-  // Intersection Observer для анимаций
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setProductsVisible(true)
-        }
-      })
-    }, observerOptions)
-
-    if (productsRef.current) observer.observe(productsRef.current)
-
-    // Сразу показываем
-    setTimeout(() => setProductsVisible(true), 100)
-
-    return () => observer.disconnect()
-  }, [])
+  // Функция для получения изображения продукта с учетом языка
+  const getProductImage = (product: Product): string => {
+    const name = product.name.toLowerCase()
+    const isRussian = lang === 'ru'
+    const suffix = isRussian ? '.jpg' : '-eng.jpg'
+    
+    if (name.includes('alpha')) return `/alpha.jpg`
+    if (name.includes('premium')) return `/premium30days${suffix}`
+    if (name.includes('30')) return `/30days${suffix}`
+    if (name.includes('90')) return `/90days${suffix}`
+    if (name.includes('навсегда') || name.includes('forever') || name.includes('lifetime')) return `/forever${suffix}`
+    if (name.includes('hwid') || name.includes('сброс')) return `/remove${suffix}`
+    return '/photo.png' // fallback изображение
+  }
 
   return (
-    <div className="home-page">
+    <div className="home-page pricing-page">
       <AnimatedBackground />
       
-      {/* Декоративные элементы */}
       <div className="deco-orb deco-orb-1"></div>
       <div className="deco-orb deco-orb-2"></div>
       <div className="deco-orb deco-orb-3"></div>
       
-      {/* Навигация */}
       <nav className="navbar">
         <div className="nav-brand">
           <img src="/icon.ico" alt="Shakedown Logo" className="nav-logo" />
@@ -97,66 +82,58 @@ function PricingPage() {
         </div>
       </nav>
 
-      {/* Секция цен */}
-      <section 
-        id="services" 
-        className={`services-section ${productsVisible ? 'visible' : ''}`}
-        style={{ paddingTop: '120px' }}
-      >
-        <h2 className={`section-title animate-fade-up ${productsVisible ? 'visible' : ''}`}>
-          {t.services.title}
-        </h2>
-        <div 
-          ref={productsRef}
-          data-animate="products"
-          className="products-grid"
-        >
-          {products.map((product, index) => (
-            <div 
-              key={product.id} 
-              className={`product-card hover-lift ${product.popular ? 'popular' : ''} animate-fade-up ${productsVisible ? 'visible' : ''}`}
-              style={{transitionDelay: `${0.1 * index}s`}}
-            >
-              {product.popular && <div className="popular-badge">{t.services.popular}</div>}
-              {'discount' in product && (product as { discount?: number }).discount && (
-                <div className="discount-badge">{t.services.discount} {(product as { discount?: number }).discount}%</div>
-              )}
-              
-              <div className="product-header">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-              </div>
-
-              <div className="product-price">
-                {'originalPrice' in product && (product as { originalPrice?: number }).originalPrice && (
-                  <span className="original-price">{(product as { originalPrice?: number }).originalPrice} ₽</span>
-                )}
-                <span className="current-price">{product.price} ₽</span>
-              </div>
-
-              <ul className="product-features">
-                {product.features.map((feature, idx) => (
-                  <li key={idx}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <section className="pricing-section">
+        <h2 className="pricing-title">{t.services.title}</h2>
+        
+        <div className="pricing-grid">
+          {products.map((product) => {
+            const hasDiscount = 'discount' in product && (product as { discount?: number }).discount
+            const originalPrice = 'originalPrice' in product ? (product as { originalPrice?: number }).originalPrice : null
+            
+            return (
+              <div key={product.id} className="pricing-card">
+                <div className="pricing-card-image">
+                  <img 
+                    src={getProductImage(product)} 
+                    alt={product.name}
+                    className="pricing-card-img"
+                  />
+                </div>
+                
+                <div className="pricing-card-content">
+                  <h3 className="pricing-card-name">{product.name}</h3>
+                  
+                  <div className="pricing-card-price">
+                    <span className="pricing-card-price-label">Цена:</span>
+                    {originalPrice && (
+                      <span className="pricing-card-price-original">{originalPrice} ₽</span>
+                    )}
+                    <span className="pricing-card-price-current">{product.price} ₽</span>
+                    {hasDiscount && (
+                      <span className="pricing-discount-badge">
+                        Скидка {(product as { discount?: number }).discount}%
+                      </span>
+                    )}
+                  </div>
+                  
+                  <button 
+                    onClick={() => navigate('/auth')} 
+                    className="pricing-card-button"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                      <path d="M16 10a4 4 0 0 1-8 0"/>
                     </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button 
-                onClick={() => navigate('/auth')} 
-                className="product-button glow-button"
-              >
-                {t.services.pay}
-              </button>
-            </div>
-          ))}
+                    {t.services.pay}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-brand">
