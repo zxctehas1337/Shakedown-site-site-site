@@ -27,7 +27,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
-  perspective: 700px;
+  perspective: 800px;
   transform-style: preserve-3d;
 }
 
@@ -38,7 +38,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.70) translateZ(-200px);
+  transform: scale(0.78) translateZ(-100px);
   transform-style: preserve-3d;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
