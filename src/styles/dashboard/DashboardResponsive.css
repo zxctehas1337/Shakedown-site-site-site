@@ -196,14 +196,31 @@
 
   /* Language selector in sidebar */
   .sidebar-language-selector {
-    padding: 0.5rem 0.75rem;
-    margin-top: 0.5rem;
+    padding: 0 0.75rem;
+    margin-bottom: 4px;
   }
 
   .sidebar-language-selector .lang-toggle {
     width: 100%;
     justify-content: center;
-    padding: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-language-selector .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border-color: rgba(59, 130, 246, 0.3);
   }
 
   .sidebar-language-selector .lang-menu {
@@ -361,10 +378,11 @@
 [data-theme="light"] .sidebar-language-selector .lang-toggle {
   background: rgba(0, 0, 0, 0.03);
   border-color: rgba(0, 0, 0, 0.08);
-  color: #111827;
+  color: #6b7280;
 }
 
 [data-theme="light"] .sidebar-language-selector .lang-toggle:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.04);
+  color: #111827;
   border-color: rgba(59, 130, 246, 0.3);
 }
