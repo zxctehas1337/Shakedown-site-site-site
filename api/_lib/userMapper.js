@@ -27,4 +27,3 @@ export function mapOAuthUser(user, token) {
   };
 }
 
-export { mapUserFromDb, mapOAuthUser };
