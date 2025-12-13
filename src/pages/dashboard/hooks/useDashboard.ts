@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser, setCurrentUser } from '../../../utils/database'
 import { User, NotificationType, LicenseKey, UserProfile } from '../../../types'
-import { DOWNLOAD_LINKS } from '../../../utils/constants'
 import { useTranslation } from '../../../hooks/useTranslation'
 
 export type TabType = 'overview' | 'profile' | 'subscription' | 'settings'
@@ -11,8 +10,7 @@ export function useDashboard() {
   const [user, setUser] = useState<User | null>(null)
   const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
-  const [selectedProductId, setSelectedProductId] = useState<string>('')
+  const [showSoonModal, setShowSoonModal] = useState(false)
   const [keyInput, setKeyInput] = useState('')
   const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [profileForm, setProfileForm] = useState<UserProfile>({})
@@ -36,9 +34,8 @@ export function useDashboard() {
     navigate('/auth')
   }
 
-  const handleBuyClient = (productId?: string) => {
-    setSelectedProductId(productId || '')
-    setShowPaymentModal(true)
+  const handleBuyClient = () => {
+    setShowSoonModal(true)
   }
 
   const handleActivateKey = () => {
@@ -108,7 +105,7 @@ export function useDashboard() {
   }
 
   const handleDownloadLauncher = () => {
-    window.location.href = DOWNLOAD_LINKS.launcher
+    setShowSoonModal(true)
   }
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,9 +184,8 @@ export function useDashboard() {
     setNotification,
     showLogoutModal,
     setShowLogoutModal,
-    showPaymentModal,
-    setShowPaymentModal,
-    selectedProductId,
+    showSoonModal,
+    setShowSoonModal,
     keyInput,
     setKeyInput,
     activeTab,

@@ -4,7 +4,6 @@ import LanguageSelector from './ThemeLanguageSelector'
 import { CLIENT_INFO } from '../utils/constants'
 import { useTranslation } from '../hooks/useTranslation'
 import { getCurrentUser } from '../utils/database'
-import { DOWNLOAD_LINKS } from '../utils/constants'
 
 interface NavigationProps {
   onLanguageChange: () => void
@@ -95,7 +94,7 @@ export default function Navigation({ onLanguageChange }: NavigationProps) {
         {isAuthed && (
           <button
             onClick={() => {
-              window.location.href = DOWNLOAD_LINKS.launcher
+              window.dispatchEvent(new CustomEvent('openSoonModal'))
             }}
             className="nav-link"
           >

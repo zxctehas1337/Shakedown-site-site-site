@@ -1,7 +1,7 @@
 import AnimatedBackground from '../../components/AnimatedBackground'
-import PaymentModal from '../../components/PaymentModal'
 import Notification from '../../components/Notification'
 import { LogoutModal } from '../../components/LogoutModal'
+import { SoonModal } from '../../components/SoonModal'
 import { MobileHeader, DashboardSidebar } from './components'
 import { OverviewTab, ProfileTab, SubscriptionTab, SettingsTab } from './tabs'
 import { useDashboard } from './hooks/useDashboard'
@@ -20,9 +20,8 @@ export default function DashboardPage() {
     setNotification,
     showLogoutModal,
     setShowLogoutModal,
-    showPaymentModal,
-    setShowPaymentModal,
-    selectedProductId,
+    showSoonModal,
+    setShowSoonModal,
     keyInput,
     setKeyInput,
     activeTab,
@@ -67,11 +66,12 @@ export default function DashboardPage() {
         />
       )}
 
-      {showPaymentModal && (
-        <PaymentModal
-          isOpen={showPaymentModal}
-          onClose={() => setShowPaymentModal(false)}
-          productId={selectedProductId}
+      {showSoonModal && (
+        <SoonModal
+          isOpen={showSoonModal}
+          title="Soon..."
+          message="Скоро"
+          onClose={() => setShowSoonModal(false)}
         />
       )}
 
