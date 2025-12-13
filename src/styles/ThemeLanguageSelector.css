@@ -115,7 +115,13 @@
     padding: 0.5rem 0.75rem;
   }
 
-  .lang-code {
+  /* Keep lang-code visible in sidebar on mobile */
+  .sidebar-language-selector .lang-code {
+    display: inline;
+  }
+
+  /* Hide lang-code only when not in sidebar */
+  .lang-toggle:not(.sidebar-language-selector .lang-toggle) .lang-code {
     display: none;
   }
 

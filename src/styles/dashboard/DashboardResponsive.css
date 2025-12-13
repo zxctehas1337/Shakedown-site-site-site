@@ -194,8 +194,9 @@
     height: 20px;
   }
 
-  /* Language selector in sidebar */
+  /* Show language selector on mobile */
   .sidebar-language-selector {
+    display: block !important;
     padding: 0 0.75rem;
     margin-bottom: 4px;
   }
@@ -239,6 +240,11 @@
     bottom: 2rem !important;
     top: auto !important;
     animation: menuSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Ensure the language menu is visible above other elements */
+  .sidebar-language-selector .lang-menu {
+    z-index: 1001 !important;
   }
 
   /* Main content */
