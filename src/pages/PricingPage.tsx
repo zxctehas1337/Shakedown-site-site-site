@@ -97,6 +97,9 @@ function PricingPage() {
                     src={getProductImage(product)} 
                     alt={product.name}
                     className="pricing-card-img"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
                 
