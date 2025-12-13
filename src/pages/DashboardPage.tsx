@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const [keyInput, setKeyInput] = useState('')
   const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'subscription' | 'settings'>('overview')
   const [profileForm, setProfileForm] = useState<UserProfile>({})
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const { t, dateLocale } = useTranslation()
@@ -223,8 +224,29 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Mobile Header */}
+      <header className="mobile-header">
+        <div className="mobile-header-left">
+          <img src="/icon.ico" alt="Shakedown" className="mobile-logo" />
+          <span className="mobile-brand">{CLIENT_INFO.name}</span>
+        </div>
+        <button 
+          className={`mobile-menu-btn ${mobileMenuOpen ? 'active' : ''}`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="dashboard-sidebar">
+      <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
           <img src="/icon.ico" alt="Shakedown" className="sidebar-logo" />
           <div className="sidebar-brand">
@@ -248,9 +270,22 @@ export default function DashboardPage() {
         </div>
 
         <nav className="sidebar-nav">
+          <button onClick={() => { navigate('/'); setMobileMenuOpen(false); }} className="nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            {t.nav.home}
+          </button>
+          <button onClick={() => { navigate('/news'); setMobileMenuOpen(false); }} className="nav-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+            </svg>
+            {t.nav.news}
+          </button>
           <button 
             className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
+            onClick={() => { setActiveTab('overview'); setMobileMenuOpen(false); }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -262,7 +297,7 @@ export default function DashboardPage() {
           </button>
           <button 
             className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
-            onClick={() => setActiveTab('profile')}
+            onClick={() => { setActiveTab('profile'); setMobileMenuOpen(false); }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="8" r="4"/>
@@ -272,7 +307,7 @@ export default function DashboardPage() {
           </button>
           <button 
             className={`nav-item ${activeTab === 'subscription' ? 'active' : ''}`}
-            onClick={() => setActiveTab('subscription')}
+            onClick={() => { setActiveTab('subscription'); setMobileMenuOpen(false); }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
@@ -281,7 +316,7 @@ export default function DashboardPage() {
           </button>
           <button 
             className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
+            onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="3"/>
@@ -292,21 +327,8 @@ export default function DashboardPage() {
         </nav>
 
         <div className="sidebar-links">
-          <button onClick={() => navigate('/')} className="link-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            {t.nav.home}
-          </button>
-          <button onClick={() => navigate('/news')} className="link-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
-            </svg>
-            {t.nav.news}
-          </button>
           {user.isAdmin && (
-            <button onClick={() => navigate('/admin')} className="link-item">
+            <button onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }} className="link-item">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>

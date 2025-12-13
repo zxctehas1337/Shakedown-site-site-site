@@ -18,6 +18,8 @@
   position: relative;
   width: 100px;
   height: 100px;
+  min-width: 100px;
+  min-height: 100px;
   border-radius: 20px;
   background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
   display: flex;
@@ -34,6 +36,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .avatar-edit-btn {

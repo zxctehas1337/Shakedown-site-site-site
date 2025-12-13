@@ -1,6 +1,6 @@
 // Типы для системы переводов ShakeDown
 
-export type Language = 'ru' | 'en' | 'uk' | 'pl'
+export type Language = 'ru' | 'en' | 'uk' | 'pl' | 'tr'
 
 export interface TranslationStructure {
   nav: {
