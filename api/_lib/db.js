@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+import { Pool } from 'pg';
 
 // Singleton для connection pooling в serverless
 let pool;
@@ -16,4 +16,4 @@ function getPool() {
   return pool;
 }
 
-module.exports = { getPool };
+export { getPool };
