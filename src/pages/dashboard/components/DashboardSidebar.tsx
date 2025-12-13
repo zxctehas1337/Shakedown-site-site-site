@@ -46,7 +46,7 @@ export function DashboardSidebar({
           )}
         </div>
         <div className="user-info">
-          <span className="user-name">{user.username}</span>
+          <span className="user-name">{user.profile?.displayName || user.username}</span>
           <span className={`user-badge ${badge.class}`}>{badge.text}</span>
         </div>
       </div>
