@@ -159,30 +159,41 @@ export class Database {
   }
 
   async adminLogin(adminKey: string, password: string) {
-    // Проверка ключа администратора
-    const validAdminKeys = ['SHAKEDOWN-ADMIN-2024', 'admin', 'ADMIN-MASTER-KEY']
-    const validPassword = 'InsideSecurity208009'
-
-    if (validAdminKeys.includes(adminKey) && password === validPassword) {
-      const adminUser: User = {
-        id: 0,
-        username: 'Administrator',
-        email: 'admin@shakedown.com',
-        password: btoa(password),
-        subscription: 'alpha',
-        registeredAt: new Date().toISOString(),
-        isAdmin: true,
-        settings: {
-          notifications: true,
-          autoUpdate: true,
-          theme: 'dark',
-          language: 'ru'
+    try {
+      // First try to use API
+      if (this.useApi) {
+        const result = await api.loginUser(adminKey, password);
+        if (result.success && result.data?.isAdmin) {
+          return { 
+            success: true, 
+            message: 'Добро пожаловать, администратор!', 
+            user: result.data 
+          };
         }
+        this.useApi = false;
       }
-      return { success: true, message: 'Добро пожаловать, администратор!', user: adminUser }
-    }
 
-    return { success: false, message: 'Неверный ключ администратора или пароль' }
+      // Fallback to database check
+      const encodedPassword = btoa(password);
+      const user = this.users.find(u => 
+        (u.username === adminKey || u.email === adminKey) && 
+        u.isAdmin && 
+        u.password === encodedPassword
+      );
+
+      if (user) {
+        return { 
+          success: true, 
+          message: 'Добро пожаловать, администратор!', 
+          user 
+        };
+      }
+
+      return { success: false, message: 'Неверный ключ администратора или пароль' };
+    } catch (error) {
+      console.error('Admin login error:', error);
+      return { success: false, message: 'Ошибка входа администратора' };
+    }
   }
 }
 
