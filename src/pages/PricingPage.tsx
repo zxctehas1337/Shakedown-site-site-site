@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground.tsx'
 import LanguageSelector from '../components/ThemeLanguageSelector.tsx'
 import '../styles/home/index.css'
@@ -64,12 +64,12 @@ function PricingPage() {
       <div className="deco-orb deco-orb-3"></div>
       
       <nav className="navbar">
-        <div className="nav-brand">
+        <Link to="/" className="nav-brand">
           <img src="/icon.ico" alt="Shakedown Logo" className="nav-logo" />
           <div className="brand-info">
             <span className="brand-name">{CLIENT_INFO.name}</span>
           </div>
-        </div>
+        </Link>
         <div className="nav-links">
           <button onClick={() => navigate('/')} className="nav-link">{t.nav.home}</button>
           <button onClick={() => navigate('/news')} className="nav-link">{t.nav.news}</button>
