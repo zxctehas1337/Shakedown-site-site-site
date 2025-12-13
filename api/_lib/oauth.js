@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const { getPool } = require('./db');
+import crypto from 'crypto';
+import { getPool } from './db.js';
 
-async function findOrCreateOAuthUser(profile, provider) {
+export async function findOrCreateOAuthUser(profile, provider) {
   const pool = getPool();
   const email = profile.email || `${profile.id}@${provider}.oauth`;
   const username = profile.name || profile.login || `${provider}_${profile.id}`;
@@ -41,4 +41,4 @@ async function findOrCreateOAuthUser(profile, provider) {
   }
 }
 
-module.exports = { findOrCreateOAuthUser };
+export { findOrCreateOAuthUser };

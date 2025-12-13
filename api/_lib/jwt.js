@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-function generateToken(user) {
+export function generateToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, isAdmin: user.is_admin },
     process.env.JWT_SECRET || 'your-jwt-secret',
@@ -8,7 +8,7 @@ function generateToken(user) {
   );
 }
 
-function verifyToken(token) {
+export function verifyToken(token) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET || 'your-jwt-secret');
   } catch {
@@ -16,4 +16,4 @@ function verifyToken(token) {
   }
 }
 
-module.exports = { generateToken, verifyToken };
+export { generateToken, verifyToken };

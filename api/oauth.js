@@ -1,8 +1,8 @@
-const { findOrCreateOAuthUser } = require('./_lib/oauth');
-const { generateToken } = require('./_lib/jwt');
-const { mapOAuthUser } = require('./_lib/userMapper');
+import { findOrCreateOAuthUser } from './_lib/oauth.js';
+import { generateToken } from './_lib/jwt.js';
+import { mapOAuthUser } from './_lib/userMapper.js';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { provider, action } = req.query;
   const frontendUrl = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
   const baseUrl = frontendUrl; // Используем FRONTEND_URL, а не VERCEL_URL (он меняется при каждом деплое)
