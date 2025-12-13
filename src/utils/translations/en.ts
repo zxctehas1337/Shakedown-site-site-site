@@ -44,7 +44,11 @@ export const enTranslations: TranslationStructure = {
     updatesDesc: 'Weekly updates with new features',
     updatesDescFull: 'We regularly update the functionality in our client, adding new features and improving existing ones. Thanks to this, our client has advantages for all existing servers.',
     richFunctionality: 'Rich Functionality',
-    richFunctionalityDesc: 'Over 100 modules for all aspects of the game',
+    richFunctionalityDesc: 'Over 100 modules for all aspects of the game: PvP, movement, visuals, automation and much more. Each module is carefully tuned for maximum efficiency.',
+    security: 'Security',
+    securityDesc: 'Your account and data are securely protected. We use modern encryption and leak protection methods so you can play with peace of mind.',
+    community: 'Active Community',
+    communityDesc: 'Join thousands of players in our Discord. Share configs, get tips and find like-minded players for playing together.',
     support: 'Best Support',
     supportDesc: 'Round-the-clock help and active community',
     supportDescFull: 'We have the best support team that knows their stuff and can help you with any question related to our client.'

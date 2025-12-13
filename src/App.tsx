@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage.tsx'
 import AuthPage from './pages/auth/AuthPage.tsx'
-import DashboardPage from './pages/DashboardPage.tsx'
+import DashboardPage from './pages/dashboard/index.tsx'
 import AdminPage from './pages/admin/AdminPage.tsx'
 import NewsPage from './pages/NewsPage.tsx'
 import PricingPage from './pages/PricingPage.tsx'

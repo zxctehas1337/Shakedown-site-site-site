@@ -9,7 +9,11 @@ import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
 import { VerificationModal } from './components/VerificationModal'
 import { getCurrentUser } from '../../utils/database'
-import '../../styles/AuthPage.css'
+import '../../styles/auth/AuthBase.css'
+import '../../styles/auth/AuthForm.css'
+import '../../styles/auth/AuthSlider.css'
+import '../../styles/auth/AuthModal.css'
+import '../../styles/auth/AuthResponsive.css'
 
 export default function AuthPage() {
   const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null)

@@ -47,6 +47,10 @@ export interface TranslationStructure {
     updatesDescFull: string
     richFunctionality: string
     richFunctionalityDesc: string
+    security: string
+    securityDesc: string
+    community: string
+    communityDesc: string
     support: string
     supportDesc: string
     supportDescFull: string

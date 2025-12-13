@@ -3,7 +3,6 @@ function mapUserFromDb(dbUser) {
     id: dbUser.id,
     username: dbUser.username,
     email: dbUser.email,
-    password: dbUser.password,
     subscription: dbUser.subscription,
     registeredAt: dbUser.registered_at,
     isAdmin: dbUser.is_admin,

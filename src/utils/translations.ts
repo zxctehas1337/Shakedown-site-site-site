@@ -1,4 +1,12 @@
-// Переадресация на новую модульную систему переводов
-// Этот файл оставлен для обратной совместимости
+// Re-export only the necessary functions to avoid circular imports
+// This file is kept for backward compatibility
 
-export * from './translations'
+export { 
+  getCurrentLanguage, 
+  setCurrentLanguage, 
+  getTranslation, 
+  isValidLanguage, 
+  getDateLocale,
+  type Language,
+  type TranslationStructure 
+} from './translations/index'

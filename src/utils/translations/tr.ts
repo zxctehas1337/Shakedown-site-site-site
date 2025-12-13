@@ -44,7 +44,11 @@ export const trTranslations: TranslationStructure = {
     updatesDesc: 'Yeni özelliklerle haftalık güncellemeler',
     updatesDescFull: 'İstemcimizde işlevselliği düzenli olarak güncelliyoruz, yeni özellikler ekliyor ve mevcut olanları geliştiriyoruz. Bu sayede istemcimiz tüm mevcut sunucular için avantajlara sahiptir.',
     richFunctionality: 'Zengin İşlevsellik',
-    richFunctionalityDesc: 'Oyunun tüm yönleri için 100\'den fazla modül',
+    richFunctionalityDesc: 'Oyunun tüm yönleri için 100\'den fazla modül: PvP, hareket, görseller, otomasyon ve çok daha fazlası. Her modül maksimum verimlilik için özenle ayarlanmıştır.',
+    security: 'Güvenlik',
+    securityDesc: 'Hesabınız ve verileriniz güvenli bir şekilde korunmaktadır. Huzur içinde oynayabilmeniz için modern şifreleme ve sızıntı koruma yöntemleri kullanıyoruz.',
+    community: 'Aktif Topluluk',
+    communityDesc: 'Discord\'umuzdaki binlerce oyuncuya katılın. Yapılandırmaları paylaşın, ipuçları alın ve birlikte oynamak için benzer düşünen oyuncular bulun.',
     support: 'En İyi Destek',
     supportDesc: '7/24 yardım ve aktif topluluk',
     supportDescFull: 'İşini bilen ve istemcimizle ilgili her sorunuzda size yardımcı olabilecek en iyi destek ekibine sahibiz.'

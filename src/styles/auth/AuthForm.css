@@ -1,0 +1,141 @@
+/* Social Buttons */
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-google-clean {
+    background: white;
+    color: #1f1f1f;
+}
+
+.btn-google-clean:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.btn-yandex-clean {
+    background: #1f1f1f;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-yandex-clean:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-github-clean {
+    background: #24292e;
+    color: white;
+}
+
+.btn-github-clean:hover {
+    background: #2f363d;
+    transform: translateY(-2px);
+}
+
+/* Divider */
+.divider-clean {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.divider-clean::before,
+.divider-clean::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.divider-clean span {
+    padding: 0 16px;
+}
+
+/* Form Elements */
+.form-group-clean {
+    margin-bottom: 20px;
+}
+
+.form-group-clean label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+}
+
+.input-clean {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.input-clean:focus {
+    outline: none;
+    border-color: #8A4BFF;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 4px rgba(138, 75, 255, 0.1);
+}
+
+.btn-primary-clean {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #8A4BFF, #FF6B9D);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 6px;
+}
+
+.btn-primary-clean:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(138, 75, 255, 0.3);
+}
+
+.btn-text-only {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    padding: 8px;
+    transition: color 0.2s;
+}
+
+.btn-text-only:hover {
+    color: #8A4BFF;
+}

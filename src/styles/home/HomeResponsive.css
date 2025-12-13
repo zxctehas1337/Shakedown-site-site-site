@@ -145,16 +145,6 @@
   .features-section {
     padding: 0;
   }
-
-  .features-layout {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  
-  .features-left {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
   
   .features-header {
     text-align: center;
@@ -170,20 +160,28 @@
     margin: 0 auto;
   }
   
-  .feature-card-left {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  
   .features-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .features-grid .feature-card {
-    border-left: none;
+  .feature-card {
+    padding: 1.25rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .feature-card:nth-child(2n) {
+    border-right: none;
+  }
+  
+  .feature-card:nth-child(4n) {
+    border-right: none;
+  }
+  
+  .features-grid .feature-card:nth-child(n+3) {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
   
-  .features-grid .feature-card:first-child {
+  .features-grid .feature-card:nth-child(n+5) {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 

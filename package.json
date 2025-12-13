@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "1.0.0",
-  "description": "```\r inside-website/\r ├── index.html          # Главная страница\r ├── auth.html           # Страница входа/регистрации\r ├── dashboard.html      # Личный кабинет\r ├── style.css           # Основные стили\r ├── auth.css            # Стили авторизации\r ├── dashboard.css       # Стили личного кабинета\r ├── script.js           # Основной JavaScript\r ├── auth.js             # JavaScript авторизации\r ├── dashboard.js        # JavaScript личного кабинета\r ├── icon.ico            # ⚠️ ПОМЕСТИТЕ СЮДА ВАШ FAVICON\r └── README.md           # Этот файл\r ```",
+  "description": "",
   "main": "auth.js",
   "scripts": {
     "dev": "vite --config vite.config.ts",
@@ -20,7 +20,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/zxctehas1337/inside/issues"
   },
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

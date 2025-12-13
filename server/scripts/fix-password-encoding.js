@@ -1,6 +1,9 @@
 // Script to fix password encoding for all users
-const { Pool } = require('pg');
-require('dotenv').config();
+import { Pool } from 'pg';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Database connection configuration
 const pool = new Pool({
@@ -28,6 +31,17 @@ async function testConnection() {
     if (error.code) console.error('   Error code:', error.code);
     return false;
   }
+}
+
+const SALT_ROUNDS = 10;
+
+async function hashPassword(password) {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, SALT_ROUNDS, (error, hashed) => {
+      if (error) return reject(error);
+      resolve(hashed);
+    });
+  });
 }
 
 async function fixPasswordEncoding() {
@@ -59,27 +73,35 @@ async function fixPasswordEncoding() {
           continue;
         }
 
-        // Check if password is already properly encoded
+        if (user.password.startsWith('$2')) {
+          console.log(`   User ${user.username} - already using bcrypt`);
+          await client.query('COMMIT');
+          continue;
+        }
+
+        let plainPassword = null;
+
         try {
           const decoded = Buffer.from(user.password, 'base64').toString('utf-8');
           if (Buffer.from(decoded).toString('base64') === user.password) {
-            console.log(`   User ${user.username} - password already properly encoded`);
-            continue;
+            plainPassword = decoded;
           }
         } catch (e) {
-          console.log(`   User ${user.username} - password needs re-encoding`);
+          // not base64, fall through
         }
 
-        // Re-encode the password
-        const encodedPassword = Buffer.from(user.password).toString('base64');
-        
-        // Update the user's password
+        if (!plainPassword) {
+          plainPassword = user.password;
+        }
+
+        const hashedPassword = await hashPassword(plainPassword);
+
         await client.query(
           'UPDATE users SET password = $1 WHERE id = $2',
-          [encodedPassword, user.id]
+          [hashedPassword, user.id]
         );
-        
-        console.log(`✅ Fixed password for user: ${user.username} (${user.email})`);
+
+        console.log(`✅ Rehashed password for user: ${user.username} (${user.email})`);
         await client.query('COMMIT');
         fixedCount++;
       } catch (error) {

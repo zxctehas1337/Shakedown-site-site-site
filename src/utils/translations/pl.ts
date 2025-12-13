@@ -44,7 +44,11 @@ export const plTranslations: TranslationStructure = {
     updatesDesc: 'Cotygodniowe aktualizacje z nowymi funkcjami',
     updatesDescFull: 'Regularnie aktualizujemy funkcjonalność naszego klienta, dodając nowe funkcje i ulepszając istniejące.',
     richFunctionality: 'Bogata funkcjonalność',
-    richFunctionalityDesc: 'Ponad 100 modułów do wszystkich aspektów gry',
+    richFunctionalityDesc: 'Ponad 100 modułów do wszystkich aspektów gry: PvP, ruch, wizualizacje, automatyzacja i wiele więcej. Każdy moduł jest starannie dostrojony dla maksymalnej wydajności.',
+    security: 'Bezpieczeństwo',
+    securityDesc: 'Twoje konto i dane są bezpiecznie chronione. Używamy nowoczesnych metod szyfrowania i ochrony przed wyciekami, abyś mógł grać spokojnie.',
+    community: 'Aktywna społeczność',
+    communityDesc: 'Dołącz do tysięcy graczy na naszym Discordzie. Dziel się konfiguracjami, otrzymuj porady i znajdź podobnie myślących graczy do wspólnej gry.',
     support: 'Najlepsze wsparcie',
     supportDesc: 'Całodobowa pomoc i aktywna społeczność',
     supportDescFull: 'Mamy najlepszy zespół wsparcia, który zna się na rzeczy i pomoże ci w każdej kwestii związanej z naszym klientem.'

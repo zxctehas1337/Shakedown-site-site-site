@@ -2,6 +2,7 @@
 // Запуск: node server/scripts/create-admin.js
 
 const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 // Validate required environment variables
@@ -21,9 +22,8 @@ const pool = new Pool({
 async function createOrUpdateAdmin() {
   const username = process.env.ADMIN_USERNAME;
   const email = process.env.ADMIN_EMAIL;
-  // Encode the password to base64 to match the login logic in api/auth.js
   const password = process.env.ADMIN_PASSWORD;
-  const encodedPassword = Buffer.from(password).toString('base64');
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     // Check if admin already exists
@@ -36,7 +36,7 @@ async function createOrUpdateAdmin() {
       // Update existing admin password
       await pool.query(
         'UPDATE users SET password = $1, is_admin = true, email_verified = true WHERE id = $2',
-        [encodedPassword, existing.rows[0].id]
+        [hashedPassword, existing.rows[0].id]
       );
       
       console.log('✅ Пароль админа обновлен:');
@@ -49,7 +49,7 @@ async function createOrUpdateAdmin() {
         `INSERT INTO users (username, email, password, is_admin, email_verified, subscription)
          VALUES ($1, $2, $3, true, true, 'premium')
          RETURNING id, username, email`,
-        [username, email, encodedPassword]
+        [username, email, hashedPassword]
       );
 
       console.log('✅ Админ создан:');

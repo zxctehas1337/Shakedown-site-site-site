@@ -1,8 +1,67 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const { pool } = require('../config/database.js');
 const { generateVerificationCode, sendVerificationEmail } = require('../services/email.js');
 const { mapUserFromDb } = require('../utils/userMapper.js');
+
+const SALT_ROUNDS = 10;
+
+const hashPassword = (password) =>
+  new Promise((resolve, reject) => {
+    bcrypt.hash(password, SALT_ROUNDS, (error, hashed) => {
+      if (error) return reject(error);
+      resolve(hashed);
+    });
+  });
+
+const comparePassword = (password, hashed) =>
+  new Promise((resolve, reject) => {
+    bcrypt.compare(password, hashed, (error, same) => {
+      if (error) return reject(error);
+      resolve(same);
+    });
+  });
+
+const rehashLegacyPassword = async (userId, password) => {
+  const hashedPassword = await hashPassword(password);
+  await pool.query('UPDATE users SET password = $1 WHERE id = $2', [hashedPassword, userId]);
+  return hashedPassword;
+};
+
+const passwordsMatch = async (user, inputPassword) => {
+  if (!user.password) {
+    return false;
+  }
+
+  if (user.password.startsWith('$2')) {
+    return comparePassword(inputPassword, user.password);
+  }
+
+  if (user.password === inputPassword) {
+    await rehashLegacyPassword(user.id, inputPassword);
+    return true;
+  }
+
+  const encodedInput = Buffer.from(inputPassword).toString('base64');
+
+  if (user.password === encodedInput) {
+    await rehashLegacyPassword(user.id, inputPassword);
+    return true;
+  }
+
+  try {
+    const decodedStored = Buffer.from(user.password, 'base64').toString('utf-8');
+    if (decodedStored === inputPassword) {
+      await rehashLegacyPassword(user.id, inputPassword);
+      return true;
+    }
+  } catch (error) {
+    // ignore decoding errors
+  }
+
+  return false;
+};
 
 // Регистрация
 router.post('/register', async (req, res) => {
@@ -27,11 +86,13 @@ router.post('/register', async (req, res) => {
     const verificationCode = generateVerificationCode();
     const codeExpires = new Date(Date.now() + 10 * 60 * 1000);
 
+    const hashedPassword = await hashPassword(password);
+
     const result = await pool.query(
       `INSERT INTO users (username, email, password, verification_code, verification_code_expires, email_verified) 
        VALUES ($1, $2, $3, $4, $5, false) 
        RETURNING id, username, email, subscription, registered_at, is_admin, is_banned, email_verified, settings`,
-      [username, email, Buffer.from(password).toString('base64'), verificationCode, codeExpires]
+      [username, email, hashedPassword, verificationCode, codeExpires]
     );
 
     const user = mapUserFromDb(result.rows[0]);
@@ -61,13 +122,12 @@ router.post('/login', async (req, res) => {
   const { usernameOrEmail, password } = req.body;
 
   try {
-    const encodedPassword = Buffer.from(password).toString('base64');
-    
     const result = await pool.query(
       `SELECT id, username, email, password, subscription, registered_at, is_admin, is_banned, email_verified, settings 
        FROM users 
-       WHERE (username = $1 OR email = $1) AND password = $2`,
-      [usernameOrEmail, encodedPassword]
+       WHERE (username = $1 OR email = $1)
+       LIMIT 1`,
+      [usernameOrEmail]
     );
 
     if (result.rows.length === 0) {
@@ -75,6 +135,12 @@ router.post('/login', async (req, res) => {
     }
 
     const dbUser = result.rows[0];
+
+    const isPasswordValid = await passwordsMatch(dbUser, password);
+
+    if (!isPasswordValid) {
+      return res.json({ success: false, message: 'Неверный логин или пароль' });
+    }
 
     if (dbUser.is_banned) {
       return res.json({ success: false, message: 'Ваш аккаунт заблокирован' });

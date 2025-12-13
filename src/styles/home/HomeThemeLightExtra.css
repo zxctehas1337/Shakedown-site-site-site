@@ -6,25 +6,18 @@
   border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .features-left {
-  border-right-color: rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .feature-card-left {
-  border-top-color: rgba(0, 0, 0, 0.08);
-}
-
 [data-theme="light"] .features-grid {
   background: transparent;
   border-color: transparent;
+  border-top-color: rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] .feature-card {
   background: transparent;
-  border-left-color: rgba(0, 0, 0, 0.08);
+  border-right-color: rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .features-grid .feature-card:nth-child(n+3) {
+[data-theme="light"] .features-grid .feature-card:nth-child(n+5) {
   border-top-color: rgba(0, 0, 0, 0.08);
 }
 
