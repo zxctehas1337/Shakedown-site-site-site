@@ -359,11 +359,7 @@ export default function DashboardPage() {
       <main className="dashboard-main">
         {activeTab === 'overview' && (
           <div className="dashboard-content">
-            <div className="content-header">
-              <h1>{t.dashboard.welcome}, {user.username}!</h1>
-              <p>{t.dashboard.manageAccount}</p>
-            </div>
-
+            
             {/* Stats Cards */}
             <div className="stats-grid">
               <div className="stat-card">
