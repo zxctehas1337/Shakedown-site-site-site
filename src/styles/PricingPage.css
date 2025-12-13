@@ -38,7 +38,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.78) translateZ(-100px);
+  transform: scale(0.82) translateZ(-45px);
   transform-style: preserve-3d;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
@@ -152,7 +152,7 @@
 }
 
 /* Адаптивность */
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .pricing-grid {
     grid-template-columns: repeat(3, 1fr);
   }
