@@ -178,6 +178,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  pointer-events: auto;
 }
 
 .nav-item:hover {
@@ -218,6 +219,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  pointer-events: auto;
 }
 
 .link-item:hover {
@@ -248,6 +250,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  pointer-events: auto;
 }
 
 .logout-btn:hover {

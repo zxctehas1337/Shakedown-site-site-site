@@ -64,7 +64,6 @@
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
   opacity: 0.4;
 }
 
@@ -153,7 +152,6 @@
   }
   
   .orb {
-    filter: blur(60px);
     opacity: 0.3;
   }
   

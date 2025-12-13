@@ -7,10 +7,29 @@ import '../styles/animations.css'
 import { CLIENT_INFO, SOCIAL_LINKS } from '../utils/constants.ts'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index.ts'
 
+// Hook для определения мобильного устройства
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return isMobile
+}
+
 function HomePage() {
   const navigate = useNavigate()
   const [lang, setLang] = useState<Language>(getCurrentLanguage())
   const t = getTranslation(lang)
+  const isMobile = useIsMobile()
 
   // Refs для анимаций при скролле
   const heroRef = useRef<HTMLElement>(null)
@@ -115,7 +134,7 @@ function HomePage() {
         {/* Фоновое изображение */}
         <div className="hero-background">
           <img 
-            src="/photo.png" 
+            src={isMobile ? "/photo2.png" : "/photo.png"} 
             alt="" 
             className="hero-bg-image" 
             draggable={false}

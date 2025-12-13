@@ -4,6 +4,12 @@
   position: relative;
 }
 
+/* Стили для контейнера в сайдбаре */
+.sidebar-language-selector .language-selector {
+  position: relative;
+  width: 100%;
+}
+
 .lang-toggle {
   display: flex;
   align-items: center;
@@ -15,6 +21,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   color: #ffffff;
+  pointer-events: auto;
 }
 
 .lang-toggle:hover {
@@ -58,6 +65,42 @@
   animation: menuSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Меню для мобильного сайдбара - прямо под кнопкой */
+.lang-menu-sidebar-mobile {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  min-width: auto;
+  margin: 0;
+  animation: menuSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1001;
+}
+
+/* Улучшение для мобильных устройств */
+@media (max-width: 768px) {
+  .lang-menu-sidebar-mobile {
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .lang-menu-sidebar-mobile .lang-option {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .lang-menu-sidebar-mobile .lang-flag {
+    font-size: 1.1rem;
+  }
+  
+  .lang-menu-sidebar-mobile .lang-name {
+    font-size: 0.85rem;
+  }
+}
+
 @keyframes menuSlideUp {
   from {
     opacity: 0;
@@ -77,6 +120,17 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes menuSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -123,9 +177,5 @@
   /* Hide lang-code only when not in sidebar */
   .lang-toggle:not(.sidebar-language-selector .lang-toggle) .lang-code {
     display: none;
-  }
-
-  .lang-menu {
-    right: -20px;
   }
 }

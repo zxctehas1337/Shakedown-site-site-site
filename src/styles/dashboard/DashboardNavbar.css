@@ -11,9 +11,8 @@
   right: 0;
   height: 60px;
   background: rgba(12, 12, 18, 0.98);
-  backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  z-index: 200;
+  z-index: 1002;
   padding: 0 1rem;
   align-items: center;
   justify-content: space-between;
@@ -79,7 +78,11 @@
 
 /* Mobile Menu Button Active State */
 .mobile-menu-btn.active span:nth-child(1) {
-  transform: rotate(45deg) translate(3px, 3px);
+  transform: rotate(45deg) translate(0, 0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -1px 0 0 -10px;
 }
 
 .mobile-menu-btn.active span:nth-child(2) {
@@ -88,20 +91,11 @@
 }
 
 .mobile-menu-btn.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(3px, -3px);
-}
-
-/* Mobile Menu Overlay */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 150;
+  transform: rotate(-45deg) translate(0, 0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -1px 0 0 -10px;
 }
 
 /* Mobile Sidebar States */
@@ -125,10 +119,6 @@
     display: flex;
   }
 
-  .mobile-overlay {
-    display: block;
-  }
-
   .dashboard-sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -144,10 +134,6 @@
 @media (max-width: 1024px) and (min-width: 769px) {
   .mobile-header {
     display: flex;
-  }
-
-  .mobile-overlay {
-    display: block;
   }
 
   .dashboard-sidebar {
@@ -222,10 +208,13 @@
 
 /* Focus States for Accessibility */
 .nav-item:focus,
-.link-item:focus,
-.mobile-menu-btn:focus {
+.link-item:focus {
   outline: 2px solid #3B82F6;
   outline-offset: 2px;
+}
+
+.mobile-menu-btn:focus {
+  outline: none;
 }
 
 /* High Contrast Mode Support */
