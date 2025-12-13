@@ -1,19 +1,21 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const session = require('express-session');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import session from 'express-session';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 // Config
 const { pool, initDatabase } = require('./config/database.js');
 const { passport, setupStrategies } = require('./config/passport.js');
 
 // Routes
-const authRoutes = require('./routes/auth.js');
-const oauthRoutes = require('./routes/oauth.js');
-const usersRoutes = require('./routes/users.js');
-const productsRoutes = require('./routes/products.js');
-const hwidRoutes = require('./routes/hwid.js');
+import authRoutes from './routes/auth.js';
+import oauthRoutes from './routes/oauth.js';
+import usersRoutes from './routes/users.js';
+import productsRoutes from './routes/products.js';
+import hwidRoutes from './routes/hwid.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
