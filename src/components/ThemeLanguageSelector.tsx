@@ -10,7 +10,6 @@ interface LanguageSelectorProps {
 function LanguageSelector({ onLanguageChange, dropdownDirection = 'down' }: LanguageSelectorProps) {
   const [currentLang, setCurrentLang] = useState('ru')
   const [showLangMenu, setShowLangMenu] = useState(false)
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 as number | undefined, right: 'auto' as string | undefined })
   const toggleRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -20,17 +19,11 @@ function LanguageSelector({ onLanguageChange, dropdownDirection = 'down' }: Lang
 
   useEffect(() => {
     if (showLangMenu && toggleRef.current) {
-      const rect = toggleRef.current.getBoundingClientRect()
       const isMobile = window.innerWidth <= 768
       const isSidebar = toggleRef.current.closest('.sidebar-language-selector')
       
       if (isMobile && isSidebar) {
         // For mobile sidebar, let CSS handle positioning
-        setMenuPosition({ 
-          top: 0,
-          left: 0,
-          right: 'auto'
-        })
       }
     }
   }, [showLangMenu])
