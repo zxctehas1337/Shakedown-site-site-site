@@ -9,12 +9,12 @@ import { getCurrentUser, setCurrentUser } from '../utils/database'
 import { User, NotificationType, LicenseKey, UserProfile } from '../types'
 import { CLIENT_INFO, DOWNLOAD_LINKS } from '../utils/constants'
 import { useTranslation } from '../hooks/useTranslation'
-import '../styles/dashboard/DashboardBase.css'
 import '../styles/dashboard/DashboardNavbar.css'
 import '../styles/dashboard/DashboardProfile.css'
 import '../styles/dashboard/DashboardActions.css'
 import '../styles/dashboard/DashboardAnimations.css'
 import '../styles/dashboard/DashboardResponsive.css'
+import '../styles/dashboard/DashboardBase.css'
 import '../styles/dashboard/DashboardProfileTab.css'
 
 export default function DashboardPage() {
