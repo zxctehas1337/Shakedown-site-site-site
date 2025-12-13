@@ -40,5 +40,3 @@ export async function findOrCreateOAuthUser(profile, provider) {
     throw error;
   }
 }
-
-export { findOrCreateOAuthUser };

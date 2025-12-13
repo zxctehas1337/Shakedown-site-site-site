@@ -49,4 +49,4 @@ const PRODUCTS = [
   }
 ];
 
-module.exports = { PRODUCTS };
+export { PRODUCTS };

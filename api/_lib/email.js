@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 function getTransporter() {
   return nodemailer.createTransport({
@@ -69,4 +69,4 @@ async function sendVerificationEmail(email, username, verificationCode) {
   }
 }
 
-module.exports = { generateVerificationCode, sendVerificationEmail };
+export { generateVerificationCode, sendVerificationEmail };

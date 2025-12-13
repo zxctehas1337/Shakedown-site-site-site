@@ -1,7 +1,7 @@
-const { getPool } = require('../_lib/db');
-const { mapUserFromDb } = require('../_lib/userMapper');
+import { getPool } from '../_lib/db.js';
+import { mapUserFromDb } from '../_lib/userMapper.js';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { id } = req.query;
   const pool = getPool();
 

@@ -1,6 +1,6 @@
-const { PRODUCTS } = require('./_lib/products');
+import { PRODUCTS } from './_lib/products.js';
 
-module.exports = (req, res) => {
+export default (req, res) => {
   const { id } = req.query;
 
   if (id) {

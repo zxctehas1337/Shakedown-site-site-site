@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
-const { getPool } = require('./_lib/db');
-const { generateVerificationCode, sendVerificationEmail } = require('./_lib/email');
-const { mapUserFromDb } = require('./_lib/userMapper');
+import bcrypt from 'bcryptjs';
+import { getPool } from './_lib/db.js';
+import { generateVerificationCode, sendVerificationEmail } from './_lib/email.js';
+import { mapUserFromDb } from './_lib/userMapper.js';
 
 const SALT_ROUNDS = 10;
 
@@ -61,7 +61,7 @@ const passwordsMatch = async (pool, user, inputPassword) => {
   return false;
 };
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { action } = req.query;
   const pool = getPool();
 

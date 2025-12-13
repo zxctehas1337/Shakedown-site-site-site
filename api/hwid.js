@@ -1,6 +1,6 @@
-const { getPool } = require('./_lib/db');
+import { getPool } from './_lib/db.js';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { action, userId } = req.query;
   const pool = getPool();
 
