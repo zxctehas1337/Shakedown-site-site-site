@@ -30,7 +30,14 @@ export function DashboardSidebar({
   return (
     <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header">
-        <img src="/icon.ico" alt="Shakedown" className="sidebar-logo" />
+        <img
+          src="/icon.ico"
+          alt="Shakedown"
+          className="sidebar-logo no-user-drag"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        />
         <div className="sidebar-brand">
           <span className="brand-name">{CLIENT_INFO.name}</span>
           <span className="brand-version">{CLIENT_INFO.version}</span>

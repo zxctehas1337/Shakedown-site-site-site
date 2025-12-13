@@ -9,7 +9,14 @@ export function MobileHeader({ mobileMenuOpen, setMobileMenuOpen }: Props) {
   return (
     <header className="mobile-header">
       <div className="mobile-header-left">
-        <img src="/icon.ico" alt="Shakedown" className="mobile-logo" />
+        <img
+          src="/icon.ico"
+          alt="Shakedown"
+          className="mobile-logo no-user-drag"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        />
         <span className="mobile-brand">{CLIENT_INFO.name}</span>
       </div>
       <button 

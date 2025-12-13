@@ -46,8 +46,10 @@ export default function FeaturesSection({ lang }: FeaturesSectionProps) {
     { 
       icon: (
         <svg width="24" height="24" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="24" cy="24" r="18" />
-          <path d="M24 10V24L32 32" strokeLinecap="round" />
+          <path d="M40 24a16 16 0 0 1-28.8 9.6" />
+          <path d="M8 24A16 16 0 0 1 36.8 14.4" />
+          <path d="M36 8v8h-8" />
+          <path d="M12 40v-8h8" />
         </svg>
       ),
       title: t.features.updates, 

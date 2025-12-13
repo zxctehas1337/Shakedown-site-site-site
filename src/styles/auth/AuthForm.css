@@ -10,6 +10,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    width: 100%;
     padding: 14px 20px;
     border-radius: 10px;
     font-weight: 500;
@@ -138,4 +139,14 @@
 
 .btn-text-only:hover {
     color: #8A4BFF;
+}
+
+@media (hover: none) {
+    .btn-google-clean:hover,
+    .btn-yandex-clean:hover,
+    .btn-github-clean:hover,
+    .btn-primary-clean:hover {
+        transform: none;
+        box-shadow: none;
+    }
 }

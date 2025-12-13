@@ -81,15 +81,6 @@
     color: var(--text-primary);
 }
 
-.nav-links a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(135deg, var(--purple-500), var(--pink-500));
-}
 
 .btn-nav {
     display: flex;

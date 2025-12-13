@@ -44,13 +44,27 @@ export default function NewsPage() {
         <nav className="nav">
           <div className="nav-brand">
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-              <img src="/icon.ico" alt="Shakedown" width="32" height="32" />
+              <img
+                src="/icon.ico"
+                alt="Shakedown"
+                width="32"
+                height="32"
+                className="no-user-drag"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+              />
               <span className="version">{CLIENT_INFO.name}</span>
             </Link>
           </div>
           <div className="nav-links">
-            <Link to="/">Главная</Link>
-            <Link to="/news" className="active">Новости</Link>
+            <Link to="/" className="active">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', transform: 'translateY(2px)' }}>
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Главная
+            </Link>
             {!currentUser && <Link to="/auth">Войти</Link>}
           </div>
           {currentUser ? (
@@ -159,7 +173,16 @@ export default function NewsPage() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <img src="/icon.ico" alt="Shakedown" width="32" height="32" />
+              <img
+                src="/icon.ico"
+                alt="Shakedown"
+                width="32"
+                height="32"
+                className="no-user-drag"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+              />
               <span>{CLIENT_INFO.name}</span>
             </div>
             <div className="footer-links">

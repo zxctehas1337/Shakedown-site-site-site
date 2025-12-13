@@ -12,7 +12,14 @@ export default function Footer({ lang }: FooterProps) {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-brand">
-          <img src="/icon.ico" alt="Shakedown" className="footer-logo" />
+          <img
+            src="/icon.ico"
+            alt="Shakedown"
+            className="footer-logo no-user-drag"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+          />
           <span className="footer-name gradient-text">{CLIENT_INFO.name}</span>
         </div>
         <div className="footer-links">

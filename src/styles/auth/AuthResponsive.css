@@ -53,6 +53,59 @@
     }
 }
 
+@media (max-width: 768px) {
+    .auth-page-split {
+        min-height: 100svh;
+    }
+
+    .auth-left-panel {
+        display: none;
+    }
+
+    .auth-right-panel {
+        flex: 1;
+        padding: 20px 16px;
+        background: #0f0f13;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: 0;
+        z-index: 1;
+    }
+
+    .auth-box-clean {
+        max-width: 440px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 20px 16px;
+        box-sizing: border-box;
+    }
+
+    .auth-header {
+        margin-bottom: 20px;
+    }
+
+    .auth-logo-small {
+        margin-bottom: 14px;
+    }
+
+    .auth-title-clean h2 {
+        font-size: 20px;
+    }
+
+    .auth-title-clean p {
+        font-size: 13px;
+    }
+
+    .input-clean {
+        font-size: 16px;
+    }
+
+    .btn-text-only {
+        padding: 12px 8px;
+    }
+}
+
 /* Адаптация для высокого разрешения и масштаба браузера */
 @media (max-resolution: 150dpi) and (max-width: 1400px),
        (max-resolution: 120dpi) and (max-width: 1600px) {
@@ -95,15 +148,14 @@
 /* Очень компактный режим для маленьких экранов */
 @media (max-width: 600px) {
     .auth-left-panel {
-        padding: 24px 12px;
-        min-height: 35vh;
+        display: none;
     }
     
     .auth-right-panel {
-        padding: 24px 12px;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-        margin-top: -16px;
+        padding: 16px 12px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: 0;
     }
     
     .auth-box-clean {
@@ -132,11 +184,6 @@
         font-size: 13px;
     }
     
-    .btn-social {
-        padding: 10px 14px;
-        font-size: 14px;
-    }
-    
     .social-buttons {
         gap: 12px;
     }
@@ -144,6 +191,19 @@
     .divider-clean {
         margin: 16px 0;
         font-size: 12px;
+    }
+
+    .input-clean {
+        font-size: 16px;
+    }
+
+    .btn-social {
+        font-size: 15px;
+        padding: 12px 14px;
+    }
+
+    .btn-primary-clean {
+        font-size: 15px;
     }
 }
 

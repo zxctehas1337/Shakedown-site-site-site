@@ -63,7 +63,16 @@ export default function AuthPage() {
         <div className="auth-box-clean">
           <div className="auth-header">
             <div className="auth-logo-small">
-              <img src="/icon.ico" alt="ShakeDown" width="40" height="40" />
+              <img
+                src="/icon.ico"
+                alt="ShakeDown"
+                width="40"
+                height="40"
+                className="no-user-drag"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+              />
             </div>
             <div className="auth-title-clean">
               <h2>Добро пожаловать</h2>

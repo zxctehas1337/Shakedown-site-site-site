@@ -223,4 +223,6 @@ export const setCurrentUser = (user: User | null) => {
   } else {
     localStorage.removeItem('currentUser')
   }
+
+  window.dispatchEvent(new Event('currentUserChanged'))
 }

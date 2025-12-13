@@ -151,6 +151,14 @@ html {
     color: #111827;
 }
 
+.no-user-drag {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+}
+
 /* Фокус для доступности */
 :focus-visible {
     outline: 2px solid #3B82F6;

@@ -19,6 +19,16 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Middleware
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const durationMs = Date.now() - start;
+      console.log(`[HTTP] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${durationMs}ms)`);
+    });
+    next();
+  });
+}
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'https://shakedown.vercel.app',
   credentials: true

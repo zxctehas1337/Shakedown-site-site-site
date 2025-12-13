@@ -13,6 +13,25 @@ function PricingPage() {
   const [products, setProducts] = useState<Product[]>(PRODUCTS_FALLBACK)
   const t = getTranslation(lang)
 
+  const IconHome = (
+    <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2L2 7v11h6v-6h4v6h6V7l-8-5z"/>
+    </svg>
+  )
+
+  const IconNews = (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+    </svg>
+  )
+
+  const IconUser = (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21a8 8 0 0 0-16 0" />
+      <path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
+    </svg>
+  )
+
   useEffect(() => {
     fetchProducts().then(data => {
       if (data.length > 0) {
@@ -65,20 +84,27 @@ function PricingPage() {
       
       <nav className="navbar">
         <Link to="/" className="nav-brand">
-          <img src="/icon.ico" alt="Shakedown Logo" className="nav-logo" />
+          <img
+            src="/icon.ico"
+            alt="Shakedown Logo"
+            className="nav-logo no-user-drag"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+          />
           <div className="brand-info">
             <span className="brand-name">{CLIENT_INFO.name}</span>
           </div>
         </Link>
         <div className="nav-links">
-          <button onClick={() => navigate('/')} className="nav-link">{t.nav.home}</button>
-          <button onClick={() => navigate('/news')} className="nav-link">{t.nav.news}</button>
+          <button onClick={() => navigate('/')} className="nav-link">{IconHome}{t.nav.home}</button>
+          <button onClick={() => navigate('/news')} className="nav-link">{IconNews}{t.nav.news}</button>
           <LanguageSelector 
             onLanguageChange={() => {
               setLang(getCurrentLanguage())
             }}
           />
-          <button onClick={() => navigate('/auth')} className="nav-button-login">{t.nav.dashboard}</button>
+          <button onClick={() => navigate('/auth')} className="nav-button-login">{IconUser}{t.nav.dashboard}</button>
         </div>
       </nav>
 
@@ -140,7 +166,14 @@ function PricingPage() {
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <img src="/icon.ico" alt="Shakedown" className="footer-logo" />
+            <img
+              src="/icon.ico"
+              alt="Shakedown"
+              className="footer-logo no-user-drag"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+            />
             <span className="footer-name gradient-text">{CLIENT_INFO.name}</span>
           </div>
           <div className="footer-links">

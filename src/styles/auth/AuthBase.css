@@ -5,7 +5,8 @@
     max-width: 100%;
     width: 100%;
     background: #0f0f13;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     margin: 0 auto;
 }

@@ -11,9 +11,13 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true
       }
+    },
+    watch: {
+      usePolling: false
     }
   },
   build: {
     outDir: 'dist'
-  }
+  },
+  logLevel: 'error'
 })

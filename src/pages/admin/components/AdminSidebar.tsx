@@ -24,7 +24,16 @@ export function AdminSidebar({
   return (
     <aside className="admin-sidebar">
       <div className="admin-brand">
-        <img src="/icon.ico" alt="Shakedown" width="32" height="32" />
+        <img
+          src="/icon.ico"
+          alt="Shakedown"
+          width="32"
+          height="32"
+          className="no-user-drag"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        />
         <div>
           <h1>Shakedown</h1>
           <span>Админ-панель</span>
