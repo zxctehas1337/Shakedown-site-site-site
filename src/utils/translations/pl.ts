@@ -191,5 +191,18 @@ export const plTranslations: TranslationStructure = {
     exclusiveFeatures: 'Ekskluzywne funkcje',
     priorityQueue: 'Priorytet w kolejce',
     uniqueFeatures: 'Unikalne funkcje'
+  },
+  currency: {
+    symbol: 'zł',
+    code: 'PLN',
+    priceLabel: 'Cena',
+    prices: {
+      client30: 9.99,
+      client90: 19.99,
+      clientLifetime: 44.99,
+      hwidReset: 4.99,
+      premium30: 14.99,
+      alpha: 29.99
+    }
   }
 }

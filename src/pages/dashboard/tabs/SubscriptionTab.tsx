@@ -1,5 +1,5 @@
 import { User } from '../../../types'
-import { IconStar } from '../../../components/Icons'
+import { IconDiamond } from '../../../components/Icons'
 
 interface Props {
   user: User
@@ -28,7 +28,7 @@ export function SubscriptionTab({
       <div className="subscription-status">
         <div className="current-plan">
           <div className={`plan-badge ${badge.class}`}>
-            <IconStar size={32} />
+            <IconDiamond size={32} />
           </div>
           <div className="plan-info">
             <h3>{t.dashboard.currentPlan}: {badge.text}</h3>

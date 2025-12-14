@@ -2,6 +2,27 @@
    Страница цен - Новый дизайн
    ======================================== */
 
+/* Navigation currency selector */
+.nav-currency {
+  margin-right: 8px;
+}
+
+.nav-currency .currency-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.nav-currency .currency-selector-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-currency .currency-selector-arrow {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .pricing-page {
   min-height: 100vh;
   background: #0d1117;

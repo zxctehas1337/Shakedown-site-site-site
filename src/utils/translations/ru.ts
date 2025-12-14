@@ -201,5 +201,19 @@ export const ruTranslations: TranslationStructure = {
     exclusiveFeatures: 'Эксклюзивные функции',
     priorityQueue: 'Приоритет в очереди',
     uniqueFeatures: 'Уникальные функции'
+  },
+  // Валюта
+  currency: {
+    symbol: '₽',
+    code: 'RUB',
+    priceLabel: 'Цена',
+    prices: {
+      client30: 199,
+      client90: 449,
+      clientLifetime: 999,
+      hwidReset: 99,
+      premium30: 299,
+      alpha: 599
+    }
   }
 }

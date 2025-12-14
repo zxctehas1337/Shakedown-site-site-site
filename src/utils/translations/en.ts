@@ -191,5 +191,18 @@ export const enTranslations: TranslationStructure = {
     exclusiveFeatures: 'Exclusive features',
     priorityQueue: 'Priority queue',
     uniqueFeatures: 'Unique features'
+  },
+  currency: {
+    symbol: '$',
+    code: 'USD',
+    priceLabel: 'Price',
+    prices: {
+      client30: 2.49,
+      client90: 4.99,
+      clientLifetime: 9.99,
+      hwidReset: 0.99,
+      premium30: 2.99,
+      alpha: 5.99
+    }
   }
 }

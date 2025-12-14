@@ -191,5 +191,18 @@ export const ukTranslations: TranslationStructure = {
     exclusiveFeatures: 'Ексклюзивні функції',
     priorityQueue: 'Пріоритет у черзі',
     uniqueFeatures: 'Унікальні функції'
+  },
+  currency: {
+    symbol: '₴',
+    code: 'UAH',
+    priceLabel: 'Ціна',
+    prices: {
+      client30: 99,
+      client90: 199,
+      clientLifetime: 449,
+      hwidReset: 49,
+      premium30: 149,
+      alpha: 299
+    }
   }
 }

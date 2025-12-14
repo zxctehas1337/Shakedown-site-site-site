@@ -6,6 +6,7 @@ import { enTranslations } from './en'
 import { ukTranslations } from './uk'
 import { plTranslations } from './pl'
 import { trTranslations } from './tr'
+import { kzTranslations } from './kz'
 
 // Экспорт типов
 export type { Language, TranslationStructure }
@@ -16,7 +17,8 @@ export const translations: Record<Language, TranslationStructure> = {
   en: enTranslations,
   uk: ukTranslations,
   pl: plTranslations,
-  tr: trTranslations
+  tr: trTranslations,
+  kz: kzTranslations
 }
 
 // Хук для получения переводов
@@ -31,7 +33,7 @@ export function getCurrentLanguage(): Language {
   }
 
   const saved = localStorage.getItem('language')
-  if (saved && (saved === 'ru' || saved === 'en' || saved === 'uk' || saved === 'pl' || saved === 'tr')) {
+  if (saved && (saved === 'ru' || saved === 'en' || saved === 'uk' || saved === 'pl' || saved === 'tr' || saved === 'kz')) {
     return saved
   }
 
@@ -53,7 +55,9 @@ export function getCurrentLanguage(): Language {
           ? 'pl'
           : normalized.some((l) => l === 'tr' || l.startsWith('tr-'))
             ? 'tr'
-            : 'ru'
+            : normalized.some((l) => l === 'kz' || l.startsWith('kz-') || l === 'kk' || l.startsWith('kk-'))
+              ? 'kz'
+              : 'ru'
 
   localStorage.setItem('language', detected)
   return detected
@@ -66,7 +70,7 @@ export function setCurrentLanguage(lang: Language): void {
 
 // Проверить, является ли строка валидным языком
 export function isValidLanguage(lang: string): lang is Language {
-  return lang === 'ru' || lang === 'en' || lang === 'uk' || lang === 'pl' || lang === 'tr'
+  return lang === 'ru' || lang === 'en' || lang === 'uk' || lang === 'pl' || lang === 'tr' || lang === 'kz'
 }
 
 // Маппинг языков на локали для форматирования дат
@@ -75,7 +79,8 @@ export const dateLocales: Record<Language, string> = {
   en: 'en-US',
   uk: 'uk-UA',
   pl: 'pl-PL',
-  tr: 'tr-TR'
+  tr: 'tr-TR',
+  kz: 'kk-KZ'
 }
 
 // Получить локаль для форматирования дат

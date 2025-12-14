@@ -28,18 +28,18 @@
 }
 
 .plan-badge.badge-free {
-  background: rgba(107, 114, 128, 0.15);
-  color: #9ca3af;
+  background: rgba(139, 90, 43, 0.2);
+  color: #CD7F32;
 }
 
 .plan-badge.badge-premium {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3B82F6;
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD700;
 }
 
 .plan-badge.badge-alpha {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
-  color: #a78bfa;
+  background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(30, 144, 255, 0.2) 100%);
+  color: #00BFFF;
 }
 
 .plan-info h3 {

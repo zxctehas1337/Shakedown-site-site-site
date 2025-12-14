@@ -143,7 +143,8 @@ export const LANGUAGES = {
   en: { name: 'English', flag: '🇬🇧' },
   uk: { name: 'Українська', flag: '🇺🇦' },
   pl: { name: 'Polski', flag: '🇵🇱' },
-  tr: { name: 'Türkçe', flag: '🇹🇷' }
+  tr: { name: 'Türkçe', flag: '🇹🇷' },
+  kz: { name: 'Қазақша', flag: '🇰🇿' }
 }
 
 // Доступные темы

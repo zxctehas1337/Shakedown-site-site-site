@@ -9,11 +9,13 @@ import '../styles/home/index.css'
 import '../styles/PricingPage.css'
 import { CLIENT_INFO, fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants.ts'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index.ts'
+import { useCurrencyTranslation } from '../hooks/useCurrencyTranslation'
 
 function PricingPage() {
   const navigate = useNavigate()
   const [lang, setLang] = useState<Language>(getCurrentLanguage())
   const [products, setProducts] = useState<Product[]>(PRODUCTS_FALLBACK)
+  const { currency } = useCurrencyTranslation()
   const t = getTranslation(lang)
 
   useEffect(() => {
@@ -44,18 +46,45 @@ function PricingPage() {
   }, [lang])
 
   // Функция для получения изображения продукта с учетом языка
-  const getProductImage = (product: Product): string => {
-    const name = product.name.toLowerCase()
+  const getProductImage = (productId: string): string => {
     const isRussian = lang === 'ru'
     const suffix = isRussian ? '.jpg' : '-eng.jpg'
     
-    if (name.includes('alpha')) return `/alpha.jpg`
-    if (name.includes('premium')) return `/premium30days${suffix}`
-    if (name.includes('30')) return `/30days${suffix}`
-    if (name.includes('90')) return `/90days${suffix}`
-    if (name.includes('навсегда') || name.includes('forever') || name.includes('lifetime')) return `/forever${suffix}`
-    if (name.includes('hwid') || name.includes('сброс')) return `/remove${suffix}`
+    if (productId === 'alpha') return `/alpha.jpg`
+    if (productId === 'premium-30') return `/premium30days${suffix}`
+    if (productId === 'client-30') return `/30days${suffix}`
+    if (productId === 'client-90') return `/90days${suffix}`
+    if (productId === 'client-lifetime') return `/forever${suffix}`
+    if (productId === 'hwid-reset') return `/remove${suffix}`
     return '/photo.png' // fallback изображение
+  }
+
+  // Функция для получения локализованного названия продукта
+  const getLocalizedProductName = (productId: string): string => {
+    const productMap: Record<string, keyof typeof t.products> = {
+      'client-30': 'client30',
+      'client-90': 'client90',
+      'client-lifetime': 'clientLifetime',
+      'hwid-reset': 'hwidReset',
+      'premium-30': 'premium30',
+      'alpha': 'alpha'
+    }
+    const key = productMap[productId]
+    return key ? t.products[key] : productId
+  }
+
+  // Функция для получения локализованной цены
+  const getLocalizedPrice = (productId: string): number => {
+    const priceMap: Record<string, keyof typeof currency.prices> = {
+      'client-30': 'client30',
+      'client-90': 'client90',
+      'client-lifetime': 'clientLifetime',
+      'hwid-reset': 'hwidReset',
+      'premium-30': 'premium30',
+      'alpha': 'alpha'
+    }
+    const key = priceMap[productId]
+    return key ? currency.prices[key] : 0
   }
 
   return (
@@ -101,14 +130,15 @@ function PricingPage() {
         <div className="pricing-grid">
           {products.map((product) => {
             const hasDiscount = 'discount' in product && (product as { discount?: number }).discount
-            const originalPrice = 'originalPrice' in product ? (product as { originalPrice?: number }).originalPrice : null
+            const localizedPrice = getLocalizedPrice(product.id)
+            const localizedName = getLocalizedProductName(product.id)
             
             return (
               <div key={product.id} className="pricing-card">
                 <div className="pricing-card-image">
                   <img 
-                    src={getProductImage(product)} 
-                    alt={product.name}
+                    src={getProductImage(product.id)} 
+                    alt={localizedName}
                     className="pricing-card-img"
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
@@ -117,17 +147,14 @@ function PricingPage() {
                 </div>
                 
                 <div className="pricing-card-content">
-                  <h3 className="pricing-card-name">{product.name}</h3>
+                  <h3 className="pricing-card-name">{localizedName}</h3>
                   
                   <div className="pricing-card-price">
-                    <span className="pricing-card-price-label">Цена:</span>
-                    {originalPrice && (
-                      <span className="pricing-card-price-original">{originalPrice} ₽</span>
-                    )}
-                    <span className="pricing-card-price-current">{product.price} ₽</span>
+                    <span className="pricing-card-price-label">{currency.priceLabel}:</span>
+                    <span className="pricing-card-price-current">{localizedPrice} {currency.symbol}</span>
                     {hasDiscount && (
                       <span className="pricing-discount-badge">
-                        Скидка {(product as { discount?: number }).discount}%
+                        {t.services.discount} {(product as { discount?: number }).discount}%
                       </span>
                     )}
                   </div>

@@ -118,21 +118,21 @@
 }
 
 .badge-free {
-  color: #9ca3af;
-  border-color: rgba(156, 163, 175, 0.3);
-  background: rgba(156, 163, 175, 0.08);
+  color: #CD7F32;
+  border-color: rgba(205, 127, 50, 0.3);
+  background: rgba(205, 127, 50, 0.08);
 }
 
 .badge-premium {
-  color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.3);
-  background: rgba(96, 165, 250, 0.08);
+  color: #FFD700;
+  border-color: rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.08);
 }
 
 .badge-alpha {
-  color: #a78bfa;
-  border-color: rgba(167, 139, 250, 0.3);
-  background: rgba(167, 139, 250, 0.08);
+  color: #00BFFF;
+  border-color: rgba(0, 191, 255, 0.3);
+  background: rgba(0, 191, 255, 0.08);
 }
 
 /* Navigation */

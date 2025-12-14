@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import LanguageSelector from '../../../components/ThemeLanguageSelector'
 import LogoWithHat from '../../../components/LogoWithHat'
-import { IconHome, IconNews, IconGrid, IconProfile, IconStar, IconSettings, IconShield, IconLogout } from '../../../components/Icons'
+import { IconHome, IconNews, IconGrid, IconProfile, IconSubscription, IconSettings, IconShield, IconLogout } from '../../../components/Icons'
 import { User } from '../../../types'
 import { CLIENT_INFO } from '../../../utils/constants'
 import { TabType } from '../hooks/useDashboard'
@@ -90,7 +90,7 @@ export function DashboardSidebar({
           className={`nav-item ${activeTab === 'subscription' ? 'active' : ''}`}
           onClick={(e) => { e.stopPropagation(); setActiveTab('subscription'); setMobileMenuOpen(false); }}
         >
-          <IconStar />
+          <IconSubscription />
           {t.dashboard.subscription}
         </button>
         <button 

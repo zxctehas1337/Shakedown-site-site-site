@@ -191,5 +191,18 @@ export const trTranslations: TranslationStructure = {
     exclusiveFeatures: 'Özel özellikler',
     priorityQueue: 'Öncelikli kuyruk',
     uniqueFeatures: 'Benzersiz özellikler'
+  },
+  currency: {
+    symbol: '₺',
+    code: 'TRY',
+    priceLabel: 'Fiyat',
+    prices: {
+      client30: 79,
+      client90: 159,
+      clientLifetime: 349,
+      hwidReset: 39,
+      premium30: 109,
+      alpha: 219
+    }
   }
 }

@@ -65,6 +65,25 @@ export const IconStar: React.FC<IconProps> = ({ size = 20, className }) => (
   </svg>
 )
 
+// Subscription/Membership card icon
+export const IconSubscription: React.FC<IconProps> = ({ size = 20, className }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2" />
+    <path d="M2 10h20" />
+    <path d="M6 15h4" />
+    <circle cx="18" cy="15" r="2" />
+  </svg>
+)
+
+// Subscription/Premium icon (Diamond)
+export const IconDiamond: React.FC<IconProps> = ({ size = 20, className }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 3h12l4 6-10 13L2 9z" />
+    <path d="M2 9h20" />
+    <path d="M12 22L6 9l6-6 6 6z" />
+  </svg>
+)
+
 export const IconSettings: React.FC<IconProps> = ({ size = 20, className }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="3" />

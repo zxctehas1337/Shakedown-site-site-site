@@ -38,7 +38,36 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
   if (!isOpen) return null
 
   const product = products.find(p => p.id === selectedProduct)
-  const finalPrice = product?.price || 0
+  
+  // Функция для получения локализованного названия продукта
+  const getLocalizedProductName = (productId: string): string => {
+    const productMap: Record<string, keyof typeof t.products> = {
+      'client-30': 'client30',
+      'client-90': 'client90',
+      'client-lifetime': 'clientLifetime',
+      'hwid-reset': 'hwidReset',
+      'premium-30': 'premium30',
+      'alpha': 'alpha'
+    }
+    const key = productMap[productId]
+    return key ? t.products[key] : productId
+  }
+
+  // Функция для получения локализованной цены
+  const getLocalizedPrice = (productId: string): number => {
+    const priceMap: Record<string, keyof typeof t.currency.prices> = {
+      'client-30': 'client30',
+      'client-90': 'client90',
+      'client-lifetime': 'clientLifetime',
+      'hwid-reset': 'hwidReset',
+      'premium-30': 'premium30',
+      'alpha': 'alpha'
+    }
+    const key = priceMap[productId]
+    return key ? t.currency.prices[key] : 0
+  }
+
+  const finalPrice = product ? getLocalizedPrice(product.id) : 0
 
   const handlePayment = () => {
     if (!selectedProduct || !paymentMethod) {
@@ -73,7 +102,7 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
             <option value="">{t.payment.selectPlaceholder}</option>
             {products.map(p => (
               <option key={p.id} value={p.id}>
-                {p.name} - {p.price} ₽
+                {getLocalizedProductName(p.id)} - {getLocalizedPrice(p.id)} {t.currency.symbol}
                 {p.discount && ` (${t.services.discount} ${p.discount}%)`}
               </option>
             ))}
@@ -98,10 +127,7 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
             <div className="price-row">
               <span>{t.payment.toPay}:</span>
               <span className="price-amount">
-                {'originalPrice' in product && (product as { originalPrice?: number }).originalPrice && (
-                  <span className="price-original">{(product as { originalPrice?: number }).originalPrice} ₽</span>
-                )}
-                <span className="price-final">{finalPrice} ₽</span>
+                <span className="price-final">{finalPrice} {t.currency.symbol}</span>
                 {'discount' in product && (product as { discount?: number }).discount && (
                   <span className="price-discount">{t.services.discount} {(product as { discount?: number }).discount}%</span>
                 )}
