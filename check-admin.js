@@ -1,5 +1,7 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -21,7 +23,8 @@ async function checkAdmin() {
         console.log(`Email: ${admin.email}`);
         console.log(`Is Admin: ${admin.is_admin}`);
         console.log(`Email Verified: ${admin.email_verified}`);
-        console.log(`Password (base64): ${admin.password}`);
+        console.log(`Password (first 50 chars): ${admin.password.substring(0, 50)}`);
+        console.log(`Password starts with: ${admin.password.substring(0, 10)}`);
         console.log('---');
       });
     } else {
@@ -44,7 +47,8 @@ async function checkAdmin() {
       console.log(`Email: ${dev.email}`);
       console.log(`Is Admin: ${dev.is_admin}`);
       console.log(`Email Verified: ${dev.email_verified}`);
-      console.log(`Password (base64): ${dev.password}`);
+      console.log(`Password (first 50 chars): ${dev.password.substring(0, 50)}`);
+      console.log(`Password starts with: ${dev.password.substring(0, 10)}`);
     }
 
     await pool.end();
@@ -55,4 +59,4 @@ async function checkAdmin() {
   }
 }
 
-checkAdmin();
+await checkAdmin();

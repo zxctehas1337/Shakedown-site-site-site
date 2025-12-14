@@ -33,7 +33,7 @@ const passwordsMatch = async (pool, user, inputPassword) => {
   }
 
   if (user.password.startsWith('$2')) {
-    return comparePassword(inputPassword, user.password);
+    return await comparePassword(inputPassword, user.password);
   }
 
   if (user.password === inputPassword) {

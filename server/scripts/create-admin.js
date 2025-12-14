@@ -1,9 +1,11 @@
 // Скрипт создания/обновления админа
 // Запуск: node server/scripts/create-admin.js
 
-const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
+import { Pool } from 'pg';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Validate required environment variables
 const requiredEnvVars = ['ADMIN_USERNAME', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'DATABASE_URL'];
