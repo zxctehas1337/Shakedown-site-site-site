@@ -32,7 +32,7 @@
 /* Карточка продукта */
 .pricing-card {
   background: #0d1117;
-  border-radius: 5px;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -116,7 +116,7 @@
   padding: 0.1rem 0.3rem;
   background: rgba(46, 160, 67, 0.2);
   border: 1px solid #2ea043;
-  border-radius: 3px;
+  border-radius: 8px;
   font-size: 0.6rem;
   color: #3fb950;
   font-weight: 500;
@@ -132,7 +132,7 @@
   padding: 0.45rem 0.5rem;
   background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   color: #fff;
   font-size: 0.72rem;
   font-weight: 500;

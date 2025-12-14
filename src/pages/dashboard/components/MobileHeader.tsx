@@ -1,4 +1,5 @@
 import { CLIENT_INFO } from '../../../utils/constants'
+import LogoWithHat from '../../../components/LogoWithHat'
 
 interface Props {
   mobileMenuOpen: boolean
@@ -9,9 +10,9 @@ export function MobileHeader({ mobileMenuOpen, setMobileMenuOpen }: Props) {
   return (
     <header className="mobile-header">
       <div className="mobile-header-left">
-        <img
-          src="/icon.ico"
+        <LogoWithHat
           alt="Shakedown"
+          size={32}
           className="mobile-logo no-user-drag"
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}

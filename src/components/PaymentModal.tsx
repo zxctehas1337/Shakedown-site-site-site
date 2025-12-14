@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import '../styles/PaymentModal.css'
 import { fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index'
+import { IconClose } from './Icons'
 
 interface PaymentModalProps {
   isOpen: boolean
@@ -56,9 +57,7 @@ function PaymentModal({ isOpen, onClose, productId }: PaymentModalProps) {
     <div className="payment-modal-overlay" onClick={onClose}>
       <div className="payment-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+          <IconClose size={24} />
         </button>
 
         <h2 className="modal-title">{t.payment.title}</h2>

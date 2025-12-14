@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { CLIENT_INFO, SOCIAL_LINKS } from '../utils/constants'
 import { getTranslation, Language } from '../utils/translations'
+import LogoWithHat from './LogoWithHat'
 
 interface FooterProps {
   lang: Language
@@ -13,9 +14,9 @@ export default function Footer({ lang }: FooterProps) {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-brand">
-          <img
-            src="/icon.ico"
+          <LogoWithHat
             alt="Shakedown"
+            size={40}
             className="footer-logo no-user-drag"
             draggable={false}
             onContextMenu={(e) => e.preventDefault()}

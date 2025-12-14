@@ -10,6 +10,8 @@ import PersonalDataPage from './pages/PersonalDataPage.tsx'
 import UserAgreementPage from './pages/UserAgreementPage.tsx'
 import UsageRulesPage from './pages/UsageRulesPage.tsx'
 import { SoonModal } from './components/SoonModal'
+import Snowfall from './components/Snowfall'
+import WinterOverlay from './components/WinterOverlay'
 import { VerificationModal } from './pages/auth/components/VerificationModal'
 import { NotificationType } from './types'
 import './styles/auth/AuthModal.css'
@@ -40,6 +42,8 @@ function App() {
 
   return (
     <Router>
+      <WinterOverlay />
+      <Snowfall />
       {showSoonModal && (
         <SoonModal
           isOpen={showSoonModal}

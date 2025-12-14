@@ -9,6 +9,7 @@ import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
 import { EmailAuthModal } from './components/EmailRegisterModal'
 import { VerificationModal } from './components/VerificationModal'
+import LogoWithHat from '../../components/LogoWithHat'
 import { getCurrentUser } from '../../utils/database'
 import { getCurrentLanguage, getTranslation } from '../../utils/translations'
 import '../../styles/auth/AuthBase.css'
@@ -70,11 +71,9 @@ export default function AuthPage() {
         <div className="auth-box-clean">
           <div className="auth-header">
             <div className="auth-logo-small">
-              <img
-                src="/icon.ico"
+              <LogoWithHat
                 alt="ShakeDown"
-                width="40"
-                height="40"
+                size={40}
                 className="no-user-drag"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}

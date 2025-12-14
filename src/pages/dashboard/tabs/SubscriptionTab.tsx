@@ -1,4 +1,5 @@
 import { User } from '../../../types'
+import { IconStar } from '../../../components/Icons'
 
 interface Props {
   user: User
@@ -27,9 +28,7 @@ export function SubscriptionTab({
       <div className="subscription-status">
         <div className="current-plan">
           <div className={`plan-badge ${badge.class}`}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-            </svg>
+            <IconStar size={32} />
           </div>
           <div className="plan-info">
             <h3>{t.dashboard.currentPlan}: {badge.text}</h3>

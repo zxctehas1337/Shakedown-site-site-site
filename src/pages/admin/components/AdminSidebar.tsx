@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import LogoWithHat from '../../../components/LogoWithHat'
 
 type TabType = 'overview' | 'news' | 'users' | 'activity' | 'keys'
 
@@ -24,11 +25,9 @@ export function AdminSidebar({
   return (
     <aside className="admin-sidebar">
       <div className="admin-brand">
-        <img
-          src="/icon.ico"
+        <LogoWithHat
           alt="Shakedown"
-          width="32"
-          height="32"
+          size={32}
           className="no-user-drag"
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}

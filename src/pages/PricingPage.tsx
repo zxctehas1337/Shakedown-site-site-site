@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground.tsx'
 import LanguageSelector from '../components/ThemeLanguageSelector.tsx'
 import Footer from '../components/Footer.tsx'
+import LogoWithHat from '../components/LogoWithHat'
+import { IconHome, IconNews, IconUser, IconShoppingBag } from '../components/Icons'
 import '../styles/home/index.css'
 import '../styles/PricingPage.css'
 import { CLIENT_INFO, fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants.ts'
@@ -13,25 +15,6 @@ function PricingPage() {
   const [lang, setLang] = useState<Language>(getCurrentLanguage())
   const [products, setProducts] = useState<Product[]>(PRODUCTS_FALLBACK)
   const t = getTranslation(lang)
-
-  const IconHome = (
-    <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M10 2L2 7v11h6v-6h4v6h6V7l-8-5z"/>
-    </svg>
-  )
-
-  const IconNews = (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
-    </svg>
-  )
-
-  const IconUser = (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21a8 8 0 0 0-16 0" />
-      <path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
-    </svg>
-  )
 
   useEffect(() => {
     fetchProducts().then(data => {
@@ -85,27 +68,30 @@ function PricingPage() {
       
       <nav className="navbar">
         <Link to="/" className="nav-brand">
-          <img
-            src="/icon.ico"
-            alt="Shakedown Logo"
-            className="nav-logo no-user-drag"
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
-          />
+          <div className="nav-logo-container">
+            <LogoWithHat
+              alt="Shakedown Logo"
+              size={42}
+              className="nav-logo no-user-drag"
+              hatClassName="nav-logo-hat"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </div>
           <div className="brand-info">
             <span className="brand-name">{CLIENT_INFO.name}</span>
           </div>
         </Link>
         <div className="nav-links">
-          <button onClick={() => navigate('/')} className="nav-link">{IconHome}{t.nav.home}</button>
-          <button onClick={() => navigate('/news')} className="nav-link">{IconNews}{t.nav.news}</button>
+          <button onClick={() => navigate('/')} className="nav-link"><IconHome />{t.nav.home}</button>
+          <button onClick={() => navigate('/news')} className="nav-link"><IconNews />{t.nav.news}</button>
           <LanguageSelector 
             onLanguageChange={() => {
               setLang(getCurrentLanguage())
             }}
           />
-          <button onClick={() => navigate('/auth')} className="nav-button-login">{IconUser}{t.nav.dashboard}</button>
+          <button onClick={() => navigate('/auth')} className="nav-button-login"><IconUser />{t.nav.dashboard}</button>
         </div>
       </nav>
 
@@ -150,11 +136,7 @@ function PricingPage() {
                     onClick={() => navigate('/auth')} 
                     className="pricing-card-button"
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                      <line x1="3" y1="6" x2="21" y2="6"/>
-                      <path d="M16 10a4 4 0 0 1-8 0"/>
-                    </svg>
+                    <IconShoppingBag />
                     {t.services.pay}
                   </button>
                 </div>

@@ -25,6 +25,11 @@
   cursor: pointer;
 }
 
+.nav-logo-container {
+  position: relative;
+  display: inline-block;
+}
+
 .nav-logo {
   width: 42px;
   height: 42px;
@@ -32,8 +37,24 @@
   transition: transform 0.3s ease;
 }
 
-.nav-logo:hover {
+.nav-logo-hat {
+  position: absolute;
+  top: -12px;
+  left: 60%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.nav-logo-container:hover .nav-logo {
   transform: rotate(10deg) scale(1.1);
+}
+
+.nav-logo-container:hover .nav-logo-hat {
+  transform: translateX(-50%) rotate(-5deg) scale(1.1);
 }
 
 .brand-info {

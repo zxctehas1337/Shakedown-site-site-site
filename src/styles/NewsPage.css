@@ -34,14 +34,14 @@
     cursor: pointer;
 }
 
-.nav-brand img {
+.nav-brand .logoWithHat__logo {
     width: 32px;
     height: 32px;
     border-radius: 8px;
     transition: transform 0.3s ease;
 }
 
-.nav-brand img:hover {
+.nav-brand .logoWithHat:hover .logoWithHat__logo {
     transform: rotate(10deg) scale(1.1);
 }
 
@@ -79,6 +79,11 @@
 .nav-links a:hover,
 .nav-links a.active {
     color: var(--text-primary);
+}
+
+.nav-links .nav-icon {
+    margin-right: 8px;
+    transform: translateY(2px);
 }
 
 

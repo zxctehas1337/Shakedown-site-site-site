@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { NewsPost } from '../types'
 import AnimatedBackground from '../components/AnimatedBackground'
+import LogoWithHat from '../components/LogoWithHat'
+import { IconHome, IconEmpty, IconAuthor } from '../components/Icons'
 import { CLIENT_INFO } from '../utils/constants'
 import '../styles/NewsPage.css'
 
@@ -44,11 +46,9 @@ export default function NewsPage() {
         <nav className="nav">
           <div className="nav-brand">
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-              <img
-                src="/icon.ico"
+              <LogoWithHat
                 alt="Shakedown"
-                width="32"
-                height="32"
+                size={32}
                 className="no-user-drag"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
@@ -59,10 +59,7 @@ export default function NewsPage() {
           </div>
           <div className="nav-links">
             <Link to="/" className="active">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', transform: 'translateY(2px)' }}>
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
+              <IconHome className="nav-icon" />
               Главная
             </Link>
             {!currentUser && <Link to="/auth">Войти</Link>}
@@ -125,12 +122,7 @@ export default function NewsPage() {
         <div className="container">
           {filteredNews.length === 0 ? (
             <div className="empty-news">
-              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <path d="M8 16C8 11.5817 11.5817 8 16 8H48C52.4183 8 56 11.5817 56 16V48C56 52.4183 52.4183 56 48 56H16C11.5817 56 8 52.4183 8 48V16Z" stroke="currentColor" strokeWidth="2"/>
-                <rect x="16" y="16" width="20" height="12" fill="currentColor" opacity="0.3"/>
-                <rect x="16" y="32" width="32" height="2" fill="currentColor" opacity="0.3"/>
-                <rect x="16" y="40" width="32" height="2" fill="currentColor" opacity="0.3"/>
-              </svg>
+              <IconEmpty />
               <h3>Новостей пока нет</h3>
               <p>Следите за обновлениями</p>
             </div>
@@ -154,10 +146,7 @@ export default function NewsPage() {
                   <p>{post.content}</p>
                   <div className="news-article-footer">
                     <div className="news-author">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <circle cx="8" cy="5" r="3"/>
-                        <path d="M8 10C4.68629 10 2 11.7909 2 14H14C14 11.7909 11.3137 10 8 10Z"/>
-                      </svg>
+                      <IconAuthor />
                       <span>{post.author}</span>
                     </div>
                   </div>
@@ -173,11 +162,9 @@ export default function NewsPage() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <img
-                src="/icon.ico"
+              <LogoWithHat
                 alt="Shakedown"
-                width="32"
-                height="32"
+                size={32}
                 className="no-user-drag"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
