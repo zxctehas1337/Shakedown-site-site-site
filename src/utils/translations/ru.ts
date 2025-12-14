@@ -32,8 +32,8 @@ export const ruTranslations: TranslationStructure = {
   },
   // Функции
   features: {
-    ourAdvantages: 'Гарантированные преимущества',
-    ourAdvantagesDesc: 'Вот что вы получаете с нашим клиентом: мощь, безопасность и удовольствие от игры.',
+    ourAdvantages: 'Наши преимущества',
+    ourAdvantagesDesc: 'Мы кратко изложили вам то, что вы гарантированно получите после покупки нашего клиента.',
     performance: 'Максимальный FPS - всегда',
     performanceDesc: 'Плавный игровой процесс без просадок даже в самых нагруженных сценах. Игра летает.',
     bypass: 'Абсолютная невидимость',
@@ -60,7 +60,10 @@ export const ruTranslations: TranslationStructure = {
   },
   // Footer
   footer: {
-    rights: 'Все права защищены'
+    rights: 'Все права защищены',
+    personalData: 'Обработка персональных данных',
+    userAgreement: 'Пользовательское соглашение',
+    usageRules: 'Правила пользования'
   },
   // Dashboard
   dashboard: {

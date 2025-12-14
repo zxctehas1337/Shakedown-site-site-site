@@ -57,6 +57,9 @@ export interface TranslationStructure {
   }
   footer: {
     rights: string
+    personalData: string
+    userAgreement: string
+    usageRules: string
   }
   dashboard: {
     title: string

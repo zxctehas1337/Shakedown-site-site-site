@@ -1,12 +1,11 @@
 /* Auth Page Split Layout */
 .auth-page-split {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
     max-width: 100%;
     width: 100%;
     background: #0f0f13;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     position: relative;
     margin: 0 auto;
 }

@@ -189,6 +189,9 @@ export default function NewsPage() {
               <Link to="/">Главная</Link>
               <Link to="/news">Новости</Link>
               <Link to="/auth">Войти</Link>
+              <Link to="/personal-data">Обработка персональных данных</Link>
+              <Link to="/user-agreement">Пользовательское соглашение</Link>
+              <Link to="/usage-rules">Правила пользования</Link>
             </div>
           </div>
           <div className="footer-bottom">

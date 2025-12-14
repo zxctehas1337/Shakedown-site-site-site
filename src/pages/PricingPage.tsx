@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import AnimatedBackground from '../components/AnimatedBackground.tsx'
 import LanguageSelector from '../components/ThemeLanguageSelector.tsx'
+import Footer from '../components/Footer.tsx'
 import '../styles/home/index.css'
 import '../styles/PricingPage.css'
-import { CLIENT_INFO, SOCIAL_LINKS, fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants.ts'
+import { CLIENT_INFO, fetchProducts, PRODUCTS_FALLBACK, Product } from '../utils/constants.ts'
 import { getTranslation, getCurrentLanguage, Language } from '../utils/translations/index.ts'
 
 function PricingPage() {
@@ -163,37 +164,7 @@ function PricingPage() {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <img
-              src="/icon.ico"
-              alt="Shakedown"
-              className="footer-logo no-user-drag"
-              draggable={false}
-              onContextMenu={(e) => e.preventDefault()}
-              onDragStart={(e) => e.preventDefault()}
-            />
-            <span className="footer-name gradient-text">{CLIENT_INFO.name}</span>
-          </div>
-          <div className="footer-links">
-            <a href="/">{t.nav.home}</a>
-            <a href="/news">{t.nav.news}</a>
-            <a href="/auth">{t.nav.dashboard}</a>
-          </div>
-          <div className="footer-social">
-            {SOCIAL_LINKS.discord && (
-              <a href={SOCIAL_LINKS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
-            )}
-            {SOCIAL_LINKS.telegram && (
-              <a href={SOCIAL_LINKS.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
-            )}
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>© 2025 {CLIENT_INFO.name}. {t.footer.rights}</p>
-        </div>
-      </footer>
+      <Footer lang={lang} />
     </div>
   )
 }

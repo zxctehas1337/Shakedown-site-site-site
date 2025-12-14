@@ -54,7 +54,10 @@ export const ukTranslations: TranslationStructure = {
     supportDescFull: 'Наша підтримка не просто відповідає на повідомлення. Ми вирішуємо проблеми в корені швидко, по суті та з повним зануренням у вашу ситуацію.'
   },
   footer: {
-    rights: 'Всі права захищені'
+    rights: 'Всі права захищені',
+    personalData: 'Обробка персональних даних',
+    userAgreement: 'Користувацька угода',
+    usageRules: 'Правила користування'
   },
   dashboard: {
     title: 'Особистий кабінет',

@@ -7,8 +7,7 @@ import { useOAuthCallback } from './hooks/useOAuthCallback'
 import { FeatureSlider } from './components/FeatureSlider'
 import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
-import { EmailLoginModal } from './components/EmailLoginModal'
-import { EmailRegisterModal } from './components/EmailRegisterModal'
+import { EmailAuthModal } from './components/EmailRegisterModal'
 import { VerificationModal } from './components/VerificationModal'
 import { getCurrentUser } from '../../utils/database'
 import { getCurrentLanguage, getTranslation } from '../../utils/translations'
@@ -21,9 +20,9 @@ import '../../styles/auth/AuthResponsive.css'
 export default function AuthPage() {
   const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null)
   const [isAdminMode, setIsAdminMode] = useState(false)
+  const [isLoginMode, setIsLoginMode] = useState(true)
   const [showVerificationModal, setShowVerificationModal] = useState(false)
-  const [showEmailLoginModal, setShowEmailLoginModal] = useState(false)
-  const [showEmailRegisterModal, setShowEmailRegisterModal] = useState(false)
+  const [showEmailAuthModal, setShowEmailAuthModal] = useState(false)
   const [pendingUserId, setPendingUserId] = useState<string | null>(null)
   const navigate = useNavigate()
   
@@ -91,18 +90,28 @@ export default function AuthPage() {
           <div className="auth-form-clean">
             {!isAdminMode ? (
               <>
-                <button
-                  onClick={() => setShowEmailLoginModal(true)}
-                  className="btn-primary-clean"
-                >
-                  Вход через Email
-                </button>
+                <div className="auth-toggle-container">
+                  <div className="auth-toggle-switch">
+                    <button 
+                      className={`toggle-option ${isLoginMode ? 'active' : ''}`}
+                      onClick={() => setIsLoginMode(true)}
+                    >
+                      Вход
+                    </button>
+                    <button 
+                      className={`toggle-option ${!isLoginMode ? 'active' : ''}`}
+                      onClick={() => setIsLoginMode(false)}
+                    >
+                      Регистрация
+                    </button>
+                  </div>
+                </div>
 
                 <button
-                  onClick={() => setShowEmailRegisterModal(true)}
+                  onClick={() => setShowEmailAuthModal(true)}
                   className="btn-primary-clean"
                 >
-                  Регистрация через Email
+                  {isLoginMode ? 'Войти через Email' : 'Создать аккаунт через Email'}
                 </button>
 
                 <div className="divider-clean">
@@ -139,23 +148,16 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {showEmailLoginModal && (
-        <EmailLoginModal
-          isOpen={showEmailLoginModal}
-          onClose={() => setShowEmailLoginModal(false)}
-          setNotification={setNotification}
-        />
-      )}
-
-      {showEmailRegisterModal && (
-        <EmailRegisterModal
-          isOpen={showEmailRegisterModal}
-          onClose={() => setShowEmailRegisterModal(false)}
+      {showEmailAuthModal && (
+        <EmailAuthModal
+          isOpen={showEmailAuthModal}
+          onClose={() => setShowEmailAuthModal(false)}
           setNotification={setNotification}
           onRequiresVerification={(userId) => {
             setPendingUserId(userId)
             setShowVerificationModal(true)
           }}
+          isLoginMode={isLoginMode}
         />
       )}
 

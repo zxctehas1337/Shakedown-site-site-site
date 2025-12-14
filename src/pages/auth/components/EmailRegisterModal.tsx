@@ -4,24 +4,62 @@ import { useNavigate } from 'react-router-dom'
 import { Database, setCurrentUser } from '../../../utils/database'
 import { NotificationType } from '../../../types'
 
-interface EmailRegisterModalProps {
+interface EmailAuthModalProps {
   isOpen: boolean
   onClose: () => void
   setNotification: (notification: { message: string; type: NotificationType } | null) => void
   onRequiresVerification: (userId: string) => void
+  isLoginMode: boolean
 }
 
-export function EmailRegisterModal({
+export function EmailAuthModal({
   isOpen,
   onClose,
   setNotification,
   onRequiresVerification,
-}: EmailRegisterModalProps) {
+  isLoginMode,
+}: EmailAuthModalProps) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!email || !password) {
+      setNotification({ message: 'Заполните все поля', type: 'error' })
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const db = new Database()
+      const result = await db.login(email, password)
+
+      if (result.success && result.user) {
+        setCurrentUser(result.user)
+        setNotification({ message: result.message || 'Вход выполнен!', type: 'success' })
+        onClose()
+
+        setTimeout(() => {
+          if (result.user?.isAdmin) {
+            navigate('/admin')
+          } else {
+            navigate('/dashboard')
+          }
+        }, 600)
+      } else {
+        setNotification({ message: result.message || 'Неверный логин или пароль', type: 'error' })
+      }
+    } catch (error) {
+      console.error('Email login error:', error)
+      setNotification({ message: 'Ошибка подключения к серверу', type: 'error' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,36 +113,40 @@ export function EmailRegisterModal({
     }
   }
 
+  const handleSubmit = isLoginMode ? handleLogin : handleRegister
+
   if (!isOpen) return null
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
       <div className="modal-content email-login-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Регистрация через Email</h3>
+          <h3>{isLoginMode ? 'Вход через Email' : 'Регистрация через Email'}</h3>
           <button className="modal-close" onClick={handleClose} disabled={isLoading}>
             ×
           </button>
         </div>
 
-        <form onSubmit={handleRegister} className="admin-form-clean">
-          <div className="form-group-clean">
-            <label htmlFor="username-register-modal">Логин</label>
-            <input
-              id="username-register-modal"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="username"
-              className="input-clean"
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="admin-form-clean">
+          {!isLoginMode && (
+            <div className="form-group-clean">
+              <label htmlFor="username-auth-modal">Логин</label>
+              <input
+                id="username-auth-modal"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="username"
+                className="input-clean"
+                required={!isLoginMode}
+              />
+            </div>
+          )}
 
           <div className="form-group-clean">
-            <label htmlFor="email-register-modal">Email</label>
+            <label htmlFor="email-auth-modal">Email</label>
             <input
-              id="email-register-modal"
+              id="email-auth-modal"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -115,9 +157,9 @@ export function EmailRegisterModal({
           </div>
 
           <div className="form-group-clean">
-            <label htmlFor="password-register-modal">Пароль</label>
+            <label htmlFor="password-auth-modal">Пароль</label>
             <input
-              id="password-register-modal"
+              id="password-auth-modal"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -128,7 +170,10 @@ export function EmailRegisterModal({
           </div>
 
           <button type="submit" className="btn-primary-clean" disabled={isLoading}>
-            {isLoading ? 'Создаем аккаунт...' : 'Зарегистрироваться'}
+            {isLoading 
+              ? (isLoginMode ? 'Входим...' : 'Создаем аккаунт...')
+              : (isLoginMode ? 'Войти' : 'Зарегистрироваться')
+            }
           </button>
         </form>
       </div>

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { CLIENT_INFO, SOCIAL_LINKS } from '../utils/constants'
 import { getTranslation, Language } from '../utils/translations'
 
@@ -23,9 +24,17 @@ export default function Footer({ lang }: FooterProps) {
           <span className="footer-name gradient-text">{CLIENT_INFO.name}</span>
         </div>
         <div className="footer-links">
-          <a href="/pricing">{t.nav.services}</a>
-          <a href="/news">{t.nav.news}</a>
-          <a href="/auth">{t.nav.dashboard}</a>
+          <Link to="/pricing">{t.nav.services}</Link>
+          <Link to="/news">{t.nav.news}</Link>
+          <Link to="/auth">{t.nav.dashboard}</Link>
+        </div>
+        <div className="footer-legal">
+          <h3 className="legal-title">Navigation</h3>
+          <div className="legal-links">
+            <Link to="/personal-data">{t.footer.personalData}</Link>
+            <Link to="/user-agreement">{t.footer.userAgreement}</Link>
+            <Link to="/usage-rules">{t.footer.usageRules}</Link>
+          </div>
         </div>
         <div className="footer-social">
           {SOCIAL_LINKS.discord && (

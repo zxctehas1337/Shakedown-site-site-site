@@ -54,7 +54,10 @@ export const plTranslations: TranslationStructure = {
     supportDescFull: 'Nasz support nie tylko odpisuje. Rozwiązujemy problemy u źródła - szybko, konkretnie i z pełnym zrozumieniem sytuacji.'
   },
   footer: {
-    rights: 'Wszelkie prawa zastrzeżone'
+    rights: 'Wszelkie prawa zastrzeżone',
+    personalData: 'Przetwarzanie danych osobowych',
+    userAgreement: 'Umowa użytkownika',
+    usageRules: 'Zasady korzystania'
   },
   dashboard: {
     title: 'Panel',

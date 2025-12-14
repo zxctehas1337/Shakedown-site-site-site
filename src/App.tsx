@@ -6,6 +6,9 @@ import DashboardPage from './pages/dashboard/index.tsx'
 import AdminPage from './pages/admin/AdminPage.tsx'
 import NewsPage from './pages/NewsPage.tsx'
 import PricingPage from './pages/PricingPage.tsx'
+import PersonalDataPage from './pages/PersonalDataPage.tsx'
+import UserAgreementPage from './pages/UserAgreementPage.tsx'
+import UsageRulesPage from './pages/UsageRulesPage.tsx'
 import { SoonModal } from './components/SoonModal'
 
 function App() {
@@ -34,6 +37,9 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/personal-data" element={<PersonalDataPage />} />
+        <Route path="/user-agreement" element={<UserAgreementPage />} />
+        <Route path="/usage-rules" element={<UsageRulesPage />} />
       </Routes>
     </Router>
   )

@@ -54,7 +54,10 @@ export const enTranslations: TranslationStructure = {
     supportDescFull: 'Our support team doesn’t just answer messages. We fix issues at the root fast to the point and fully immersed in your case.'
   },
   footer: {
-    rights: 'All rights reserved'
+    rights: 'All rights reserved',
+    personalData: 'Personal data processing',
+    userAgreement: 'User agreement',
+    usageRules: 'Rules of use'
   },
   dashboard: {
     title: 'Dashboard',

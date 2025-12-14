@@ -54,7 +54,10 @@ export const trTranslations: TranslationStructure = {
     supportDescFull: 'Destek ekibimiz sadece mesajlara cevap vermez. Sorunları kökten çözeriz - hızlı, net ve durumunuza tamamen hakim olarak.'
   },
   footer: {
-    rights: 'Tüm hakları saklıdır'
+    rights: 'Tüm hakları saklıdır',
+    personalData: 'Kişisel veri işleme',
+    userAgreement: 'Kullanıcı sözleşmesi',
+    usageRules: 'Kullanım kuralları'
   },
   dashboard: {
     title: 'Panel',
