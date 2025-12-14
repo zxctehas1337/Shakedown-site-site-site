@@ -42,7 +42,7 @@ export async function loginUser(usernameOrEmail: string, password: string) {
 }
 
 // Обновление пользователя
-export async function updateUser(userId: number, updates: any) {
+export async function updateUser(userId: number | string, updates: any) {
   try {
     const response = await fetch(`${API_URL}/api/users/${userId}`, {
       method: 'PATCH',

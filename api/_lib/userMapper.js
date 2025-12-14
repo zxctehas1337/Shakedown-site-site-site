@@ -9,7 +9,8 @@ export function mapUserFromDb(dbUser) {
     isAdmin: dbUser.is_admin,
     isBanned: dbUser.is_banned,
     emailVerified: dbUser.email_verified,
-    settings: dbUser.settings
+    settings: dbUser.settings,
+    hwid: dbUser.hwid
   };
 }
 
@@ -25,6 +26,7 @@ export function mapOAuthUser(user, token) {
     isBanned: user.is_banned,
     emailVerified: true,
     settings: user.settings,
+    hwid: user.hwid,
     token: token
   };
 }

@@ -1,24 +1,46 @@
 import { useEffect } from 'react'
 import { getCurrentUser } from '../utils/database'
+import { updateUser } from '../utils/api'
 
 export default function LauncherAuthPage() {
     useEffect(() => {
         // Небольшая задержка чтобы убедиться что localStorage инициализирован
-        const checkAuth = setTimeout(() => {
-            const user = getCurrentUser()
+        const checkAuth = setTimeout(async () => {
+            let user = getCurrentUser()
 
             if (user) {
                 console.log('User found, redirecting to launcher...', user)
+
+                // Получаем HWID и порт из параметров URL
+                const urlParams = new URLSearchParams(window.location.search)
+                const port = urlParams.get('port') || 3000
+                const hwid = urlParams.get('hwid')
+
+                // Если есть HWID и он отличается, обновляем его
+                if (hwid && user.hwid !== hwid) {
+                    try {
+                        console.log('Updating HWID...', hwid)
+                        const result = await updateUser(user.id, { hwid })
+                        if (result.success && result.data) {
+                            console.log('HWID updated successfully')
+                            // Обновляем локального пользователя с данными от сервера (где уже есть HWID)
+                            // Но нам важнее, чтобы он был в user, который мы отправляем в лаунчер
+                            // user = result.data // result.data might contain mapped user which is good
+
+                            // Мы можем просто добавить hwid в текущий объект, если сервер вернул успех
+                            user.hwid = hwid
+                        }
+                    } catch (e) {
+                        console.error('Failed to update HWID', e)
+                    }
+                }
+
                 // Кодируем данные пользователя для передачи в лаунчер
                 const userData = encodeURIComponent(JSON.stringify(user))
 
-                // Получаем порт из параметров URL
-                const urlParams = new URLSearchParams(window.location.search)
-                const port = urlParams.get('port') || 3000
-
                 // Редиректим на локальный сервер лаунчера
                 window.location.href = `http://127.0.0.1:${port}/callback?user=${userData}`
-                
+
                 // Закрываем окно после успешной отправки данных в лаунчер
                 setTimeout(() => {
                     window.close()
@@ -27,7 +49,13 @@ export default function LauncherAuthPage() {
                 console.log('User not found, redirecting to login...')
                 // Если не авторизован, редиректим на страницу входа
                 // Добавляем параметр чтобы после входа можно было вернуться (опционально)
-                window.location.href = '/auth?redirect=launcher'
+                const urlParams = new URLSearchParams(window.location.search)
+                const hwid = urlParams.get('hwid')
+                let redirectUrl = '/auth?redirect=launcher'
+                if (hwid) {
+                    redirectUrl += `&hwid=${encodeURIComponent(hwid)}`
+                }
+                window.location.href = redirectUrl
             }
         }, 500)
 

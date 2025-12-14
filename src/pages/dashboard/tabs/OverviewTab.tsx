@@ -63,7 +63,7 @@ export function OverviewTab({
           </div>
           <div className="stat-info">
             <span className="stat-label">{t.dashboard.hwid}</span>
-            <span className="stat-value hwid">{t.dashboard.notLinked}</span>
+            <span className="stat-value hwid">{user.hwid || t.dashboard.notLinked}</span>
           </div>
         </div>
       </div>
