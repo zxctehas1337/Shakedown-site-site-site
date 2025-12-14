@@ -6,6 +6,7 @@ import { IconHome, IconDollar, IconNews, IconDownload, IconUser } from './Icons'
 import { CLIENT_INFO } from '../utils/constants'
 import { useTranslation } from '../hooks/useTranslation'
 import { getCurrentUser } from '../utils/database'
+import { getAvatarUrl } from '../utils/avatarGenerator'
 
 interface NavigationProps {
   onLanguageChange: () => void
@@ -82,7 +83,7 @@ export default function Navigation({ onLanguageChange }: NavigationProps) {
         {currentUser ? (
           <button onClick={() => navigate('/dashboard')} className="nav-button-login" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <img 
-              src={currentUser.avatar || '/icon.ico'} 
+              src={getAvatarUrl(currentUser.avatar, currentUser.username)} 
               alt="Avatar" 
               style={{ 
                 width: '24px', 

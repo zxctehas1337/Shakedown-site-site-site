@@ -5,6 +5,7 @@ import { IconHome, IconNews, IconGrid, IconProfile, IconSubscription, IconSettin
 import { User } from '../../../types'
 import { CLIENT_INFO } from '../../../utils/constants'
 import { TabType } from '../hooks/useDashboard'
+import { getAvatarUrl } from '../../../utils/avatarGenerator'
 
 interface Props {
   user: User
@@ -48,11 +49,7 @@ export function DashboardSidebar({
 
       <div className="sidebar-user">
         <div className="user-avatar">
-          {user.avatar ? (
-            <img src={user.avatar} alt={user.username} />
-          ) : (
-            <span>{user.username.charAt(0).toUpperCase()}</span>
-          )}
+          <img src={getAvatarUrl(user.avatar, user.username)} alt={user.username} />
         </div>
         <div className="user-info">
           <span className="user-name">{user.profile?.displayName || user.username}</span>

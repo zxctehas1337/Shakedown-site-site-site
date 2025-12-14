@@ -1,6 +1,7 @@
 import { RefObject } from 'react'
 import { User, UserProfile } from '../../../types'
 import { IconCamera } from '../../../components/Icons'
+import { getAvatarUrl } from '../../../utils/avatarGenerator'
 
 interface Props {
   user: User
@@ -33,11 +34,7 @@ export function ProfileTab({
       {/* Avatar Section */}
       <div className="profile-avatar-section">
         <div className="avatar-preview">
-          {user.avatar ? (
-            <img src={user.avatar} alt={user.username} />
-          ) : (
-            <span>{user.username.charAt(0).toUpperCase()}</span>
-          )}
+          <img src={getAvatarUrl(user.avatar, user.username)} alt={user.username} />
           <button 
             className="avatar-edit-btn"
             onClick={() => avatarInputRef.current?.click()}
