@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './styles/index.css'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 // Скрытая функция для локального тестирования (вызов из консоли: local_auth_test())
 declare global {
@@ -35,5 +36,6 @@ window.local_auth_test = async (
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
+    <SpeedInsights />
   </React.StrictMode>,
 )
