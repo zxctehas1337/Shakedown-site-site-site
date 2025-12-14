@@ -15,20 +15,31 @@ export default async (req, res) => {
     return handleCallback(req, res, provider, frontendUrl, baseUrl, redirect);
   }
 
+  // Обмен code на токен для лаунчера (когда GitHub редиректит на localhost, а localhost редиректит сюда)
+  if (action === 'exchange') {
+    return handleExchange(req, res, provider);
+  }
+
   // Redirect to OAuth provider
   return handleRedirect(res, provider, baseUrl, redirect);
 };
 
 function handleRedirect(res, provider, baseUrl, redirect) {
+  // Для лаунчера используем специальный redirect_uri на localhost
+  // GitHub примет этот redirect_uri даже если он не совпадает с зарегистрированным
+  const isLauncher = redirect === 'launcher';
+  
   const redirectUris = {
-    github: process.env.GITHUB_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
+    github: isLauncher 
+      ? `http://localhost:3000/api/oauth?provider=${provider}&action=callback`
+      : (process.env.GITHUB_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`),
     google: process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
     yandex: process.env.YANDEX_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`
   };
   let redirectUri = redirectUris[provider];
 
-  // Добавляем параметр redirect в callback URL, если он есть
-  if (redirect === 'launcher') {
+  // Добавляем параметр redirect в callback URL для Google/Yandex (для GitHub уже используем localhost)
+  if (isLauncher && provider !== 'github') {
     redirectUri += `&redirect=launcher`;
   }
 
@@ -135,6 +146,36 @@ async function handleGoogle(code, baseUrl, provider) {
   const profile = await userResponse.json();
 
   return { id: profile.id, email: profile.email, name: profile.name };
+}
+
+// Обмен code на токен для лаунчера (GitHub OAuth через localhost)
+async function handleExchange(req, res, provider) {
+  const { code, source } = req.query;
+
+  if (!code) {
+    return res.redirect(`http://127.0.0.1:3000/callback?error=no_code`);
+  }
+
+  // Только для запросов от лаунчера
+  if (source !== 'launcher') {
+    return res.status(400).json({ success: false, message: 'Invalid source' });
+  }
+
+  try {
+    const handlers = { github: handleGitHub, google: handleGoogle, yandex: handleYandex };
+    const profile = await handlers[provider](code);
+
+    const user = await findOrCreateOAuthUser(profile, provider);
+    const token = generateToken(user);
+    const userData = mapOAuthUser(user, token);
+    const encodedUser = encodeURIComponent(JSON.stringify(userData));
+
+    // Редиректим обратно на локальный сервер лаунчера с данными пользователя
+    return res.redirect(`http://127.0.0.1:3000/callback?user=${encodedUser}`);
+  } catch (err) {
+    console.error(`${provider} OAuth exchange error:`, err);
+    return res.redirect(`http://127.0.0.1:3000/callback?error=${provider}_failed`);
+  }
 }
 
 async function handleYandex(code) {
