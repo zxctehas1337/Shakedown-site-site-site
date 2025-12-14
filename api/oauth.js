@@ -28,9 +28,9 @@ function handleRedirect(res, provider, baseUrl, redirect) {
   // Для лаунчера используем специальный redirect_uri на localhost
   // GitHub примет этот redirect_uri даже если он не совпадает с зарегистрированным
   const isLauncher = redirect === 'launcher';
-  
+
   const redirectUris = {
-    github: isLauncher 
+    github: isLauncher
       ? `http://localhost:3000/api/oauth?provider=${provider}&action=callback`
       : (process.env.GITHUB_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`),
     google: process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
@@ -53,7 +53,7 @@ function handleRedirect(res, provider, baseUrl, redirect) {
 
 async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect) {
   const { code, error, state } = req.query;
-  
+
   // Определяем источник запроса: из параметра redirect или из state
   const isLauncher = redirect === 'launcher' || state === 'launcher';
 
@@ -121,7 +121,13 @@ async function handleGitHub(code) {
     email = primaryEmail ? primaryEmail.email : null;
   }
 
-  return { id: profile.id.toString(), email, name: profile.name || profile.login, login: profile.login };
+  return {
+    id: profile.id.toString(),
+    email,
+    name: profile.name || profile.login,
+    login: profile.login,
+    avatar: profile.avatar_url
+  };
 }
 
 async function handleGoogle(code, baseUrl, provider) {
@@ -147,7 +153,7 @@ async function handleGoogle(code, baseUrl, provider) {
   });
   const profile = await userResponse.json();
 
-  return { id: profile.id, email: profile.email, name: profile.name };
+  return { id: profile.id, email: profile.email, name: profile.name, avatar: profile.picture };
 }
 
 // Обмен code на токен для лаунчера (GitHub OAuth через localhost)
@@ -200,5 +206,13 @@ async function handleYandex(code) {
   });
   const profile = await userResponse.json();
 
-  return { id: profile.id, email: profile.default_email || `${profile.id}@yandex.oauth`, name: profile.display_name || profile.login };
+  const avatarId = profile.default_avatar_id;
+  const avatar = avatarId ? `https://avatars.yandex.net/get-yapic/${avatarId}/islands-200` : null;
+
+  return {
+    id: profile.id,
+    email: profile.default_email || `${profile.id}@yandex.oauth`,
+    name: profile.display_name || profile.login,
+    avatar
+  };
 }
