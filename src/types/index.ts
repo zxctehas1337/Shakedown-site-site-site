@@ -11,6 +11,7 @@ export interface User {
   isBanned?: boolean
   emailVerified?: boolean
   profile?: UserProfile
+  hwid?: string
 }
 
 export interface UserProfile {

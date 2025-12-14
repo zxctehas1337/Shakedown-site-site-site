@@ -35,7 +35,7 @@ export function ProfileTab({
       <div className="profile-avatar-section">
         <div className="avatar-preview">
           <img src={getAvatarUrl(user.avatar, user.username)} alt={user.username} />
-          <button 
+          <button
             className="avatar-edit-btn"
             onClick={() => avatarInputRef.current?.click()}
           >
@@ -58,7 +58,7 @@ export function ProfileTab({
       {/* Profile Form */}
       <div className="profile-form-section">
         <h2>{t.dashboard.basicInfo}</h2>
-        
+
         <div className="form-grid">
           <div className="form-group full-width">
             <label>{t.dashboard.displayName}</label>
@@ -71,6 +71,17 @@ export function ProfileTab({
               maxLength={20}
             />
             <span className="form-hint">{t.dashboard.displayNameHint}</span>
+          </div>
+
+          <div className="form-group full-width">
+            <label>HWID</label>
+            <input
+              type="text"
+              value={user.hwid || 'Not bound'}
+              readOnly
+              className="input-muted"
+            />
+            <span className="form-hint">{t.dashboard?.hwidHint || 'Hardware ID'}</span>
           </div>
         </div>
       </div>

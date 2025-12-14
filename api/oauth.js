@@ -2,6 +2,31 @@ import { findOrCreateOAuthUser } from './_lib/oauth.js';
 import { generateToken } from './_lib/jwt.js';
 import { mapOAuthUser } from './_lib/userMapper.js';
 
+// Вспомогательная функция для кодирования/декодирования state
+function encodeState(stateObj) {
+  return Buffer.from(JSON.stringify(stateObj)).toString('base64');
+}
+
+function decodeState(stateStr) {
+  try {
+    // Пробуем декодировать base64. Если не получается (старый формат), возвращаем как есть
+    if (!stateStr) return {};
+
+    // Проверка на старый текстовый формат 'launcher'/'web'
+    if (stateStr === 'launcher') return { source: 'launcher' };
+    if (stateStr === 'web') return { source: 'web' };
+
+    const decoded = Buffer.from(stateStr, 'base64').toString('utf-8');
+    // Проверяем, является ли это JSON
+    if (decoded.trim().startsWith('{')) {
+      return JSON.parse(decoded);
+    }
+    return { source: stateStr }; // Fallback
+  } catch (e) {
+    return { source: stateStr };
+  }
+}
+
 export default async (req, res) => {
   const { provider, action, redirect } = req.query;
   const frontendUrl = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
@@ -21,10 +46,11 @@ export default async (req, res) => {
   }
 
   // Redirect to OAuth provider
-  return handleRedirect(res, provider, baseUrl, redirect);
+  const hwid = req.query.hwid;
+  return handleRedirect(res, provider, baseUrl, redirect, hwid);
 };
 
-function handleRedirect(res, provider, baseUrl, redirect) {
+function handleRedirect(res, provider, baseUrl, redirect, hwid) {
   // Для лаунчера используем специальный redirect_uri на localhost
   // GitHub примет этот redirect_uri даже если он не совпадает с зарегистрированным
   const isLauncher = redirect === 'launcher';
@@ -38,9 +64,12 @@ function handleRedirect(res, provider, baseUrl, redirect) {
   };
   const redirectUri = redirectUris[provider];
 
-  // Используем state параметр для передачи информации о лаунчере
-  // Это не меняет redirect_uri, поэтому Google его примет
-  const state = isLauncher ? 'launcher' : 'web';
+  // Используем state параметр для передачи информации о лаунчере и HWID
+  const stateObj = {
+    source: isLauncher ? 'launcher' : 'web',
+    hwid: hwid || null
+  };
+  const state = encodeState(stateObj);
 
   const urls = {
     github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}&state=${state}`,
@@ -54,8 +83,10 @@ function handleRedirect(res, provider, baseUrl, redirect) {
 async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect) {
   const { code, error, state } = req.query;
 
+  const stateData = decodeState(state);
   // Определяем источник запроса: из параметра redirect или из state
-  const isLauncher = redirect === 'launcher' || state === 'launcher';
+  const isLauncher = redirect === 'launcher' || stateData.source === 'launcher';
+  const hwid = stateData.hwid;
 
   if (error || !code) {
     // Если это запрос от лаунчера, редиректим на локальный сервер с ошибкой
@@ -69,7 +100,7 @@ async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect
     const handlers = { github: handleGitHub, google: handleGoogle, yandex: handleYandex };
     const profile = await handlers[provider](code, baseUrl, provider);
 
-    const user = await findOrCreateOAuthUser(profile, provider);
+    const user = await findOrCreateOAuthUser(profile, provider, hwid);
     const token = generateToken(user);
     const userData = mapOAuthUser(user, token);
     const encodedUser = encodeURIComponent(JSON.stringify(userData));
@@ -158,11 +189,15 @@ async function handleGoogle(code, baseUrl, provider) {
 
 // Обмен code на токен для лаунчера (GitHub OAuth через localhost)
 async function handleExchange(req, res, provider) {
-  const { code, source } = req.query;
+  const { code, source, state } = req.query;
 
   if (!code) {
     return res.redirect(`http://127.0.0.1:3000/callback?error=no_code`);
   }
+
+  const stateData = decodeState(state);
+  // Используем хардкод source из query, но можно проверить и stateData.source
+  const hwid = stateData.hwid;
 
   // Только для запросов от лаунчера
   if (source !== 'launcher') {
@@ -173,7 +208,7 @@ async function handleExchange(req, res, provider) {
     const handlers = { github: handleGitHub, google: handleGoogle, yandex: handleYandex };
     const profile = await handlers[provider](code);
 
-    const user = await findOrCreateOAuthUser(profile, provider);
+    const user = await findOrCreateOAuthUser(profile, provider, hwid);
     const token = generateToken(user);
     const userData = mapOAuthUser(user, token);
     const encodedUser = encodeURIComponent(JSON.stringify(userData));

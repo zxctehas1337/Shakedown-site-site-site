@@ -91,10 +91,10 @@ export default async (req, res) => {
 };
 
 async function handleLogin(req, res, pool) {
-  const { usernameOrEmail, password } = req.body;
-  
+  const { usernameOrEmail, password, hwid } = req.body;
+
   const result = await pool.query(
-    `SELECT id, username, email, password, subscription, registered_at, is_admin, is_banned, email_verified, settings 
+    `SELECT id, username, email, password, subscription, registered_at, is_admin, is_banned, email_verified, settings, avatar, hwid
      FROM users 
      WHERE (username = $1 OR email = $1)
      LIMIT 1`,
@@ -117,11 +117,17 @@ async function handleLogin(req, res, pool) {
     return res.json({ success: false, message: 'Ваш аккаунт заблокирован' });
   }
 
+  // Обновляем HWID если передан
+  if (hwid) {
+    await pool.query('UPDATE users SET hwid = $1 WHERE id = $2', [hwid, dbUser.id]);
+    dbUser.hwid = hwid;
+  }
+
   res.json({ success: true, message: 'Вход выполнен!', data: mapUserFromDb(dbUser) });
 }
 
 async function handleRegister(req, res, pool) {
-  const { username, email, password } = req.body;
+  const { username, email, password, hwid } = req.body;
 
   const existingUser = await pool.query(
     'SELECT * FROM users WHERE username = $1 OR email = $2',
@@ -144,21 +150,21 @@ async function handleRegister(req, res, pool) {
   const hashedPassword = await hashPassword(password);
 
   const result = await pool.query(
-    `INSERT INTO users (username, email, password, verification_code, verification_code_expires, email_verified) 
-     VALUES ($1, $2, $3, $4, $5, false) 
-     RETURNING id, username, email, subscription, registered_at, is_admin, is_banned, email_verified, settings`,
-    [username, email, hashedPassword, verificationCode, codeExpires]
+    `INSERT INTO users (username, email, password, verification_code, verification_code_expires, email_verified, hwid) 
+     VALUES ($1, $2, $3, $4, $5, false, $6) 
+     RETURNING id, username, email, subscription, registered_at, is_admin, is_banned, email_verified, settings, avatar, hwid`,
+    [username, email, hashedPassword, verificationCode, codeExpires, hwid]
   );
 
   const user = mapUserFromDb(result.rows[0]);
   const emailSent = await sendVerificationEmail(email, username, verificationCode);
-  
+
   if (emailSent) {
-    res.json({ 
-      success: true, 
-      message: 'Код подтверждения отправлен на email', 
+    res.json({
+      success: true,
+      message: 'Код подтверждения отправлен на email',
       requiresVerification: true,
-      data: user 
+      data: user
     });
   } else {
     res.json({ success: false, message: 'Ошибка отправки кода. Попробуйте позже.' });
@@ -193,7 +199,7 @@ async function handleResendCode(req, res, pool) {
   );
 
   const emailSent = await sendVerificationEmail(user.email, user.username, verificationCode);
-  
+
   if (emailSent) {
     res.json({ success: true, message: 'Новый код отправлен на email' });
   } else {
@@ -240,11 +246,11 @@ async function handleLocalAuthTest(req, res, pool) {
   const origin = req.headers.origin || '';
   const localHosts = ['localhost', '127.0.0.1', '192.168.', '10.0.', '172.16.'];
   const localPorts = [':3000', ':8060', ':8080', ':5173', ':4173'];
-  
+
   const isLocalHost = localHosts.some(h => host.includes(h) || origin.includes(h));
   const isLocalPort = localPorts.some(p => host.includes(p) || origin.includes(p));
   const isLocal = isLocalHost || isLocalPort;
-  
+
   if (!isLocal) {
     return res.status(403).json({ success: false, message: 'Доступно только для локальной сети' });
   }
@@ -264,9 +270,9 @@ async function handleLocalAuthTest(req, res, pool) {
     settings: JSON.stringify({})
   };
 
-  return res.json({ 
-    success: true, 
-    message: 'Тестовый вход выполнен!', 
+  return res.json({
+    success: true,
+    message: 'Тестовый вход выполнен!',
     data: mapUserFromDb(fakeUser),
     isTestAuth: true
   });

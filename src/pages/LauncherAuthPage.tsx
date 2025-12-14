@@ -18,6 +18,11 @@ export default function LauncherAuthPage() {
 
                 // Редиректим на локальный сервер лаунчера
                 window.location.href = `http://127.0.0.1:${port}/callback?user=${userData}`
+                
+                // Закрываем окно после успешной отправки данных в лаунчер
+                setTimeout(() => {
+                    window.close()
+                }, 1000)
             } else {
                 console.log('User not found, redirecting to login...')
                 // Если не авторизован, редиректим на страницу входа
