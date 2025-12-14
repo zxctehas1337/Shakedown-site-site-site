@@ -9,6 +9,7 @@ import PricingPage from './pages/PricingPage.tsx'
 import PersonalDataPage from './pages/PersonalDataPage.tsx'
 import UserAgreementPage from './pages/UserAgreementPage.tsx'
 import UsageRulesPage from './pages/UsageRulesPage.tsx'
+import LauncherAuthPage from './pages/LauncherAuthPage.tsx'
 import { SoonModal } from './components/SoonModal'
 import Snowfall from './components/Snowfall'
 import WinterOverlay from './components/WinterOverlay'
@@ -34,7 +35,7 @@ function App() {
       setPendingUserId(userId || 'test-user-id')
       setShowVerificationModal(true)
     }
-    
+
     return () => {
       delete (window as any).execute_verification_modal
     }
@@ -52,7 +53,7 @@ function App() {
           onClose={() => setShowSoonModal(false)}
         />
       )}
-      
+
       {showVerificationModal && (
         <VerificationModal
           pendingUserId={pendingUserId}
@@ -60,7 +61,7 @@ function App() {
           onClose={() => setShowVerificationModal(false)}
         />
       )}
-      
+
       {notification && (
         <div style={{
           position: 'fixed',
@@ -74,7 +75,7 @@ function App() {
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}>
           {notification.message}
-          <button 
+          <button
             onClick={() => setNotification(null)}
             style={{
               marginLeft: '10px',
@@ -89,7 +90,7 @@ function App() {
           </button>
         </div>
       )}
-      
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
@@ -100,6 +101,7 @@ function App() {
         <Route path="/personal-data" element={<PersonalDataPage />} />
         <Route path="/user-agreement" element={<UserAgreementPage />} />
         <Route path="/usage-rules" element={<UsageRulesPage />} />
+        <Route path="/launcher-auth" element={<LauncherAuthPage />} />
       </Routes>
     </Router>
   )
