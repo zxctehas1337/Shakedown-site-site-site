@@ -146,6 +146,15 @@ router.post('/login', async (req, res) => {
       return res.json({ success: false, message: 'Ваш аккаунт заблокирован' });
     }
 
+    if (!dbUser.email_verified) {
+      return res.json({
+        success: false,
+        message: 'Подтвердите email кодом из письма',
+        requiresVerification: true,
+        userId: String(dbUser.id),
+      });
+    }
+
     res.json({ success: true, message: 'Вход выполнен!', data: mapUserFromDb(dbUser) });
   } catch (error) {
     console.error('Login error:', error);

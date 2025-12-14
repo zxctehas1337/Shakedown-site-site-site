@@ -38,6 +38,13 @@ export function EmailAuthModal({
       const db = new Database()
       const result = await db.login(email, password)
 
+      if ((result as any).requiresVerification && (result as any).userId) {
+        setNotification({ message: result.message || 'Введите код подтверждения из письма', type: 'success' })
+        onClose()
+        onRequiresVerification(String((result as any).userId))
+        return
+      }
+
       if (result.success && result.user) {
         setCurrentUser(result.user)
         setNotification({ message: result.message || 'Вход выполнен!', type: 'success' })

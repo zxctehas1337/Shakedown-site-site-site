@@ -40,15 +40,15 @@ export class Database {
     if (this.useApi) {
       const result = await api.registerUser(username, email, password)
       if (result.success && result.data) {
-        return { 
-          success: true, 
-          message: result.message || 'Регистрация успешна!', 
+        return {
+          success: true,
+          message: result.message || 'Регистрация успешна!',
           user: result.data,
-          requiresVerification: (result as any).requiresVerification || false
+          requiresVerification: (result as any).requiresVerification || false,
         }
       }
-      // Если API не сработал, fallback на localStorage
-      this.useApi = false
+
+      return { success: false, message: result.message || 'Ошибка регистрации' }
     }
 
     // Fallback на localStorage
@@ -106,11 +106,20 @@ export class Database {
     // Пробуем использовать API
     if (this.useApi) {
       const result = await api.loginUser(usernameOrEmail, password)
-      if (result.success && result.data) {
-        return { success: true, message: 'Вход выполнен!', user: result.data }
+      if ((result as any).requiresVerification && (result as any).userId) {
+        return {
+          success: false,
+          message: result.message || 'Подтвердите email кодом из письма',
+          requiresVerification: true,
+          userId: String((result as any).userId),
+        }
       }
-      // Если API не сработал, fallback на localStorage
-      this.useApi = false
+
+      if (result.success && result.data) {
+        return { success: true, message: result.message || 'Вход выполнен!', user: result.data }
+      }
+
+      return { success: false, message: result.message || 'Неверный логин или пароль' }
     }
 
     // Fallback на localStorage
