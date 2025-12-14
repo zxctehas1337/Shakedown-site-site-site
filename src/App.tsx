@@ -10,14 +10,32 @@ import PersonalDataPage from './pages/PersonalDataPage.tsx'
 import UserAgreementPage from './pages/UserAgreementPage.tsx'
 import UsageRulesPage from './pages/UsageRulesPage.tsx'
 import { SoonModal } from './components/SoonModal'
+import { VerificationModal } from './pages/auth/components/VerificationModal'
+import { NotificationType } from './types'
+import './styles/auth/AuthModal.css'
 
 function App() {
   const [showSoonModal, setShowSoonModal] = useState(false)
+  const [showVerificationModal, setShowVerificationModal] = useState(false)
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null)
+  const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null)
 
   useEffect(() => {
-    const open = () => setShowSoonModal(true)
-    window.addEventListener('openSoonModal', open)
-    return () => window.removeEventListener('openSoonModal', open)
+    const openSoon = () => setShowSoonModal(true)
+    window.addEventListener('openSoonModal', openSoon)
+    return () => window.removeEventListener('openSoonModal', openSoon)
+  }, [])
+
+  useEffect(() => {
+    // Global function to open verification modal
+    (window as any).execute_verification_modal = (userId?: string) => {
+      setPendingUserId(userId || 'test-user-id')
+      setShowVerificationModal(true)
+    }
+    
+    return () => {
+      delete (window as any).execute_verification_modal
+    }
   }, [])
 
   return (
@@ -30,6 +48,44 @@ function App() {
           onClose={() => setShowSoonModal(false)}
         />
       )}
+      
+      {showVerificationModal && (
+        <VerificationModal
+          pendingUserId={pendingUserId}
+          setNotification={setNotification}
+          onClose={() => setShowVerificationModal(false)}
+        />
+      )}
+      
+      {notification && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 10000,
+          background: notification.type === 'success' ? '#10b981' : '#ef4444',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          {notification.message}
+          <button 
+            onClick={() => setNotification(null)}
+            style={{
+              marginLeft: '10px',
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />

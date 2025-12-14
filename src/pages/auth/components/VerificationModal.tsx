@@ -22,6 +22,7 @@ export function VerificationModal({ pendingUserId, setNotification, onClose }: V
     inputRefs.current[0]?.focus()
   }, [])
 
+
   const focusIndex = (index: number) => {
     inputRefs.current[index]?.focus()
     inputRefs.current[index]?.select()
@@ -42,6 +43,11 @@ export function VerificationModal({ pendingUserId, setNotification, onClose }: V
 
     if (idx <= 5) focusIndex(idx)
     else focusIndex(5)
+  }
+
+  const findPasteStartIndex = () => {
+    const firstEmpty = verificationCode.findIndex((d) => !d)
+    return firstEmpty === -1 ? 0 : firstEmpty
   }
 
   const handleVerificationCodeChange = (index: number, rawValue: string) => {
@@ -67,24 +73,44 @@ export function VerificationModal({ pendingUserId, setNotification, onClose }: V
     applyDigitsFrom(index, digits)
   }
 
-  const handleVerificationCodePaste = (index: number, e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    applyDigitsFrom(index, e.clipboardData.getData('text'))
-  }
 
   const handleVerificationCodeKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
-      focusIndex(index - 1)
+    // Ctrl+A - очистить все поля
+    if ((e.key === 'a' || e.key === 'A') && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault()
+      setVerificationCode(['', '', '', '', '', ''])
+      focusIndex(0)
+      return
     }
 
+    // Backspace - если поле пустое, перейти к предыдущему
+    if (e.key === 'Backspace') {
+      if (!verificationCode[index] && index > 0) {
+        focusIndex(index - 1)
+        return
+      }
+      
+      if (verificationCode[index]) {
+        const newCode = [...verificationCode]
+        newCode[index] = ''
+        setVerificationCode(newCode)
+        e.preventDefault()
+        return
+      }
+    }
+
+    // Стрелка влево
     if (e.key === 'ArrowLeft' && index > 0) {
       e.preventDefault()
       focusIndex(index - 1)
+      return
     }
 
+    // Стрелка вправо
     if (e.key === 'ArrowRight' && index < 5) {
       e.preventDefault()
       focusIndex(index + 1)
+      return
     }
   }
 
@@ -131,24 +157,31 @@ export function VerificationModal({ pendingUserId, setNotification, onClose }: V
     }
   }
 
+  const handleVerificationCodePaste = (index: number, e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    applyDigitsFrom(index, e.clipboardData.getData('text'))
+  }
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="verification-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>Подтвердите email</h2>
-          <button className="close-btn" onClick={onClose}>
+    <div className="email-verification-overlay" onClick={onClose}>
+      <div className="email-verification-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="email-verification-header">
+          <h2 className="email-verification-title">Подтверждение email</h2>
+          <button className="email-verification-close-btn" onClick={onClose}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
         </div>
         
-        <div className="modal-content">
-          <p className="verification-text">
-            Введите 6-значный код из письма.
-          </p>
+        <div className="email-verification-content">
+          <p className="email-verification-text">Введите 6-значный код из письма</p>
           
-          <div className="code-inputs">
+          <div className="email-verification-code-inputs" onPaste={(e) => {
+              e.preventDefault()
+              applyDigitsFrom(findPasteStartIndex(), e.clipboardData.getData('text'))
+            }}>
             {verificationCode.map((digit, index) => (
               <input
                 key={index}
@@ -165,28 +198,30 @@ export function VerificationModal({ pendingUserId, setNotification, onClose }: V
                 ref={(el) => {
                   inputRefs.current[index] = el
                 }}
-                className="code-input"
+                className="email-verification-code-input"
               />
             ))}
           </div>
 
-          <p className="verification-hint">Можно вставить код целиком (Ctrl+V).</p>
+          <p className="email-verification-hint"></p>
 
-          <button 
-            className="btn btn-primary btn-full"
-            onClick={handleVerifyCode}
-            disabled={isVerifying || verificationCode.join('').length !== 6}
-          >
-            {isVerifying ? 'Проверка...' : 'Подтвердить'}
-          </button>
+          <div className="email-verification-actions">
+            <button
+              className="email-verification-btn email-verification-btn--primary"
+              onClick={handleVerifyCode}
+              disabled={isVerifying || verificationCode.join('').length !== 6}
+            >
+              {isVerifying ? 'Проверка...' : 'Подтвердить'}
+            </button>
 
-          <button 
-            className="btn btn-secondary btn-full"
-            onClick={handleResendCode}
-            disabled={isVerifying}
-          >
-            Отправить код повторно
-          </button>
+            <button
+              className="email-verification-btn email-verification-btn--secondary"
+              onClick={handleResendCode}
+              disabled={isVerifying}
+            >
+              Отправить код повторно
+            </button>
+          </div>
         </div>
       </div>
     </div>
