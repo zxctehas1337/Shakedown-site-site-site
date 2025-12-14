@@ -12,8 +12,12 @@ export default function LauncherAuthPage() {
                 // Кодируем данные пользователя для передачи в лаунчер
                 const userData = encodeURIComponent(JSON.stringify(user))
 
+                // Получаем порт из параметров URL
+                const urlParams = new URLSearchParams(window.location.search)
+                const port = urlParams.get('port') || 3000
+
                 // Редиректим на локальный сервер лаунчера
-                window.location.href = `http://127.0.0.1:3000/callback?user=${userData}`
+                window.location.href = `http://127.0.0.1:${port}/callback?user=${userData}`
             } else {
                 console.log('User not found, redirecting to login...')
                 // Если не авторизован, редиректим на страницу входа
