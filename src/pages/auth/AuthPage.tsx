@@ -8,6 +8,7 @@ import { FeatureSlider } from './components/FeatureSlider'
 import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
 import { EmailLoginModal } from './components/EmailLoginModal'
+import { EmailRegisterModal } from './components/EmailRegisterModal'
 import { VerificationModal } from './components/VerificationModal'
 import { getCurrentUser } from '../../utils/database'
 import { getCurrentLanguage, getTranslation } from '../../utils/translations'
@@ -22,7 +23,8 @@ export default function AuthPage() {
   const [isAdminMode, setIsAdminMode] = useState(false)
   const [showVerificationModal, setShowVerificationModal] = useState(false)
   const [showEmailLoginModal, setShowEmailLoginModal] = useState(false)
-  const [pendingUserId, _setPendingUserId] = useState<string | null>(null)
+  const [showEmailRegisterModal, setShowEmailRegisterModal] = useState(false)
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null)
   const navigate = useNavigate()
   
   const { currentFeature, setCurrentFeature } = useFeatureSlider()
@@ -96,6 +98,13 @@ export default function AuthPage() {
                   Вход через Email
                 </button>
 
+                <button
+                  onClick={() => setShowEmailRegisterModal(true)}
+                  className="btn-primary-clean"
+                >
+                  Регистрация через Email
+                </button>
+
                 <div className="divider-clean">
                   <span>или</span>
                 </div>
@@ -135,6 +144,18 @@ export default function AuthPage() {
           isOpen={showEmailLoginModal}
           onClose={() => setShowEmailLoginModal(false)}
           setNotification={setNotification}
+        />
+      )}
+
+      {showEmailRegisterModal && (
+        <EmailRegisterModal
+          isOpen={showEmailRegisterModal}
+          onClose={() => setShowEmailRegisterModal(false)}
+          setNotification={setNotification}
+          onRequiresVerification={(userId) => {
+            setPendingUserId(userId)
+            setShowVerificationModal(true)
+          }}
         />
       )}
 
