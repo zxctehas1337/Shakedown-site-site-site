@@ -1,8 +1,9 @@
 // Script to clean up non-admin users from the database
 // Usage: node server/scripts/cleanup-users.js
 
-const { Pool } = require('pg');
-require('dotenv').config();
+import { Pool } from 'pg';
+import 'dotenv/config';
+import readline from 'readline';
 
 // Database connection configuration
 const pool = new Pool({
@@ -40,16 +41,16 @@ async function cleanupUsers() {
     console.log('❌ This action cannot be undone!');
     
     // Ask for confirmation
-    const readline = require('readline').createInterface({
+    const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
     
     const answer = await new Promise(resolve => {
-      readline.question('Are you sure you want to continue? (yes/no) ', resolve);
+      rl.question('Are you sure you want to continue? (yes/no) ', resolve);
     });
     
-    readline.close();
+    rl.close();
     
     if (answer.toLowerCase() !== 'yes') {
       console.log('❌ Operation cancelled by user.');
