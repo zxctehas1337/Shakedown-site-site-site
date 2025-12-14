@@ -3,7 +3,7 @@ import { generateToken } from './_lib/jwt.js';
 import { mapOAuthUser } from './_lib/userMapper.js';
 
 export default async (req, res) => {
-  const { provider, action } = req.query;
+  const { provider, action, redirect } = req.query;
   const frontendUrl = process.env.FRONTEND_URL || 'https://shakedown.vercel.app';
   const baseUrl = frontendUrl; // Используем FRONTEND_URL, а не VERCEL_URL (он меняется при каждом деплое)
 
@@ -12,20 +12,25 @@ export default async (req, res) => {
   }
 
   if (action === 'callback') {
-    return handleCallback(req, res, provider, frontendUrl, baseUrl);
+    return handleCallback(req, res, provider, frontendUrl, baseUrl, redirect);
   }
 
   // Redirect to OAuth provider
-  return handleRedirect(res, provider, baseUrl);
+  return handleRedirect(res, provider, baseUrl, redirect);
 };
 
-function handleRedirect(res, provider, baseUrl) {
+function handleRedirect(res, provider, baseUrl, redirect) {
   const redirectUris = {
     github: process.env.GITHUB_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
     google: process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
     yandex: process.env.YANDEX_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`
   };
-  const redirectUri = redirectUris[provider];
+  let redirectUri = redirectUris[provider];
+
+  // Добавляем параметр redirect в callback URL, если он есть
+  if (redirect === 'launcher') {
+    redirectUri += `&redirect=launcher`;
+  }
 
   const urls = {
     github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}`,
@@ -36,10 +41,14 @@ function handleRedirect(res, provider, baseUrl) {
   res.redirect(urls[provider]);
 }
 
-async function handleCallback(req, res, provider, frontendUrl, baseUrl) {
+async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect) {
   const { code, error } = req.query;
 
   if (error || !code) {
+    // Если это запрос от лаунчера, редиректим на локальный сервер с ошибкой
+    if (redirect === 'launcher') {
+      return res.redirect(`http://127.0.0.1:3000/callback?error=${provider}_failed`);
+    }
     return res.redirect(`${frontendUrl}/auth?error=${provider}_failed`);
   }
 
@@ -52,9 +61,20 @@ async function handleCallback(req, res, provider, frontendUrl, baseUrl) {
     const userData = mapOAuthUser(user, token);
     const encodedUser = encodeURIComponent(JSON.stringify(userData));
 
+    // Если это запрос от лаунчера, редиректим на локальный сервер
+    if (redirect === 'launcher') {
+      return res.redirect(`http://127.0.0.1:3000/callback?user=${encodedUser}`);
+    }
+
+    // Иначе редиректим на фронтенд
     res.redirect(`${frontendUrl}/auth?auth=success&user=${encodedUser}`);
   } catch (err) {
     console.error(`${provider} OAuth error:`, err);
+
+    // Если это запрос от лаунчера, редиректим на локальный сервер с ошибкой
+    if (redirect === 'launcher') {
+      return res.redirect(`http://127.0.0.1:3000/callback?error=${provider}_failed`);
+    }
     res.redirect(`${frontendUrl}/auth?error=${provider}_failed`);
   }
 }
