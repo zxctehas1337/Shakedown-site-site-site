@@ -10,6 +10,8 @@ import PersonalDataPage from './pages/PersonalDataPage.tsx'
 import UserAgreementPage from './pages/UserAgreementPage.tsx'
 import UsageRulesPage from './pages/UsageRulesPage.tsx'
 import LauncherAuthPage from './pages/LauncherAuthPage.tsx'
+import NotFoundPage from './pages/NotFoundPage.tsx'
+import BadGatewayPage from './pages/BadGatewayPage.tsx'
 import { SoonModal } from './components/SoonModal'
 import Snowfall from './components/Snowfall'
 import WinterOverlay from './components/WinterOverlay'
@@ -102,6 +104,8 @@ function App() {
         <Route path="/user-agreement" element={<UserAgreementPage />} />
         <Route path="/usage-rules" element={<UsageRulesPage />} />
         <Route path="/launcher-auth" element={<LauncherAuthPage />} />
+        <Route path="/502" element={<BadGatewayPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   )
