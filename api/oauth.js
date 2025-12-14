@@ -36,28 +36,30 @@ function handleRedirect(res, provider, baseUrl, redirect) {
     google: process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`,
     yandex: process.env.YANDEX_CALLBACK_URL || `${baseUrl}/api/oauth?provider=${provider}&action=callback`
   };
-  let redirectUri = redirectUris[provider];
+  const redirectUri = redirectUris[provider];
 
-  // Добавляем параметр redirect в callback URL для Google/Yandex (для GitHub уже используем localhost)
-  if (isLauncher && provider !== 'github') {
-    redirectUri += `&redirect=launcher`;
-  }
+  // Используем state параметр для передачи информации о лаунчере
+  // Это не меняет redirect_uri, поэтому Google его примет
+  const state = isLauncher ? 'launcher' : 'web';
 
   const urls = {
-    github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}`,
-    google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent('profile email')}&access_type=offline`,
-    yandex: `https://oauth.yandex.ru/authorize?client_id=${process.env.YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`
+    github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}&state=${state}`,
+    google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent('profile email')}&access_type=offline&state=${state}`,
+    yandex: `https://oauth.yandex.ru/authorize?client_id=${process.env.YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`
   };
 
   res.redirect(urls[provider]);
 }
 
 async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect) {
-  const { code, error } = req.query;
+  const { code, error, state } = req.query;
+  
+  // Определяем источник запроса: из параметра redirect или из state
+  const isLauncher = redirect === 'launcher' || state === 'launcher';
 
   if (error || !code) {
     // Если это запрос от лаунчера, редиректим на локальный сервер с ошибкой
-    if (redirect === 'launcher') {
+    if (isLauncher) {
       return res.redirect(`http://127.0.0.1:3000/callback?error=${provider}_failed`);
     }
     return res.redirect(`${frontendUrl}/auth?error=${provider}_failed`);
@@ -73,7 +75,7 @@ async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect
     const encodedUser = encodeURIComponent(JSON.stringify(userData));
 
     // Если это запрос от лаунчера, редиректим на локальный сервер
-    if (redirect === 'launcher') {
+    if (isLauncher) {
       return res.redirect(`http://127.0.0.1:3000/callback?user=${encodedUser}`);
     }
 
@@ -83,7 +85,7 @@ async function handleCallback(req, res, provider, frontendUrl, baseUrl, redirect
     console.error(`${provider} OAuth error:`, err);
 
     // Если это запрос от лаунчера, редиректим на локальный сервер с ошибкой
-    if (redirect === 'launcher') {
+    if (isLauncher) {
       return res.redirect(`http://127.0.0.1:3000/callback?error=${provider}_failed`);
     }
     res.redirect(`${frontendUrl}/auth?error=${provider}_failed`);
