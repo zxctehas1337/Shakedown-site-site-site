@@ -4,8 +4,8 @@ require('dotenv').config();
 // Настройка SMTP транспорта
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: 465,
-  secure: true,
+  port: Number(process.env.SMTP_PORT) || 465,
+  secure: (Number(process.env.SMTP_PORT) || 465) === 465,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
@@ -45,10 +45,10 @@ async function sendVerificationEmail(email, username, verificationCode) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>✨ Добро пожаловать, ${username}! ✨</h1>
+              <h1>Добро пожаловать, ${username}!</h1>
             </div>
             <div class="content">
-              <p>Спасибо за регистрацию на платформе Inside!</p>
+              <p>Спасибо за регистрацию!</p>
               <p>Для завершения регистрации введите этот код подтверждения:</p>
               <div class="code-box">
                 <div class="code">${verificationCode}</div>
@@ -57,7 +57,7 @@ async function sendVerificationEmail(email, username, verificationCode) {
               <p>Если вы не регистрировались на нашем сайте, просто проигнорируйте это письмо.</p>
             </div>
             <div class="footer">
-              <p>© 2024 Inside. Все права защищены.</p>
+              <p>© 2025 Shakedown. Все права защищены.</p>
             </div>
           </div>
         </body>

@@ -110,20 +110,21 @@
 .btn-primary-clean {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #8A4BFF, #FF6B9D);
-    color: white;
-    border: none;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 10px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     margin-top: 6px;
 }
 
 .btn-primary-clean:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(138, 75, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: white;
 }
 
 .btn-text-only {
@@ -146,7 +147,7 @@
     .btn-yandex-clean:hover,
     .btn-github-clean:hover,
     .btn-primary-clean:hover {
-        transform: none;
-        box-shadow: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
     }
 }

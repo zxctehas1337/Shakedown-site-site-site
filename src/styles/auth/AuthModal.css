@@ -65,6 +65,56 @@
     padding: 32px;
 }
 
+/* Email Login Modal */
+.modal-content.email-login-modal {
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.4s ease;
+}
+
+.modal-content.email-login-modal .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-content.email-login-modal .modal-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: white;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.modal-close:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.modal-close:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-content.email-login-modal .admin-form-clean {
+    padding: 24px;
+    margin: 0;
+}
+
 .verification-text {
     text-align: center;
     color: rgba(255, 255, 255, 0.7);

@@ -15,7 +15,6 @@
     margin-bottom: 20px;
     color: #8A4BFF;
     filter: drop-shadow(0 0 20px rgba(138, 75, 255, 0.4));
-    animation: float 6s ease-in-out infinite;
     display: flex;
     justify-content: center;
     align-items: center;

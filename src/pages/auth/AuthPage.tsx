@@ -7,8 +7,10 @@ import { useOAuthCallback } from './hooks/useOAuthCallback'
 import { FeatureSlider } from './components/FeatureSlider'
 import { SocialButtons } from './components/SocialButtons'
 import { AdminLoginForm } from './components/AdminLoginForm'
+import { EmailLoginModal } from './components/EmailLoginModal'
 import { VerificationModal } from './components/VerificationModal'
 import { getCurrentUser } from '../../utils/database'
+import { getCurrentLanguage, getTranslation } from '../../utils/translations'
 import '../../styles/auth/AuthBase.css'
 import '../../styles/auth/AuthForm.css'
 import '../../styles/auth/AuthSlider.css'
@@ -19,10 +21,13 @@ export default function AuthPage() {
   const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null)
   const [isAdminMode, setIsAdminMode] = useState(false)
   const [showVerificationModal, setShowVerificationModal] = useState(false)
-  const [pendingUserId] = useState<string | null>(null)
+  const [showEmailLoginModal, setShowEmailLoginModal] = useState(false)
+  const [pendingUserId, _setPendingUserId] = useState<string | null>(null)
   const navigate = useNavigate()
   
   const { currentFeature, setCurrentFeature } = useFeatureSlider()
+  const currentLang = getCurrentLanguage()
+  const t = getTranslation(currentLang)
   
   useOAuthCallback({ setNotification })
 
@@ -56,7 +61,8 @@ export default function AuthPage() {
 
       <FeatureSlider 
         currentFeature={currentFeature} 
-        setCurrentFeature={setCurrentFeature} 
+        setCurrentFeature={setCurrentFeature}
+        t={t}
       />
 
       <div className="auth-right-panel">
@@ -83,6 +89,17 @@ export default function AuthPage() {
           <div className="auth-form-clean">
             {!isAdminMode ? (
               <>
+                <button
+                  onClick={() => setShowEmailLoginModal(true)}
+                  className="btn-primary-clean"
+                >
+                  Вход через Email
+                </button>
+
+                <div className="divider-clean">
+                  <span>или</span>
+                </div>
+
                 <SocialButtons />
 
                 <div className="divider-clean">
@@ -112,6 +129,14 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
+
+      {showEmailLoginModal && (
+        <EmailLoginModal
+          isOpen={showEmailLoginModal}
+          onClose={() => setShowEmailLoginModal(false)}
+          setNotification={setNotification}
+        />
+      )}
 
       {showVerificationModal && (
         <VerificationModal
