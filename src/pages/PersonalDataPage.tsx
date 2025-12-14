@@ -70,6 +70,7 @@ export default function PersonalDataPage() {
             </p>
 
             <h2 className="perspective-title" style={{ color: 'white', marginTop: '1.5rem', fontSize: '1.25rem' }}>Зачем это нужно</h2>
+            <p>
               Для создания и поддержки аккаунта, предоставления доступа к продуктам, обработки платежей, предотвращения
               мошенничества и обеспечения безопасности.
             </p>
