@@ -72,17 +72,6 @@ export function ProfileTab({
             />
             <span className="form-hint">{t.dashboard.displayNameHint}</span>
           </div>
-
-          <div className="form-group full-width">
-            <label>HWID</label>
-            <input
-              type="text"
-              value={user.hwid || 'Not bound'}
-              readOnly
-              className="input-muted"
-            />
-            <span className="form-hint">{t.dashboard?.hwidHint || 'Hardware ID'}</span>
-          </div>
         </div>
       </div>
     </div>
