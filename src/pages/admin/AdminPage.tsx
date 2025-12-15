@@ -10,12 +10,13 @@ import {
   NewsTab, 
   UsersTab, 
   ActivityTab, 
-  KeysTab 
+  KeysTab,
+  VersionsTab
 } from './components'
 import { getProductName } from './utils/keyUtils'
 import '../../styles/admin/index.css'
 
-type TabType = 'overview' | 'news' | 'users' | 'activity' | 'keys'
+type TabType = 'overview' | 'news' | 'users' | 'activity' | 'keys' | 'versions'
 
 export default function AdminPage() {
   const navigate = useNavigate()
@@ -23,7 +24,19 @@ export default function AdminPage() {
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   
-  const { news, setNews, users, setUsers, licenseKeys, createKeys, deleteKey } = useAdminData()
+  const { 
+    news, 
+    setNews, 
+    users, 
+    setUsers, 
+    licenseKeys, 
+    createKeys, 
+    deleteKey,
+    clientVersions,
+    createVersion,
+    updateVersion,
+    deleteVersion
+  } = useAdminData()
 
   const handleCreatePost = (newPost: { title: string; content: string; type: 'launcher' | 'website' }) => {
     if (!newPost.title || !newPost.content) {
@@ -139,6 +152,33 @@ export default function AdminPage() {
     setNotification({ message: 'Ключ скопирован в буфер обмена', type: 'success' })
   }
 
+  const handleCreateVersion = async (payload: { version: string; downloadUrl: string; description?: string; isActive?: boolean }) => {
+    const result = await createVersion(payload)
+    if (result.success) {
+      setNotification({ message: 'Версия добавлена', type: 'success' })
+    } else {
+      setNotification({ message: result.message || 'Ошибка при добавлении версии', type: 'error' })
+    }
+  }
+
+  const handleUpdateVersion = async (id: number, updates: any) => {
+    const result = await updateVersion(id, updates)
+    if (result.success) {
+      setNotification({ message: 'Версия обновлена', type: 'success' })
+    } else {
+      setNotification({ message: result.message || 'Ошибка при обновлении версии', type: 'error' })
+    }
+  }
+
+  const handleDeleteVersion = async (id: number) => {
+    const result = await deleteVersion(id)
+    if (result.success) {
+      setNotification({ message: result.message || 'Версия удалена', type: 'info' })
+    } else {
+      setNotification({ message: result.message || 'Ошибка при удалении версии', type: 'error' })
+    }
+  }
+
   const handleLogout = () => {
     localStorage.removeItem('currentUser')
     navigate('/')
@@ -200,6 +240,15 @@ export default function AdminPage() {
             onGenerateKeys={handleGenerateKeys}
             onDeleteKey={handleDeleteKey}
             onCopyKey={handleCopyKey}
+          />
+        )}
+
+        {activeTab === 'versions' && (
+          <VersionsTab
+            versions={clientVersions}
+            onCreateVersion={handleCreateVersion}
+            onUpdateVersion={handleUpdateVersion}
+            onDeleteVersion={handleDeleteVersion}
           />
         )}
       </main>

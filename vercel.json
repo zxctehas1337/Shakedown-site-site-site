@@ -17,6 +17,7 @@
     { "source": "/api/hwid/verify", "destination": "/api/hwid?action=verify" },
     { "source": "/api/hwid/:userId", "destination": "/api/hwid?action=get&userId=:userId" },
     { "source": "/api/products/:id", "destination": "/api/products?id=:id" },
+    { "source": "/api/versions/:id", "destination": "/api/versions?id=:id" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],

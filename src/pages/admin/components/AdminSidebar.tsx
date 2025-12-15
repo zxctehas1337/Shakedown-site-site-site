@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import LogoWithHat from '../../../components/LogoWithHat'
 
-type TabType = 'overview' | 'news' | 'users' | 'activity' | 'keys'
+type TabType = 'overview' | 'news' | 'users' | 'activity' | 'keys' | 'versions'
 
 interface AdminSidebarProps {
   activeTab: TabType
@@ -98,6 +98,16 @@ export function AdminSidebar({
           </svg>
           <span>Ключи</span>
           {availableKeysCount > 0 && <span className="badge">{availableKeysCount}</span>}
+        </button>
+
+        <button 
+          className={`admin-nav-item ${activeTab === 'versions' ? 'active' : ''}`}
+          onClick={() => setActiveTab('versions')}
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M4 2h12a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2zm0 2v12h12V4H4zm2 2h8v2H6V6zm0 4h8v2H6v-2z"/>
+          </svg>
+          <span>Версии</span>
         </button>
       </nav>
 

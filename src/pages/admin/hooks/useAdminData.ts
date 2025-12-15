@@ -1,13 +1,52 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, NewsPost, LicenseKey } from '../../../types'
+import { User, NewsPost, LicenseKey, ClientVersion } from '../../../types'
 import { getLicenseKeys, createLicenseKeys, deleteLicenseKey } from '../../../utils/keys'
+import { getClientVersions, createClientVersion, updateClientVersion, deleteClientVersion } from '../../../utils/versions'
 
 export function useAdminData() {
   const navigate = useNavigate()
   const [news, setNews] = useState<NewsPost[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [licenseKeys, setLicenseKeys] = useState<LicenseKey[]>([])
+  const [clientVersions, setClientVersions] = useState<ClientVersion[]>([])
+
+  const loadClientVersions = async () => {
+    try {
+      const result = await getClientVersions()
+      if (result.success && result.data) {
+        setClientVersions(result.data)
+        return
+      }
+    } catch (error) {
+      console.error('Failed to load versions via API:', error)
+    }
+    setClientVersions([])
+  }
+
+  const createVersion = async (payload: { version: string; downloadUrl: string; description?: string; isActive?: boolean }) => {
+    const result = await createClientVersion(payload)
+    if (result?.success) {
+      await loadClientVersions()
+    }
+    return result
+  }
+
+  const updateVersion = async (id: number, updates: Partial<Pick<ClientVersion, 'version' | 'downloadUrl' | 'description' | 'isActive'>>) => {
+    const result = await updateClientVersion(id, updates)
+    if (result?.success) {
+      await loadClientVersions()
+    }
+    return result
+  }
+
+  const deleteVersion = async (id: number) => {
+    const result = await deleteClientVersion(id)
+    if (result?.success) {
+      await loadClientVersions()
+    }
+    return result
+  }
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
@@ -19,6 +58,7 @@ export function useAdminData() {
     loadNews()
     loadUsers()
     loadLicenseKeys()
+    loadClientVersions()
   }, [navigate])
 
   const loadNews = () => {
@@ -107,10 +147,16 @@ export function useAdminData() {
     setUsers,
     licenseKeys,
     setLicenseKeys,
+    clientVersions,
+    setClientVersions,
     loadNews,
     loadUsers,
     loadLicenseKeys,
+    loadClientVersions,
     createKeys,
-    deleteKey
+    deleteKey,
+    createVersion,
+    updateVersion,
+    deleteVersion
   }
 }

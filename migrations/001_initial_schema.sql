@@ -31,6 +31,16 @@ CREATE TABLE IF NOT EXISTS license_keys (
     notes TEXT
 );
 
+-- Create client_versions table if it doesn't exist
+CREATE TABLE IF NOT EXISTS client_versions (
+    id SERIAL PRIMARY KEY,
+    version VARCHAR(50) UNIQUE NOT NULL,
+    download_url TEXT NOT NULL,
+    description TEXT,
+    is_active BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_license_keys_key ON license_keys(key);
 CREATE INDEX IF NOT EXISTS idx_license_keys_used_by ON license_keys(used_by);

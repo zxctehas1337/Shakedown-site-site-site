@@ -47,3 +47,12 @@ export interface LicenseKey {
   isUsed: boolean
   createdBy: string
 }
+
+export interface ClientVersion {
+  id: number
+  version: string
+  downloadUrl: string
+  description?: string | null
+  isActive: boolean
+  createdAt: string
+}
