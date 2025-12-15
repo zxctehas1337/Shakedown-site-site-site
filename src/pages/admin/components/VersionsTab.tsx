@@ -142,7 +142,7 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
             <p>Версий пока нет</p>
           </div>
         ) : (
-          <div className="keys-table">
+          <div className="keys-table versions-table">
             <table>
               <thead>
                 <tr>
@@ -155,7 +155,7 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
               </thead>
               <tbody>
                 {sortedVersions.map(v => (
-                  <tr key={v.id}>
+                  <tr key={v.id} className={v.isActive ? 'version-active' : undefined}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <code className="key-code">{v.version}</code>

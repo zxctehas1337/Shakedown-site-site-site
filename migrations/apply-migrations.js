@@ -19,15 +19,20 @@ async function applyMigrations() {
   try {
     await client.query('BEGIN');
     
-    // Read the migration file
-    const migrationPath = join(__dirname, '001_initial_schema.sql');
-    const migrationSQL = await readFile(migrationPath, 'utf-8');
+    // Apply all migration files in order
+    const migrationFiles = ['001_initial_schema.sql', '002_fix_created_at_column.sql', '003_prune_client_versions_keep_last_2.sql'];
     
-    console.log('Applying migration...');
-    await client.query(migrationSQL);
+    for (const file of migrationFiles) {
+      const migrationPath = join(__dirname, file);
+      const migrationSQL = await readFile(migrationPath, 'utf-8');
+      
+      console.log(`Applying migration: ${file}...`);
+      await client.query(migrationSQL);
+      console.log(`Migration ${file} applied successfully!`);
+    }
     
     await client.query('COMMIT');
-    console.log('Migration applied successfully!');
+    console.log('All migrations applied successfully!');
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error applying migration:', error);
