@@ -8,7 +8,7 @@ export default async (req, res) => {
   if (req.method === 'GET') {
     try {
       const result = await pool.query(
-        `SELECT id, username, email, password, subscription, avatar, registered_at, is_admin, is_banned, email_verified, settings 
+        `SELECT id, username, email, password, subscription, avatar, registered_at, is_admin, is_banned, email_verified, settings, hwid 
          FROM users WHERE id = $1`,
         [id]
       );
