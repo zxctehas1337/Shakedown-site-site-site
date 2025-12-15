@@ -1,4 +1,5 @@
 import { User } from '../../../types'
+import { getAvatarUrl } from '../../../utils/avatarGenerator'
 
 interface ActivityTabProps {
   users: User[]
@@ -71,13 +72,7 @@ export function ActivityTab({ users }: ActivityTabProps) {
         <div className="users-list">
           {users.slice(0, 10).map(user => (
             <div key={user.id} className="user-item">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.username} className="user-avatar-small" />
-              ) : (
-                <div className="user-avatar-placeholder-small">
-                  {user.username[0].toUpperCase()}
-                </div>
-              )}
+              <img src={getAvatarUrl(user.avatar, user.username)} alt={user.username} className="user-avatar-small" />
               <div className="user-item-info">
                 <div className="user-item-name">{user.username}</div>
                 <div className="user-item-date">{new Date(user.registeredAt).toLocaleDateString('ru-RU')}</div>

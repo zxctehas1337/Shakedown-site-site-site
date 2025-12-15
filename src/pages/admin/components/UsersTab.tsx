@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { User } from '../../../types'
+import { getAvatarUrl } from '../../../utils/avatarGenerator'
 
 interface UsersTabProps {
   users: User[]
@@ -53,13 +54,7 @@ export function UsersTab({ users, onBanUser, onDeleteUser }: UsersTabProps) {
                 <td>#{user.id}</td>
                 <td>
                   <div className="user-cell">
-                    {user.avatar ? (
-                      <img src={user.avatar} alt={user.username} className="user-avatar" />
-                    ) : (
-                      <div className="user-avatar-placeholder">
-                        {user.username[0].toUpperCase()}
-                      </div>
-                    )}
+                    <img src={getAvatarUrl(user.avatar, user.username)} alt={user.username} className="user-avatar" />
                     <span>{user.username}</span>
                   </div>
                 </td>
