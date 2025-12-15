@@ -9,11 +9,10 @@ interface VersionsTabProps {
 }
 
 export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDeleteVersion }: VersionsTabProps) {
-  const [form, setForm] = useState<{ version: string; downloadUrl: string; description: string; isActive: boolean }>({
+  const [form, setForm] = useState<{ version: string; downloadUrl: string; description: string }>({
     version: '',
     downloadUrl: '',
-    description: '',
-    isActive: false
+    description: ''
   })
   const [editingId, setEditingId] = useState<number | null>(null)
 
@@ -31,14 +30,13 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
     setForm({
       version: v.version,
       downloadUrl: v.downloadUrl,
-      description: String(v.description ?? ''),
-      isActive: v.isActive
+      description: String(v.description ?? '')
     })
   }
 
   const resetForm = () => {
     setEditingId(null)
-    setForm({ version: '', downloadUrl: '', description: '', isActive: false })
+    setForm({ version: '', downloadUrl: '', description: '' })
   }
 
   const submit = () => {
@@ -48,8 +46,7 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
       onUpdateVersion(editingId, {
         version: form.version.trim(),
         downloadUrl: form.downloadUrl.trim(),
-        description: form.description,
-        isActive: form.isActive
+        description: form.description
       })
       resetForm()
       return
@@ -58,8 +55,7 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
     onCreateVersion({
       version: form.version.trim(),
       downloadUrl: form.downloadUrl.trim(),
-      description: form.description,
-      isActive: form.isActive
+      description: form.description
     })
     resetForm()
   }
@@ -108,17 +104,7 @@ export function VersionsTab({ versions, onCreateVersion, onUpdateVersion, onDele
           />
         </div>
 
-        <div className="form-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={form.isActive}
-              onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-            />
-            <span>Сделать активной</span>
-          </label>
-        </div>
-
+        
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <button className="btn-primary" onClick={submit}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
