@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getCurrentUser, setCurrentUser } from '../../../utils/database'
 import { getUserInfo, updateUser } from '../../../utils/api'
 import { activateLicenseKey } from '../../../utils/keys'
-import { User, NotificationType, LicenseKey, UserProfile } from '../../../types'
+import { User, NotificationType, UserProfile } from '../../../types'
 import { useTranslation } from '../../../hooks/useTranslation'
 
 export type TabType = 'overview' | 'profile' | 'subscription' | 'settings'
@@ -71,7 +71,7 @@ export function useDashboard() {
     }
 
     try {
-      const result = await activateLicenseKey(keyInput.trim().toUpperCase(), user.id)
+      const result = await activateLicenseKey(keyInput.trim().toUpperCase(), String(user.id))
       
       if (result.success) {
         // Обновление подписки пользователя

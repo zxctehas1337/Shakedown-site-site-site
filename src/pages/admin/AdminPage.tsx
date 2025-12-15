@@ -23,7 +23,7 @@ export default function AdminPage() {
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   
-  const { news, setNews, users, setUsers, licenseKeys, setLicenseKeys, createKeys, deleteKey } = useAdminData()
+  const { news, setNews, users, setUsers, licenseKeys, createKeys, deleteKey } = useAdminData()
 
   const handleCreatePost = (newPost: { title: string; content: string; type: 'launcher' | 'website' }) => {
     if (!newPost.title || !newPost.content) {
