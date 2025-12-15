@@ -2,7 +2,7 @@ import { getPool } from './_lib/db.js';
 
 export default async function handler(req, res) {
   const pool = getPool();
-  
+
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
@@ -77,15 +77,15 @@ async function handleCreateKeys(req, res, pool) {
 
   try {
     const createdKeys = [];
-    
+
     for (const keyData of keys) {
       const result = await pool.query(
         `INSERT INTO license_keys (key, product, duration, created_by) 
          VALUES ($1, $2, $3, $4) 
          RETURNING id, key, product, duration, is_used, created_at`,
-        [keyData.key, keyData.product, keyData.duration, keyData.createdBy]
+        [keyData.key.trim().toUpperCase(), keyData.product, keyData.duration, keyData.createdBy]
       );
-      
+
       createdKeys.push(result.rows[0]);
     }
 
@@ -106,8 +106,8 @@ async function handleActivateKey(req, res, pool) {
   try {
     // Проверка существования ключа
     const keyResult = await pool.query(
-      'SELECT * FROM license_keys WHERE key = $1',
-      [key.toUpperCase()]
+      'SELECT * FROM license_keys WHERE UPPER(key) = $1',
+      [key.trim().toUpperCase()]
     );
 
     if (keyResult.rows.length === 0) {
@@ -141,8 +141,8 @@ async function handleActivateKey(req, res, pool) {
       [newSubscription, userId]
     );
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: 'Ключ активирован',
       data: {
         product: licenseKey.product,

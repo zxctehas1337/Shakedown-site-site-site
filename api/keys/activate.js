@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const keyResult = await pool.query('SELECT * FROM license_keys WHERE key = $1', [key.toUpperCase()]);
+    const keyResult = await pool.query('SELECT * FROM license_keys WHERE UPPER(key) = $1', [key.trim().toUpperCase()]);
 
     if (keyResult.rows.length === 0) {
       res.json({ success: false, message: 'Ключ не найден' });
