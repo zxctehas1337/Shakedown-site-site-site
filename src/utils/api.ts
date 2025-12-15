@@ -7,6 +7,32 @@ export interface ApiResponse<T> {
   message?: string
 }
 
+async function parseJsonResponse(response: Response) {
+  const contentType = response.headers.get('content-type') || ''
+  const text = await response.text()
+
+  if (!response.ok) {
+    return {
+      success: false,
+      message: `HTTP ${response.status}`,
+      data: undefined,
+      raw: text,
+      contentType,
+    }
+  }
+
+  try {
+    return text ? JSON.parse(text) : { success: true }
+  } catch {
+    return {
+      success: false,
+      message: 'Invalid JSON response from server',
+      raw: text,
+      contentType,
+    }
+  }
+}
+
 // Регистрация пользователя
 export async function registerUser(username: string, email: string, password: string) {
   try {
@@ -17,7 +43,7 @@ export async function registerUser(username: string, email: string, password: st
       },
       body: JSON.stringify({ username, email, password }),
     })
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Registration error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -34,7 +60,7 @@ export async function loginUser(usernameOrEmail: string, password: string) {
       },
       body: JSON.stringify({ usernameOrEmail, password }),
     })
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Login error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -51,7 +77,7 @@ export async function updateUser(userId: number | string, updates: any) {
       },
       body: JSON.stringify(updates),
     })
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Update error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -62,7 +88,7 @@ export async function updateUser(userId: number | string, updates: any) {
 export async function getUserInfo(userId: number | string) {
   try {
     const response = await fetch(`${API_URL}/api/users/${userId}`)
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Get user error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -83,7 +109,7 @@ export async function checkServerHealth() {
 export async function getAllUsers() {
   try {
     const response = await fetch(`${API_URL}/api/users`)
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Get all users error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -100,7 +126,7 @@ export async function verifyEmailCode(userId: number | string, code: string) {
       },
       body: JSON.stringify({ userId, code }),
     })
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Verify code error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }
@@ -117,7 +143,7 @@ export async function resendVerificationCode(userId: number | string) {
       },
       body: JSON.stringify({ userId }),
     })
-    return await response.json()
+    return await parseJsonResponse(response)
   } catch (error) {
     console.error('Resend code error:', error)
     return { success: false, message: 'Ошибка подключения к серверу' }

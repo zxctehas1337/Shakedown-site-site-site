@@ -47,10 +47,6 @@ export default function DashboardPage() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  if (!user) return null
-
-  const badge = getSubscriptionBadge(user.subscription)
-
   const setTabAndNavigate = (tab: typeof activeTab) => {
     setActiveTab(tab)
     navigate(`/dashboard/${tab}`)
@@ -73,6 +69,10 @@ export default function DashboardPage() {
       setActiveTab(routeTab)
     }
   }, [activeTab, location.pathname, setActiveTab])
+
+  if (!user) return null
+
+  const badge = getSubscriptionBadge(user.subscription)
 
   return (
     <div className="dashboard-page">
