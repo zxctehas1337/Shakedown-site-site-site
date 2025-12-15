@@ -1,5 +1,24 @@
 import { getPool } from './_lib/db.js';
 
+ let _supportsDescriptionColumnPromise;
+
+ async function supportsDescriptionColumn(pool) {
+   if (!_supportsDescriptionColumnPromise) {
+     _supportsDescriptionColumnPromise = (async () => {
+       const result = await pool.query(
+         `SELECT 1
+          FROM information_schema.columns
+          WHERE table_schema = 'public'
+            AND table_name = 'client_versions'
+            AND column_name = 'description'
+          LIMIT 1`
+       );
+       return result.rowCount > 0;
+     })();
+   }
+   return _supportsDescriptionColumnPromise;
+ }
+
 export default async function handler(req, res) {
   const pool = getPool();
 
@@ -36,8 +55,9 @@ export default async function handler(req, res) {
 }
 
 async function handleGetVersions(_req, res, pool) {
+  const hasDescription = await supportsDescriptionColumn(pool);
   const result = await pool.query(
-    `SELECT id, version, download_url, description, is_active, created_at
+    `SELECT id, version, download_url${hasDescription ? ', description' : ''}, is_active, created_at
      FROM client_versions
      ORDER BY created_at DESC, id DESC`
   );
@@ -46,7 +66,7 @@ async function handleGetVersions(_req, res, pool) {
     id: v.id,
     version: v.version,
     downloadUrl: v.download_url,
-    description: v.description,
+    description: hasDescription ? v.description : null,
     isActive: v.is_active,
     createdAt: v.created_at
   }));
@@ -66,12 +86,21 @@ async function handleCreateVersion(req, res, pool) {
     await pool.query('UPDATE client_versions SET is_active = false WHERE is_active = true');
   }
 
-  const result = await pool.query(
-    `INSERT INTO client_versions (version, download_url, description, is_active)
-     VALUES ($1, $2, $3, $4)
-     RETURNING id, version, download_url, description, is_active, created_at`,
-    [String(version).trim(), String(downloadUrl).trim(), description ?? null, Boolean(isActive)]
-  );
+  const hasDescription = await supportsDescriptionColumn(pool);
+
+  const result = hasDescription
+    ? await pool.query(
+        `INSERT INTO client_versions (version, download_url, description, is_active)
+         VALUES ($1, $2, $3, $4)
+         RETURNING id, version, download_url, description, is_active, created_at`,
+        [String(version).trim(), String(downloadUrl).trim(), description ?? null, Boolean(isActive)]
+      )
+    : await pool.query(
+        `INSERT INTO client_versions (version, download_url, is_active)
+         VALUES ($1, $2, $3)
+         RETURNING id, version, download_url, is_active, created_at`,
+        [String(version).trim(), String(downloadUrl).trim(), Boolean(isActive)]
+      );
 
   const v = result.rows[0];
 
@@ -81,7 +110,7 @@ async function handleCreateVersion(req, res, pool) {
       id: v.id,
       version: v.version,
       downloadUrl: v.download_url,
-      description: v.description,
+      description: hasDescription ? v.description : null,
       isActive: v.is_active,
       createdAt: v.created_at
     }
@@ -101,6 +130,8 @@ async function handleUpdateVersion(req, res, pool) {
   const values = [];
   let paramCount = 1;
 
+  const hasDescription = await supportsDescriptionColumn(pool);
+
   if (version !== undefined) {
     fields.push(`version = $${paramCount}`);
     values.push(String(version).trim());
@@ -113,7 +144,7 @@ async function handleUpdateVersion(req, res, pool) {
     paramCount++;
   }
 
-  if (description !== undefined) {
+  if (hasDescription && description !== undefined) {
     fields.push(`description = $${paramCount}`);
     values.push(description ?? null);
     paramCount++;
@@ -139,7 +170,7 @@ async function handleUpdateVersion(req, res, pool) {
   const result = await pool.query(
     `UPDATE client_versions SET ${fields.join(', ')}
      WHERE id = $${paramCount}
-     RETURNING id, version, download_url, description, is_active, created_at`,
+     RETURNING id, version, download_url${hasDescription ? ', description' : ''}, is_active, created_at`,
     values
   );
 
@@ -156,7 +187,7 @@ async function handleUpdateVersion(req, res, pool) {
       id: v.id,
       version: v.version,
       downloadUrl: v.download_url,
-      description: v.description,
+      description: hasDescription ? v.description : null,
       isActive: v.is_active,
       createdAt: v.created_at
     }
