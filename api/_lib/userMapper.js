@@ -1,5 +1,5 @@
 export function mapUserFromDb(dbUser) {
-  const normalizedSubscription = String(dbUser.subscription || 'free').toLowerCase();
+  const normalizedSubscription = String(dbUser.subscription || 'free').trim().toLowerCase();
   const subscription = normalizedSubscription === 'premium' || normalizedSubscription === 'alpha' ? normalizedSubscription : 'free';
   return {
     id: dbUser.id,
@@ -17,7 +17,7 @@ export function mapUserFromDb(dbUser) {
 }
 
 export function mapOAuthUser(user, token) {
-  const normalizedSubscription = String(user.subscription || 'free').toLowerCase();
+  const normalizedSubscription = String(user.subscription || 'free').trim().toLowerCase();
   const subscription = normalizedSubscription === 'premium' || normalizedSubscription === 'alpha' ? normalizedSubscription : 'free';
   return {
     id: user.id,

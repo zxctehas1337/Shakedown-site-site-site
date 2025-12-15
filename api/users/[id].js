@@ -47,7 +47,7 @@ export default async (req, res) => {
       const result = await pool.query(
         `UPDATE users SET ${fields.join(', ')} 
          WHERE id = $${paramCount} 
-         RETURNING id, username, email, password, subscription, avatar, registered_at, is_admin, is_banned, settings`,
+         RETURNING id, username, email, password, subscription, avatar, registered_at, is_admin, is_banned, settings, hwid`,
         values
       );
 
