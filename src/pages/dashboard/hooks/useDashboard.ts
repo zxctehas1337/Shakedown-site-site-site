@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser, setCurrentUser } from '../../../utils/database'
+import { getUserInfo, updateUser } from '../../../utils/api'
 import { User, NotificationType, LicenseKey, UserProfile } from '../../../types'
 import { useTranslation } from '../../../hooks/useTranslation'
 
@@ -26,6 +27,25 @@ export function useDashboard() {
     } else {
       setUser(userData)
       setProfileForm(userData.profile || {})
+
+      ;(async () => {
+        try {
+          const response = await getUserInfo(userData.id)
+          if (response?.success && response.data) {
+            const mergedUser: User = {
+              ...userData,
+              ...response.data,
+              registeredAt: response.data.registeredAt || userData.registeredAt,
+              settings: response.data.settings || userData.settings,
+            }
+            setCurrentUser(mergedUser)
+            setUser(mergedUser)
+            setProfileForm(mergedUser.profile || {})
+          }
+        } catch (error) {
+          console.error('Failed to refresh user from API:', error)
+        }
+      })()
     }
   }, [navigate])
 
@@ -78,15 +98,7 @@ export function useDashboard() {
       }
 
       const updatedUser = { ...user, subscription: newSubscription }
-      setCurrentUser(updatedUser)
-      setUser(updatedUser)
-
-      const users: User[] = JSON.parse(localStorage.getItem('insideUsers') || '[]')
-      const userIndex = users.findIndex(u => u.id === user.id)
-      if (userIndex !== -1) {
-        users[userIndex] = updatedUser
-        localStorage.setItem('insideUsers', JSON.stringify(users))
-      }
+      updateUserData(updatedUser)
     }
 
     const productNames: Record<string, string> = {
@@ -160,6 +172,29 @@ export function useDashboard() {
       users[userIndex] = updatedUser
       localStorage.setItem('insideUsers', JSON.stringify(users))
     }
+
+    ;(async () => {
+      try {
+        const response = await updateUser(updatedUser.id, {
+          avatar: updatedUser.avatar,
+          subscription: updatedUser.subscription,
+          settings: updatedUser.settings,
+        })
+
+        if (response?.success && response.data) {
+          const mergedUser: User = {
+            ...updatedUser,
+            ...response.data,
+            registeredAt: response.data.registeredAt || updatedUser.registeredAt,
+            settings: response.data.settings || updatedUser.settings,
+          }
+          setCurrentUser(mergedUser)
+          setUser(mergedUser)
+        }
+      } catch (error) {
+        console.error('Failed to persist user to API:', error)
+      }
+    })()
   }
 
   const formatDate = (dateString: string) => {
