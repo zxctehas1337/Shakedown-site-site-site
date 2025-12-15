@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       message: 'Ключ активирован',
       data: {
         product: licenseKey.product,
-        duration: licenseKey.duration,
+        duration: licenseKey.duration_days,
         newSubscription
       }
     });

@@ -51,7 +51,7 @@ async function handleGetKeys(req, res, pool) {
       id: key.id,
       key: key.key,
       product: key.product,
-      duration: key.duration,
+      duration: key.duration_days,
       isUsed: key.is_used,
       usedBy: key.used_by,
       usedAt: key.used_at,
@@ -80,9 +80,9 @@ async function handleCreateKeys(req, res, pool) {
 
     for (const keyData of keys) {
       const result = await pool.query(
-        `INSERT INTO license_keys (key, product, duration, created_by) 
+        `INSERT INTO license_keys (key, product, duration_days, created_by) 
          VALUES ($1, $2, $3, $4) 
-         RETURNING id, key, product, duration, is_used, created_at`,
+         RETURNING id, key, product, duration_days, is_used, created_at`,
         [keyData.key.trim().toUpperCase(), keyData.product, keyData.duration, keyData.createdBy]
       );
 
@@ -146,7 +146,7 @@ async function handleActivateKey(req, res, pool) {
       message: 'Ключ активирован',
       data: {
         product: licenseKey.product,
-        duration: licenseKey.duration,
+        duration: licenseKey.duration_days,
         newSubscription
       }
     });

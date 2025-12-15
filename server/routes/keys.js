@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       id: key.id,
       key: key.key,
       product: key.product,
-      duration: key.duration,
+      duration: key.duration_days,
       isUsed: key.is_used,
       usedBy: key.used_by,
       usedAt: key.used_at,
@@ -44,15 +44,15 @@ router.post('/', async (req, res) => {
 
   try {
     const createdKeys = [];
-    
+
     for (const keyData of keys) {
       const result = await pool.query(
-        `INSERT INTO license_keys (key, product, duration, created_by) 
+        `INSERT INTO license_keys (key, product, duration_days, created_by) 
          VALUES ($1, $2, $3, $4) 
-         RETURNING id, key, product, duration, is_used, created_at`,
+         RETURNING id, key, product, duration_days, is_used, created_at`,
         [keyData.key, keyData.product, keyData.duration, keyData.createdBy]
       );
-      
+
       createdKeys.push(result.rows[0]);
     }
 
@@ -109,12 +109,12 @@ router.post('/activate', async (req, res) => {
       [newSubscription, userId]
     );
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: 'Ключ активирован',
       data: {
         product: licenseKey.product,
-        duration: licenseKey.duration,
+        duration: licenseKey.duration_days,
         newSubscription
       }
     });
