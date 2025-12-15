@@ -16,6 +16,7 @@ import oauthRoutes from './routes/oauth.js';
 import usersRoutes from './routes/users.js';
 import productsRoutes from './routes/products.js';
 import hwidRoutes from './routes/hwid.js';
+import keysRoutes from './routes/keys.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -70,6 +71,7 @@ app.use('/api/auth', oauthRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/hwid', hwidRoutes);
+app.use('/api/keys', keysRoutes);
 
 // Serve index.html for all other routes (SPA support)
 app.get('*', (req, res) => {

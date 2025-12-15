@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser, setCurrentUser } from '../../../utils/database'
 import { getUserInfo, updateUser } from '../../../utils/api'
+import { activateLicenseKey } from '../../../utils/keys'
 import { User, NotificationType, LicenseKey, UserProfile } from '../../../types'
 import { useTranslation } from '../../../hooks/useTranslation'
 
@@ -58,62 +59,49 @@ export function useDashboard() {
     setShowSoonModal(true)
   }
 
-  const handleActivateKey = () => {
+  const handleActivateKey = async () => {
     if (!keyInput.trim()) {
       setNotification({ message: t.dashboard.enterKeyToActivate, type: 'error' })
       return
     }
 
-    const licenseKeys: LicenseKey[] = JSON.parse(localStorage.getItem('insideLicenseKeys') || '[]')
-    const keyIndex = licenseKeys.findIndex(k => k.key === keyInput.trim().toUpperCase())
-    
-    if (keyIndex === -1) {
-      setNotification({ message: t.dashboard.keyNotFound, type: 'error' })
+    if (!user) {
+      setNotification({ message: 'Пользователь не найден', type: 'error' })
       return
     }
 
-    const licenseKey = licenseKeys[keyIndex]
-
-    if (licenseKey.isUsed) {
-      setNotification({ message: t.dashboard.keyAlreadyUsed, type: 'error' })
-      return
-    }
-
-    licenseKeys[keyIndex] = {
-      ...licenseKey,
-      isUsed: true,
-      usedAt: new Date().toISOString(),
-      usedBy: user?.id
-    }
-
-    localStorage.setItem('insideLicenseKeys', JSON.stringify(licenseKeys))
-
-    if (user) {
-      let newSubscription: 'free' | 'premium' | 'alpha' = user.subscription
+    try {
+      const result = await activateLicenseKey(keyInput.trim().toUpperCase(), user.id)
       
-      if (licenseKey.product === 'premium' || licenseKey.product === 'inside-client') {
-        newSubscription = 'premium'
-      } else if (licenseKey.product === 'alpha') {
-        newSubscription = 'alpha'
+      if (result.success) {
+        // Обновление подписки пользователя
+        const updatedUser = { ...user, subscription: result.data.newSubscription }
+        updateUserData(updatedUser)
+
+        const productNames: Record<string, string> = {
+          'premium': 'Premium',
+          'alpha': 'Alpha',
+          'inside-client': 'Shakedown Client',
+          'inside-spoofer': 'Shakedown Spoofer',
+          'inside-cleaner': 'Shakedown Cleaner'
+        }
+
+        const durationText = result.data.duration === 0 
+          ? t.dashboard.forever 
+          : t.dashboard.forDays.replace('{days}', String(result.data.duration))
+        
+        setNotification({ 
+          message: `${t.dashboard.keyActivated} ${productNames[result.data.product]} ${durationText}`, 
+          type: 'success' 
+        })
+        setKeyInput('')
+      } else {
+        setNotification({ message: result.message || 'Ошибка активации ключа', type: 'error' })
       }
-
-      const updatedUser = { ...user, subscription: newSubscription }
-      updateUserData(updatedUser)
+    } catch (error) {
+      console.error('Error activating key:', error)
+      setNotification({ message: 'Ошибка сети при активации ключа', type: 'error' })
     }
-
-    const productNames: Record<string, string> = {
-      'premium': 'Premium',
-      'alpha': 'Alpha',
-      'inside-client': 'Shakedown Client',
-      'inside-spoofer': 'Shakedown Spoofer',
-      'inside-cleaner': 'Shakedown Cleaner'
-    }
-
-    const durationText = licenseKey.duration === 0 
-      ? t.dashboard.forever 
-      : t.dashboard.forDays.replace('{days}', String(licenseKey.duration))
-    setNotification({ message: `${t.dashboard.keyActivated} ${productNames[licenseKey.product]} ${durationText}`, type: 'success' })
-    setKeyInput('')
   }
 
   const handleDownloadLauncher = () => {

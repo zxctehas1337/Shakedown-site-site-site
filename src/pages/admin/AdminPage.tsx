@@ -23,7 +23,7 @@ export default function AdminPage() {
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   
-  const { news, setNews, users, setUsers, licenseKeys, setLicenseKeys } = useAdminData()
+  const { news, setNews, users, setUsers, licenseKeys, setLicenseKeys, createKeys, deleteKey } = useAdminData()
 
   const handleCreatePost = (newPost: { title: string; content: string; type: 'launcher' | 'website' }) => {
     if (!newPost.title || !newPost.content) {
@@ -110,23 +110,28 @@ export default function AdminPage() {
     setNotification({ message: 'Пользователь удален', type: 'info' })
   }
 
-  const handleGenerateKeys = (newKeys: LicenseKey[]) => {
-    const updatedKeys = [...newKeys, ...licenseKeys]
-    setLicenseKeys(updatedKeys)
-    localStorage.setItem('insideLicenseKeys', JSON.stringify(updatedKeys))
+  const handleGenerateKeys = async (newKeys: LicenseKey[]) => {
+    const result = await createKeys(newKeys)
     
-    const keyCount = newKeys.length
-    setNotification({ 
-      message: `Создано ${keyCount} ${keyCount === 1 ? 'ключ' : keyCount < 5 ? 'ключа' : 'ключей'} для ${getProductName(newKeys[0].product)}`, 
-      type: 'success' 
-    })
+    if (result.success) {
+      const keyCount = newKeys.length
+      setNotification({ 
+        message: `Создано ${keyCount} ${keyCount === 1 ? 'ключ' : keyCount < 5 ? 'ключа' : 'ключей'} для ${getProductName(newKeys[0].product)}`, 
+        type: 'success' 
+      })
+    } else {
+      setNotification({ message: 'Ошибка при создании ключей', type: 'error' })
+    }
   }
 
-  const handleDeleteKey = (keyId: string) => {
-    const updatedKeys = licenseKeys.filter(k => k.id !== keyId)
-    setLicenseKeys(updatedKeys)
-    localStorage.setItem('insideLicenseKeys', JSON.stringify(updatedKeys))
-    setNotification({ message: 'Ключ удален', type: 'info' })
+  const handleDeleteKey = async (keyId: string) => {
+    const result = await deleteKey(keyId)
+    
+    if (result.success) {
+      setNotification({ message: result.message || 'Ключ удален', type: 'info' })
+    } else {
+      setNotification({ message: 'Ошибка при удалении ключа', type: 'error' })
+    }
   }
 
   const handleCopyKey = (key: string) => {
