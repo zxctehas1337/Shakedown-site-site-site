@@ -96,7 +96,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard/*" element={<DashboardPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/pricing" element={<PricingPage />} />

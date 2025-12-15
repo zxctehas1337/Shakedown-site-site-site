@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import AnimatedBackground from '../../components/AnimatedBackground'
 import Notification from '../../components/Notification'
 import { LogoutModal } from '../../components/LogoutModal'
@@ -5,6 +6,7 @@ import { SoonModal } from '../../components/SoonModal'
 import { MobileHeader, DashboardSidebar } from './components'
 import { OverviewTab, ProfileTab, SubscriptionTab, SettingsTab } from './tabs'
 import { useDashboard } from './hooks/useDashboard'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import '../../styles/dashboard/DashboardNavbar.css'
 import '../../styles/dashboard/DashboardProfile.css'
 import '../../styles/dashboard/DashboardActions.css'
@@ -42,9 +44,35 @@ export default function DashboardPage() {
     getSubscriptionBadge
   } = useDashboard()
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
   if (!user) return null
 
   const badge = getSubscriptionBadge(user.subscription)
+
+  const setTabAndNavigate = (tab: typeof activeTab) => {
+    setActiveTab(tab)
+    navigate(`/dashboard/${tab}`)
+  }
+
+  const getTabFromPathname = (pathname: string) => {
+    const path = pathname.replace(/^\/dashboard\/?/, '')
+    const segment = path.split('/')[0]
+
+    if (segment === 'overview' || segment === 'profile' || segment === 'subscription' || segment === 'settings') {
+      return segment
+    }
+
+    return 'profile'
+  }
+
+  useEffect(() => {
+    const routeTab = getTabFromPathname(location.pathname)
+    if (routeTab !== activeTab) {
+      setActiveTab(routeTab)
+    }
+  }, [activeTab, location.pathname, setActiveTab])
 
   return (
     <div className="dashboard-page">
@@ -88,7 +116,7 @@ export default function DashboardPage() {
         user={user}
         badge={badge}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={setTabAndNavigate}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         setShowLogoutModal={setShowLogoutModal}
@@ -96,45 +124,53 @@ export default function DashboardPage() {
       />
 
       <main className="dashboard-main">
-        {activeTab === 'overview' && (
-          <OverviewTab
-            user={user}
-            badge={badge}
-            formatDate={formatDate}
-            handleBuyClient={handleBuyClient}
-            handleDownloadLauncher={handleDownloadLauncher}
-            setActiveTab={setActiveTab}
-            t={t}
+        <Routes>
+          <Route index element={<Navigate to="profile" replace />} />
+          <Route
+            path="overview"
+            element={
+              <OverviewTab
+                user={user}
+                badge={badge}
+                formatDate={formatDate}
+                handleBuyClient={handleBuyClient}
+                handleDownloadLauncher={handleDownloadLauncher}
+                setActiveTab={setTabAndNavigate}
+                t={t}
+              />
+            }
           />
-        )}
-
-        {activeTab === 'profile' && (
-          <ProfileTab
-            user={user}
-            badge={badge}
-            profileForm={profileForm}
-            setProfileForm={setProfileForm}
-            avatarInputRef={avatarInputRef}
-            handleAvatarChange={handleAvatarChange}
-            handleProfileSave={handleProfileSave}
-            t={t}
+          <Route
+            path="profile"
+            element={
+              <ProfileTab
+                user={user}
+                badge={badge}
+                profileForm={profileForm}
+                setProfileForm={setProfileForm}
+                avatarInputRef={avatarInputRef}
+                handleAvatarChange={handleAvatarChange}
+                handleProfileSave={handleProfileSave}
+                t={t}
+              />
+            }
           />
-        )}
-
-        {activeTab === 'subscription' && (
-          <SubscriptionTab
-            user={user}
-            badge={badge}
-            keyInput={keyInput}
-            setKeyInput={setKeyInput}
-            handleActivateKey={handleActivateKey}
-            t={t}
+          <Route
+            path="subscription"
+            element={
+              <SubscriptionTab
+                user={user}
+                badge={badge}
+                keyInput={keyInput}
+                setKeyInput={setKeyInput}
+                handleActivateKey={handleActivateKey}
+                t={t}
+              />
+            }
           />
-        )}
-
-        {activeTab === 'settings' && (
-          <SettingsTab user={user} formatDate={formatDate} t={t} />
-        )}
+          <Route path="settings" element={<SettingsTab user={user} formatDate={formatDate} t={t} />} />
+          <Route path="*" element={<Navigate to="profile" replace />} />
+        </Routes>
       </main>
     </div>
   )
