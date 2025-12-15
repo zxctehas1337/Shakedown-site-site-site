@@ -262,6 +262,17 @@
     background: rgba(255, 77, 77, 0.2);
 }
 
+.btn-action.activate {
+    border-color: rgba(50, 200, 100, 0.3);
+    color: #32C864;
+}
+
+.btn-action.activate:hover {
+    background: rgba(50, 200, 100, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(50, 200, 100, 0.3);
+}
+
 .btn-copy {
     padding: 6px;
     background: transparent;
