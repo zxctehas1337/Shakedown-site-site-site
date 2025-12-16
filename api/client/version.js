@@ -48,7 +48,8 @@ export default async function handler(req, res) {
       data: {
         version: row.version,
         downloadUrl: row.download_url,
-        changelog: row.description
+        changelog: row.description,
+        updatedAt: row.created_at ? new Date(row.created_at).toISOString() : null
       }
     });
   } catch (error) {
