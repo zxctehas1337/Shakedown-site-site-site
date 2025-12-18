@@ -46,7 +46,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           {t.hero.subtitle}
         </p>
         <div className="hero-buttons animate-item delay-3">
-          <button onClick={() => navigate('/auth')} className="primary-button glow-button">
+          <button onClick={() => navigate('/auth')} className="primary-button">
             <span>{t.hero.cta}</span>
             <IconArrowRight />
           </button>
